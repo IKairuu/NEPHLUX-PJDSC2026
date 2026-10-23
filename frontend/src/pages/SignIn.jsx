@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router'
+import { Link, Navigate, useNavigate, useParams } from 'react-router'
 import clsx from 'clsx'
 import Icon, { BrandMark } from '../components/Icon'
 import NephraFace from '../components/NephraFace'
@@ -84,7 +84,9 @@ function ResidentBody({ startRef }) {
 
 function StaffForm({ role, firstRef }) {
   const go = useGo()
+  const navigate = useNavigate()
   const setSession = useUIStore((s) => s.setSession)
+  const notify = useUIStore((s) => s.notify)
   const r = ROLES[role]
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -105,8 +107,8 @@ function StaffForm({ role, firstRef }) {
           : 'This account has no screen in this version. Sign in with a YAKAP doctor or City Health Office account.')
       }
       setSession({ role, name: res.user.fullName, token: res.accessToken, expiresAt: Date.now() + toMs(res.expiresIn), user: res.user })
-      // TODO: open the role's home screen once the staff screens are ported
-      go('account')
+      notify(`Signed in as ${res.user.fullName}`)
+      navigate(`/${role}`)
     } catch (e) {
       setBad({ email: e.status === 401, password: e.status === 401 })
       setMsg(e.message)

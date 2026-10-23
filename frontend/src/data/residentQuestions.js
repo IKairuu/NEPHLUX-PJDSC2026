@@ -8,6 +8,13 @@ export const OFFLINE = {
   fil: 'Hindi maabot ang NEPHLUX server. Tingnan ang inyong koneksyon at subukang muli.',
 }
 
+// shown when the server answers with a 5xx error (for example, no active model yet)
+export const UNAVAILABLE = {
+  en: "The check isn't available right now. Please try again later, or ask at your YAKAP clinic.",
+  ceb: 'Dili pa magamit ang check karon. Palihug sulayi pag-usab unya, o pangutana sa imong YAKAP clinic.',
+  fil: 'Hindi pa magagamit ang check ngayon. Pakisubukang muli mamaya, o magtanong sa inyong YAKAP clinic.',
+}
+
 export const YES_NO = {
   yns: [['1', { en: 'Yes', ceb: 'Oo', fil: 'Oo' }], ['0', { en: 'No / not sure', ceb: 'Wala / dili sigurado', fil: 'Hindi / hindi sigurado' }]],
   yn: [['1', { en: 'Yes', ceb: 'Oo', fil: 'Oo' }], ['0', { en: 'No', ceb: 'Dili', fil: 'Hindi' }]],

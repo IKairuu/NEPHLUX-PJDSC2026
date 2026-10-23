@@ -66,7 +66,7 @@ export const api = {
     check: (answers) => request('/resident-check', { method: 'POST', body: answers }),
     decode: (code) => request(`/resident-check/codes/${encodeURIComponent(code)}`, { auth: true }),
   },
-  // DOCTOR (or ADMIN) only. No screens use these yet; they are here for the doctor screens.
+  // DOCTOR (or ADMIN) only, scoped to the doctor's own clinic
   assessments: {
     create: (body) => request('/assessments', { method: 'POST', body, auth: true }),
     list: (query) => request('/assessments', { query, auth: true }),
@@ -80,6 +80,20 @@ export const api = {
     slip: (id) => request(`/referrals/${id}/slip`, { auth: true }),
     markSlipPrinted: (id) => request(`/referrals/${id}/slip-printed`, { method: 'POST', auth: true }),
   },
+}
+
+// Lists are paged at most 100 rows a page; the follow-up screen needs every referral, so walk the pages.
+// Stops after maxPages so a very large clinic cannot hang the screen; `total` tells the caller if it was cut short.
+export async function allPages(list, query = {}, maxPages = 10) {
+  const rows = []
+  let total = 0
+  for (let page = 1; page <= maxPages; page++) {
+    const r = await list({ ...query, page, limit: 100 })
+    rows.push(...r.data)
+    total = r.meta.total
+    if (rows.length >= total || !r.data.length) break
+  }
+  return { rows, total }
 }
 
 // The barangay list changes only with a reseed, so fetch it once per page load (with or without boundaries).
