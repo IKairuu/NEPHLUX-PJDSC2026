@@ -5,6 +5,16 @@ import NephraFab from './components/NephraFab'
 import Toast from './components/Toast'
 import Landing from './pages/Landing'
 import SignIn from './pages/SignIn'
+import Register from './pages/Register'
+import { useGo } from './hooks/useGo'
+import { useUIStore } from './store/useUIStore'
+
+// lets store.navigate('register') (Nav, MobileNav) use the router
+function RouterBridge() {
+  const go = useGo()
+  useEffect(() => { useUIStore.setState({ routeTo: go }) }, [go])
+  return null
+}
 
 // new page starts at the top; in-page #anchors keep their own scrolling
 function ScrollToTop() {
@@ -18,9 +28,12 @@ export default function App() {
     <>
       <Sprite />
       <ScrollToTop />
+      <RouterBridge />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login/:role" element={<SignIn />} />
+        <Route path="/register" element={<Navigate to="/register/doctor" replace />} />
+        <Route path="/register/:role" element={<Register />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <NephraFab />

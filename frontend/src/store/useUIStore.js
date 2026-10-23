@@ -13,7 +13,6 @@ function loadSession() {
 const PENDING = {
   resident: 'The resident check is not ported to React yet.',
   app: 'The staff screens are not ported to React yet.',
-  register: 'Staff registration is not ported to React yet.',
   demo: 'The guided demo is not ported to React yet.',
   nephra: 'The Nephra chat panel is not ported to React yet.',
   evidence: 'The full evidence screen is not ported to React yet.',
@@ -56,7 +55,11 @@ export const useUIStore = create((set, get) => ({
   },
 
   // target is a screen key, optionally with a role: 'resident', 'login:doctor', 'demo', ...
+  // routed screens go through useGo, which App hands to the store so components outside the router hooks can reach them
+  routeTo: null,
   navigate: (target) => {
+    const [screen] = target.split(':')
+    if (screen === 'register' && get().routeTo) return get().routeTo(target)
     set({ portalOpen: false, mobileNavOpen: false })
     get().notify(PENDING[target.split(':')[0]] || 'This screen is not ported to React yet.')
   },
