@@ -9,8 +9,9 @@ import Register from './pages/Register'
 import { useGo } from './hooks/useGo'
 import { useUIStore } from './store/useUIStore'
 
-// the check brings Leaflet and the city data, so it loads only when opened
+// the check and the staff screens bring Leaflet and the city data, so they load only when opened
 const ResidentCheck = lazy(() => import('./pages/ResidentCheck'))
+const StaffArea = lazy(() => import('./pages/staff/StaffArea'))
 
 // lets store.navigate('register') (Nav, MobileNav) use the router
 function RouterBridge() {
@@ -38,6 +39,8 @@ export default function App() {
         <Route path="/resident/check" element={<Suspense fallback={null}><ResidentCheck /></Suspense>} />
         <Route path="/register" element={<Navigate to="/register/doctor" replace />} />
         <Route path="/register/:role" element={<Register />} />
+        <Route path="/doctor/*" element={<Suspense fallback={null}><StaffArea role="doctor" /></Suspense>} />
+        <Route path="/cho/*" element={<Suspense fallback={null}><StaffArea role="cho" /></Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <NephraFab />
