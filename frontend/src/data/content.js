@@ -15,7 +15,8 @@ export const ROLES = {
   cho: { name: 'City Health Office', short: 'CHO', icon: 'cho', blurb: 'Screening reach by barangay, test budget, outreach.', email: 'cho@demo.nephlux', demoName: 'CHO analyst' },
 }
 
-// Prototype sign-in only: one shared, publicly shown password. Not secure, and not meant to be.
+// Shown on the sign-in screen for the seeded demo accounts. It only works when the backend was seeded
+// with SEED_DEMO_PASSWORD=demo-2026; real accounts never use it.
 export const DEMO_PASSWORD = 'demo-2026'
 
 export const BENEFITS = [

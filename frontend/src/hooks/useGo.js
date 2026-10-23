@@ -6,6 +6,7 @@ import { ROLES } from '../data/content'
 // Screens that exist as routes. Anything else falls back to the store's "not ported yet" notice.
 function pathFor(target) {
   if (target === 'home') return '/'
+  if (target === 'resident') return '/resident/check'
   const [screen, role] = target.split(':')
   if (screen === 'login' && ROLES[role]) return `/login/${role}`
   if (screen === 'register') return `/register/${role || 'doctor'}`

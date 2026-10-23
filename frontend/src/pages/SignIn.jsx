@@ -7,7 +7,13 @@ import ThemeToggle from '../components/ThemeToggle'
 import { Aurora } from '../sections/Hero'
 import { DEMO_PASSWORD, ROLES, ROLE_KEYS } from '../data/content'
 import { useGo } from '../hooks/useGo'
+import { api } from '../lib/api'
 import { useUIStore } from '../store/useUIStore'
+
+// backend StaffRole -> the frontend's role keys (ADMIN may sign in through any staff card)
+const ROLE_OF = { DOCTOR: 'doctor', BHW: 'bhw', CHO: 'cho' }
+const EXPIRES_MS = { h: 3600e3, m: 60e3, s: 1e3, d: 864e5 }
+const toMs = (s) => { const m = /^(\d+)([smhd])$/.exec(s || ''); return m ? +m[1] * EXPIRES_MS[m[2]] : 8 * 3600e3 }
 
 const SUBTITLE = { resident: 'No account needed', doctor: 'YAKAP clinic', bhw: 'One barangay', cho: 'City-wide counts' }
 
@@ -84,11 +90,27 @@ function StaffForm({ role, firstRef }) {
   const [password, setPassword] = useState('')
   const [bad, setBad] = useState({ email: false, password: false })
   const [msg, setMsg] = useState('')
+  const [busy, setBusy] = useState(false)
 
-  function signIn() {
-    setSession({ role, name: r.demoName })
-    // TODO: open the role's home screen once the staff screens are ported
-    notify(`Signed in as ${r.demoName}. The ${r.short || r.name} screens are not ported to React yet.`)
+  async function signIn(em, pw) {
+    setBusy(true)
+    setMsg('')
+    try {
+      const res = await api.auth.login(em, pw)
+      const theirRole = ROLE_OF[res.user.role]
+      if (res.user.role !== 'ADMIN' && theirRole !== role) {
+        setBad({ email: true, password: false })
+        return setMsg(`This is a ${ROLES[theirRole]?.name || res.user.role} account. Choose that role above to sign in.`)
+      }
+      setSession({ role, name: res.user.fullName, token: res.accessToken, expiresAt: Date.now() + toMs(res.expiresIn), user: res.user })
+      // TODO: open the role's home screen once the staff screens are ported
+      notify(`Signed in as ${res.user.fullName}. The ${r.short || r.name} screens are not ported to React yet.`)
+    } catch (e) {
+      setBad({ email: e.status === 401, password: e.status === 401 })
+      setMsg(e.message)
+    } finally {
+      setBusy(false)
+    }
   }
 
   function onSubmit(e) {
@@ -96,9 +118,7 @@ function StaffForm({ role, firstRef }) {
     const em = email.trim().toLowerCase()
     setBad({ email: !em, password: !password })
     if (!em || !password) return setMsg('Enter your work email and password.')
-    if (em !== r.email || password !== DEMO_PASSWORD) return setMsg(`That is not the demo account. Use ${r.email} / ${DEMO_PASSWORD}.`)
-    setMsg('')
-    signIn()
+    signIn(em, password)
   }
 
   function fillDemo() {
@@ -107,7 +127,7 @@ function StaffForm({ role, firstRef }) {
     setBad({ email: false, password: false })
     setMsg('')
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    setTimeout(signIn, reduce ? 0 : 250) // a beat so the filled-in fields are seen
+    setTimeout(() => signIn(r.email, DEMO_PASSWORD), reduce ? 0 : 250) // a beat so the filled-in fields are seen
   }
 
   return (
@@ -120,14 +140,14 @@ function StaffForm({ role, firstRef }) {
         <input className={clsx('in', bad.password && 'bad')} id="pw" type="password" autoComplete="off"
           value={password} onChange={(e) => setPassword(e.target.value)} />
         <p className="muted text-[13px] min-h-5 mt-2" role="status">{msg}</p>
-        <button className="btn primary w-full" type="submit">Sign in as {r.name}</button>
+        <button className="btn primary w-full" type="submit" disabled={busy}>{busy ? 'Signing in…' : `Sign in as ${r.name}`}</button>
       </form>
       <div className="demo-acc">
         <div>
           <div className="font-semibold text-sm">Demo account</div>
           <div className="mono">{r.email} · {DEMO_PASSWORD}</div>
         </div>
-        <button className="btn sm" type="button" onClick={fillDemo}>Use demo account</button>
+        <button className="btn sm" type="button" onClick={fillDemo} disabled={busy}>Use demo account</button>
       </div>
       <p className="muted text-[13px] mt-4">
         New staff? <a href="#" onClick={(e) => { e.preventDefault(); go('register') }}>Request access</a>

@@ -4,8 +4,12 @@ const THEME_KEY = 'nephlux_theme'
 const SESSION_KEY = 'nephlux_v5_session'
 let toastTimer
 
+// a session from before the API (no token) or one past its expiry counts as signed out
 function loadSession() {
-  try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) } catch { return null }
+  try {
+    const s = JSON.parse(sessionStorage.getItem(SESSION_KEY))
+    return s?.token && s.expiresAt > Date.now() ? s : null
+  } catch { return null }
 }
 
 // Screens the landing page links to but that are not ported to React yet.
@@ -34,7 +38,7 @@ export const useUIStore = create((set, get) => ({
   mobileNavOpen: false,
   setMobileNavOpen: (mobileNavOpen) => set({ mobileNavOpen }),
 
-  // demo sign-in: { role, name } for this browser tab only
+  // staff sign-in from POST /auth/login: { role, name, token, expiresAt, user }, for this browser tab only
   session: loadSession(),
   setSession: (session) => {
     try {
