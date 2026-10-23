@@ -1,0 +1,618 @@
+{
+  "source": "NHANES 2017-March 2020 test set (n=6655, 797 cases); frozen step-2 model",
+  "casesPer1000": 119.7595792637115,
+  "ruleSharePer1000": 489.8572501878287,
+  "uacrPriceAssumed": 600,
+  "uacrPriceRange": [
+    300,
+    1200
+  ],
+  "rows": [
+    {
+      "tests_per_1000": 0,
+      "model": 0,
+      "rule_first": 0,
+      "random": 0
+    },
+    {
+      "tests_per_1000": 10,
+      "model": 7.06,
+      "rule_first": 1.88,
+      "random": 1.2
+    },
+    {
+      "tests_per_1000": 20,
+      "model": 12.17,
+      "rule_first": 3.73,
+      "random": 2.4
+    },
+    {
+      "tests_per_1000": 30,
+      "model": 17.73,
+      "rule_first": 5.61,
+      "random": 3.59
+    },
+    {
+      "tests_per_1000": 40,
+      "model": 21.64,
+      "rule_first": 7.47,
+      "random": 4.79
+    },
+    {
+      "tests_per_1000": 50,
+      "model": 24.79,
+      "rule_first": 9.35,
+      "random": 5.99
+    },
+    {
+      "tests_per_1000": 60,
+      "model": 27.8,
+      "rule_first": 11.2,
+      "random": 7.19
+    },
+    {
+      "tests_per_1000": 70,
+      "model": 31.25,
+      "rule_first": 13.08,
+      "random": 8.38
+    },
+    {
+      "tests_per_1000": 80,
+      "model": 34.71,
+      "rule_first": 14.93,
+      "random": 9.58
+    },
+    {
+      "tests_per_1000": 90,
+      "model": 38.32,
+      "rule_first": 16.81,
+      "random": 10.78
+    },
+    {
+      "tests_per_1000": 100,
+      "model": 41.02,
+      "rule_first": 18.7,
+      "random": 11.98
+    },
+    {
+      "tests_per_1000": 110,
+      "model": 43.73,
+      "rule_first": 20.55,
+      "random": 13.17
+    },
+    {
+      "tests_per_1000": 120,
+      "model": 45.68,
+      "rule_first": 22.43,
+      "random": 14.37
+    },
+    {
+      "tests_per_1000": 130,
+      "model": 47.93,
+      "rule_first": 24.28,
+      "random": 15.57
+    },
+    {
+      "tests_per_1000": 140,
+      "model": 50.64,
+      "rule_first": 26.16,
+      "random": 16.77
+    },
+    {
+      "tests_per_1000": 150,
+      "model": 52.89,
+      "rule_first": 28.01,
+      "random": 17.96
+    },
+    {
+      "tests_per_1000": 160,
+      "model": 55.15,
+      "rule_first": 29.9,
+      "random": 19.16
+    },
+    {
+      "tests_per_1000": 170,
+      "model": 57.55,
+      "rule_first": 31.75,
+      "random": 20.36
+    },
+    {
+      "tests_per_1000": 180,
+      "model": 59.5,
+      "rule_first": 33.63,
+      "random": 21.56
+    },
+    {
+      "tests_per_1000": 190,
+      "model": 61.01,
+      "rule_first": 35.48,
+      "random": 22.75
+    },
+    {
+      "tests_per_1000": 200,
+      "model": 62.36,
+      "rule_first": 37.36,
+      "random": 23.95
+    },
+    {
+      "tests_per_1000": 210,
+      "model": 63.56,
+      "rule_first": 39.24,
+      "random": 25.15
+    },
+    {
+      "tests_per_1000": 220,
+      "model": 64.31,
+      "rule_first": 41.1,
+      "random": 26.35
+    },
+    {
+      "tests_per_1000": 230,
+      "model": 65.66,
+      "rule_first": 42.98,
+      "random": 27.54
+    },
+    {
+      "tests_per_1000": 240,
+      "model": 67.32,
+      "rule_first": 44.83,
+      "random": 28.74
+    },
+    {
+      "tests_per_1000": 250,
+      "model": 69.42,
+      "rule_first": 46.71,
+      "random": 29.94
+    },
+    {
+      "tests_per_1000": 260,
+      "model": 71.68,
+      "rule_first": 48.56,
+      "random": 31.14
+    },
+    {
+      "tests_per_1000": 270,
+      "model": 73.18,
+      "rule_first": 50.44,
+      "random": 32.34
+    },
+    {
+      "tests_per_1000": 280,
+      "model": 74.08,
+      "rule_first": 52.3,
+      "random": 33.53
+    },
+    {
+      "tests_per_1000": 290,
+      "model": 75.28,
+      "rule_first": 54.18,
+      "random": 34.73
+    },
+    {
+      "tests_per_1000": 300,
+      "model": 76.48,
+      "rule_first": 56.03,
+      "random": 35.93
+    },
+    {
+      "tests_per_1000": 310,
+      "model": 78.14,
+      "rule_first": 57.91,
+      "random": 37.13
+    },
+    {
+      "tests_per_1000": 320,
+      "model": 80.09,
+      "rule_first": 59.79,
+      "random": 38.32
+    },
+    {
+      "tests_per_1000": 330,
+      "model": 81.14,
+      "rule_first": 61.64,
+      "random": 39.52
+    },
+    {
+      "tests_per_1000": 340,
+      "model": 81.74,
+      "rule_first": 63.52,
+      "random": 40.72
+    },
+    {
+      "tests_per_1000": 350,
+      "model": 83.25,
+      "rule_first": 65.38,
+      "random": 41.92
+    },
+    {
+      "tests_per_1000": 360,
+      "model": 84.3,
+      "rule_first": 67.26,
+      "random": 43.11
+    },
+    {
+      "tests_per_1000": 370,
+      "model": 84.75,
+      "rule_first": 69.11,
+      "random": 44.31
+    },
+    {
+      "tests_per_1000": 380,
+      "model": 86.1,
+      "rule_first": 70.99,
+      "random": 45.51
+    },
+    {
+      "tests_per_1000": 390,
+      "model": 87.15,
+      "rule_first": 72.84,
+      "random": 46.71
+    },
+    {
+      "tests_per_1000": 400,
+      "model": 88.05,
+      "rule_first": 74.72,
+      "random": 47.9
+    },
+    {
+      "tests_per_1000": 410,
+      "model": 88.96,
+      "rule_first": 76.6,
+      "random": 49.1
+    },
+    {
+      "tests_per_1000": 420,
+      "model": 89.41,
+      "rule_first": 78.46,
+      "random": 50.3
+    },
+    {
+      "tests_per_1000": 430,
+      "model": 89.71,
+      "rule_first": 80.34,
+      "random": 51.5
+    },
+    {
+      "tests_per_1000": 440,
+      "model": 90.91,
+      "rule_first": 82.19,
+      "random": 52.69
+    },
+    {
+      "tests_per_1000": 450,
+      "model": 92.86,
+      "rule_first": 84.07,
+      "random": 53.89
+    },
+    {
+      "tests_per_1000": 460,
+      "model": 93.61,
+      "rule_first": 85.92,
+      "random": 55.09
+    },
+    {
+      "tests_per_1000": 470,
+      "model": 94.52,
+      "rule_first": 87.8,
+      "random": 56.29
+    },
+    {
+      "tests_per_1000": 480,
+      "model": 95.27,
+      "rule_first": 89.66,
+      "random": 57.48
+    },
+    {
+      "tests_per_1000": 490,
+      "model": 96.32,
+      "rule_first": 91.52,
+      "random": 58.68
+    },
+    {
+      "tests_per_1000": 500,
+      "model": 97.07,
+      "rule_first": 92.08,
+      "random": 59.88
+    },
+    {
+      "tests_per_1000": 510,
+      "model": 97.52,
+      "rule_first": 92.63,
+      "random": 61.08
+    },
+    {
+      "tests_per_1000": 520,
+      "model": 98.42,
+      "rule_first": 93.18,
+      "random": 62.27
+    },
+    {
+      "tests_per_1000": 530,
+      "model": 98.87,
+      "rule_first": 93.73,
+      "random": 63.47
+    },
+    {
+      "tests_per_1000": 540,
+      "model": 99.32,
+      "rule_first": 94.29,
+      "random": 64.67
+    },
+    {
+      "tests_per_1000": 550,
+      "model": 99.92,
+      "rule_first": 94.84,
+      "random": 65.87
+    },
+    {
+      "tests_per_1000": 560,
+      "model": 100.83,
+      "rule_first": 95.4,
+      "random": 67.07
+    },
+    {
+      "tests_per_1000": 570,
+      "model": 101.13,
+      "rule_first": 95.95,
+      "random": 68.26
+    },
+    {
+      "tests_per_1000": 580,
+      "model": 102.03,
+      "rule_first": 96.5,
+      "random": 69.46
+    },
+    {
+      "tests_per_1000": 590,
+      "model": 102.78,
+      "rule_first": 97.05,
+      "random": 70.66
+    },
+    {
+      "tests_per_1000": 600,
+      "model": 103.38,
+      "rule_first": 97.61,
+      "random": 71.86
+    },
+    {
+      "tests_per_1000": 610,
+      "model": 103.68,
+      "rule_first": 98.17,
+      "random": 73.05
+    },
+    {
+      "tests_per_1000": 620,
+      "model": 104.43,
+      "rule_first": 98.72,
+      "random": 74.25
+    },
+    {
+      "tests_per_1000": 630,
+      "model": 104.88,
+      "rule_first": 99.27,
+      "random": 75.45
+    },
+    {
+      "tests_per_1000": 640,
+      "model": 105.03,
+      "rule_first": 99.82,
+      "random": 76.65
+    },
+    {
+      "tests_per_1000": 650,
+      "model": 105.03,
+      "rule_first": 100.38,
+      "random": 77.84
+    },
+    {
+      "tests_per_1000": 660,
+      "model": 105.33,
+      "rule_first": 100.93,
+      "random": 79.04
+    },
+    {
+      "tests_per_1000": 670,
+      "model": 105.94,
+      "rule_first": 101.49,
+      "random": 80.24
+    },
+    {
+      "tests_per_1000": 680,
+      "model": 106.39,
+      "rule_first": 102.04,
+      "random": 81.44
+    },
+    {
+      "tests_per_1000": 690,
+      "model": 107.14,
+      "rule_first": 102.59,
+      "random": 82.63
+    },
+    {
+      "tests_per_1000": 700,
+      "model": 107.59,
+      "rule_first": 103.14,
+      "random": 83.83
+    },
+    {
+      "tests_per_1000": 710,
+      "model": 107.89,
+      "rule_first": 103.7,
+      "random": 85.03
+    },
+    {
+      "tests_per_1000": 720,
+      "model": 108.79,
+      "rule_first": 104.26,
+      "random": 86.23
+    },
+    {
+      "tests_per_1000": 730,
+      "model": 109.69,
+      "rule_first": 104.81,
+      "random": 87.42
+    },
+    {
+      "tests_per_1000": 740,
+      "model": 109.99,
+      "rule_first": 105.36,
+      "random": 88.62
+    },
+    {
+      "tests_per_1000": 750,
+      "model": 110.74,
+      "rule_first": 105.91,
+      "random": 89.82
+    },
+    {
+      "tests_per_1000": 760,
+      "model": 111.95,
+      "rule_first": 106.47,
+      "random": 91.02
+    },
+    {
+      "tests_per_1000": 770,
+      "model": 112.4,
+      "rule_first": 107.02,
+      "random": 92.21
+    },
+    {
+      "tests_per_1000": 780,
+      "model": 112.7,
+      "rule_first": 107.58,
+      "random": 93.41
+    },
+    {
+      "tests_per_1000": 790,
+      "model": 112.7,
+      "rule_first": 108.13,
+      "random": 94.61
+    },
+    {
+      "tests_per_1000": 800,
+      "model": 113.45,
+      "rule_first": 108.68,
+      "random": 95.81
+    },
+    {
+      "tests_per_1000": 810,
+      "model": 113.6,
+      "rule_first": 109.24,
+      "random": 97.01
+    },
+    {
+      "tests_per_1000": 820,
+      "model": 113.6,
+      "rule_first": 109.79,
+      "random": 98.2
+    },
+    {
+      "tests_per_1000": 830,
+      "model": 113.75,
+      "rule_first": 110.35,
+      "random": 99.4
+    },
+    {
+      "tests_per_1000": 840,
+      "model": 113.9,
+      "rule_first": 110.9,
+      "random": 100.6
+    },
+    {
+      "tests_per_1000": 850,
+      "model": 114.35,
+      "rule_first": 111.46,
+      "random": 101.8
+    },
+    {
+      "tests_per_1000": 860,
+      "model": 114.35,
+      "rule_first": 112,
+      "random": 102.99
+    },
+    {
+      "tests_per_1000": 870,
+      "model": 114.5,
+      "rule_first": 112.56,
+      "random": 104.19
+    },
+    {
+      "tests_per_1000": 880,
+      "model": 114.95,
+      "rule_first": 113.11,
+      "random": 105.39
+    },
+    {
+      "tests_per_1000": 890,
+      "model": 115.25,
+      "rule_first": 113.67,
+      "random": 106.59
+    },
+    {
+      "tests_per_1000": 900,
+      "model": 115.85,
+      "rule_first": 114.23,
+      "random": 107.78
+    },
+    {
+      "tests_per_1000": 910,
+      "model": 116,
+      "rule_first": 114.78,
+      "random": 108.98
+    },
+    {
+      "tests_per_1000": 920,
+      "model": 116.6,
+      "rule_first": 115.33,
+      "random": 110.18
+    },
+    {
+      "tests_per_1000": 930,
+      "model": 117.36,
+      "rule_first": 115.88,
+      "random": 111.38
+    },
+    {
+      "tests_per_1000": 940,
+      "model": 117.96,
+      "rule_first": 116.44,
+      "random": 112.57
+    },
+    {
+      "tests_per_1000": 950,
+      "model": 117.96,
+      "rule_first": 116.99,
+      "random": 113.77
+    },
+    {
+      "tests_per_1000": 960,
+      "model": 118.56,
+      "rule_first": 117.55,
+      "random": 114.97
+    },
+    {
+      "tests_per_1000": 970,
+      "model": 118.86,
+      "rule_first": 118.1,
+      "random": 116.17
+    },
+    {
+      "tests_per_1000": 980,
+      "model": 119.01,
+      "rule_first": 118.65,
+      "random": 117.36
+    },
+    {
+      "tests_per_1000": 990,
+      "model": 119.46,
+      "rule_first": 119.2,
+      "random": 118.56
+    },
+    {
+      "tests_per_1000": 1000,
+      "model": 119.76,
+      "rule_first": 119.76,
+      "random": 119.76
+    }
+  ]
+}
