@@ -10,3 +10,322 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ---------------------------------------------------------------- ENUMS
+
+enum ClinicSector {
+  PUBLIC
+  PRIVATE
+}
+
+enum LocationPrecision {
+  APPROXIMATE
+  EXACT
+}
+
+enum StaffRole {
+  DOCTOR
+  BHW
+  CHO
+  ADMIN
+}
+
+enum ChoUnit {
+  NCD
+  EPIDEMIOLOGY
+  PLANNING
+}
+
+enum StaffStatus {
+  PENDING
+  ACTIVE
+  DISABLED
+}
+
+enum Sex {
+  F
+  M
+}
+
+enum LabUnits {
+  SI
+  CONVENTIONAL
+}
+
+enum RiskLevel {
+  HIGH
+  MODERATE
+  LOW
+}
+
+enum Suggestion {
+  REFER
+  CONSIDER_OR_REPEAT
+  ROUTINE
+}
+
+enum Decision {
+  APPROVED
+  OVERRIDDEN
+  NO_REFERRAL
+}
+
+// ---------------------------------------------------------------- REFERENCE DATA
+
+model Barangay {
+  id        Int    @id @default(autoincrement())
+  psgcCode  String @unique @map("psgc_code") @db.VarChar(10)
+  name      String
+  codeIndex Int    @unique @map("code_index") @db.SmallInt // 1-80, PSGC order; stored inside the resident clinic code
+  pop2020   Int    @map("pop_2020")
+  pop2024   Int?   @map("pop_2024")
+  centreLat Float? @map("centre_lat")
+  centreLon Float? @map("centre_lon")
+  boundary  Json? // GeoJSON polygon
+
+  clinics  Clinic[]
+  patients Patient[]
+  staff    StaffUser[]
+
+  @@map("barangays")
+}
+
+model Clinic {
+  id                  String            @id @default(uuid()) @db.Uuid
+  yakapRef            String            @unique @map("yakap_ref") // e.g. Y1
+  name                String
+  shortName           String?           @map("short_name")
+  sector              ClinicSector
+  phone               String?
+  address             String?
+  barangayId          Int               @map("barangay_id")
+  lat                 Float
+  lon                 Float
+  locationPrecision   LocationPrecision @default(APPROXIMATE) @map("location_precision")
+  accreditationExpiry DateTime?         @map("accreditation_expiry") @db.Date
+
+  barangay    Barangay     @relation(fields: [barangayId], references: [id])
+  doctors     StaffUser[]
+  assessments Assessment[]
+
+  @@index([barangayId])
+  @@map("clinics")
+}
+
+// ---------------------------------------------------------------- STAFF
+
+model StaffUser {
+  id           String      @id @default(uuid()) @db.Uuid
+  email        String      @unique
+  passwordHash String      @map("password_hash")
+  fullName     String      @map("full_name")
+  role         StaffRole
+  prcLicenseNo String?     @map("prc_license_no") // doctors only
+  clinicId     String?     @map("clinic_id") @db.Uuid // doctors only
+  barangayId   Int?        @map("barangay_id") // BHW coverage area
+  choUnit      ChoUnit?    @map("cho_unit") // CHO only
+  status       StaffStatus @default(PENDING)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  lastLoginAt  DateTime?   @map("last_login_at")
+
+  clinic      Clinic?            @relation(fields: [clinicId], references: [id])
+  barangay    Barangay?          @relation(fields: [barangayId], references: [id])
+  assessments Assessment[]
+  decisions   ReferralDecision[]
+  uacrResults UacrResult[]
+  auditLogs   AuditLog[]
+
+  @@index([role])
+  @@map("staff_users")
+}
+
+// ---------------------------------------------------------------- PATIENTS AND ASSESSMENTS
+
+model Patient {
+  id         String   @id @default(uuid()) @db.Uuid
+  initials   String   @db.VarChar(8) // initials only, never full names
+  sex        Sex
+  barangayId Int      @map("barangay_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  barangay    Barangay     @relation(fields: [barangayId], references: [id])
+  assessments Assessment[]
+
+  @@index([barangayId])
+  @@map("patients")
+}
+
+model Assessment {
+  id            String   @id @default(uuid()) @db.Uuid
+  patientId     String   @map("patient_id") @db.Uuid
+  clinicId      String   @map("clinic_id") @db.Uuid
+  doctorId      String   @map("doctor_id") @db.Uuid
+  assessedOn    DateTime @default(now()) @map("assessed_on") @db.Date
+  residentCode  String?  @map("resident_code") @db.VarChar(11) // e.g. ACS-2YB-A51
+  codeConfirmed Boolean  @default(false) @map("code_confirmed")
+
+  // patient at time of visit
+  age      Int   @db.SmallInt // 20-100
+  weightKg Float @map("weight_kg")
+  heightCm Float @map("height_cm")
+  bmi      Float
+
+  // history
+  dmHx   Boolean @map("dm_hx")
+  htnHx  Boolean @map("htn_hx")
+  bpMed  Boolean @map("bp_med")
+  cvdHx  Boolean @map("cvd_hx")
+  smoker Boolean
+  famDm  Boolean @map("fam_dm")
+
+  // blood pressure, mean of 2-3 readings
+  sbp Int @db.SmallInt
+  dbp Int @db.SmallInt
+
+  // YAKAP labs, stored in conventional units; labUnits = what the doctor typed
+  labUnits       LabUnits @default(SI) @map("lab_units")
+  hba1cPct       Float    @map("hba1c_pct")
+  creatinineMgDl Float    @map("creatinine_mg_dl")
+  tcholMgDl      Float    @map("tchol_mg_dl")
+  hdlMgDl        Float    @map("hdl_mg_dl")
+  hgbGDl         Float    @map("hgb_g_dl")
+  wbc            Float // x10^9/L
+  platelets      Float // x10^9/L
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  patient     Patient           @relation(fields: [patientId], references: [id])
+  clinic      Clinic            @relation(fields: [clinicId], references: [id])
+  doctor      StaffUser         @relation(fields: [doctorId], references: [id])
+  riskResult  RiskResult?
+  decision    ReferralDecision?
+  uacrResults UacrResult[]
+
+  @@index([patientId])
+  @@index([clinicId])
+  @@index([assessedOn])
+  @@map("assessments")
+}
+
+model RiskResult {
+  id             String     @id @default(uuid()) @db.Uuid
+  assessmentId   String     @unique @map("assessment_id") @db.Uuid
+  modelVersionId String     @map("model_version_id") @db.Uuid
+  probability    Float // chance of uACR >= 30 mg/g
+  riskLevel      RiskLevel  @map("risk_level")
+  egfr           Float // CKD-EPI 2021
+  suggestion     Suggestion
+  createdAt      DateTime   @default(now()) @map("created_at")
+
+  assessment   Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  modelVersion ModelVersion @relation(fields: [modelVersionId], references: [id])
+  reasons      RiskReason[]
+
+  @@index([riskLevel])
+  @@map("risk_results")
+}
+
+model RiskReason {
+  id           String @id @default(uuid()) @db.Uuid
+  riskResultId String @map("risk_result_id") @db.Uuid
+  rank         Int    @db.SmallInt // 1-5
+  featureKey   String @map("feature_key") // e.g. hba1c
+  contribution Float // > 0 raises, < 0 lowers the estimate
+
+  riskResult RiskResult @relation(fields: [riskResultId], references: [id], onDelete: Cascade)
+
+  @@unique([riskResultId, rank])
+  @@map("risk_reasons")
+}
+
+model ReferralDecision {
+  id             String    @id @default(uuid()) @db.Uuid
+  assessmentId   String    @unique @map("assessment_id") @db.Uuid
+  decision       Decision
+  overrideReason String?   @map("override_reason") // required when OVERRIDDEN or approving against the suggestion
+  decidedById    String    @map("decided_by") @db.Uuid
+  decidedAt      DateTime  @default(now()) @map("decided_at")
+  recheckDue     DateTime? @map("recheck_due") @db.Date // moderate risk, no referral: +12 months
+  slipPrintedAt  DateTime? @map("slip_printed_at")
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  decidedBy  StaffUser  @relation(fields: [decidedById], references: [id])
+
+  @@index([decision])
+  @@map("referral_decisions")
+}
+
+model UacrResult {
+  id           String   @id @default(uuid()) @db.Uuid
+  assessmentId String   @map("assessment_id") @db.Uuid
+  valueMgG     Float    @map("value_mg_g") // 0-5000; >= 30 = suspected albuminuria
+  recordedById String   @map("recorded_by") @db.Uuid
+  recordedAt   DateTime @default(now()) @map("recorded_at")
+  isRepeat     Boolean  @default(false) @map("is_repeat")
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  recordedBy StaffUser  @relation(fields: [recordedById], references: [id])
+
+  @@index([assessmentId])
+  @@map("uacr_results")
+}
+
+// ---------------------------------------------------------------- MODEL AND PLANNING
+
+model ModelVersion {
+  id           String   @id @default(uuid()) @db.Uuid
+  version      String // e.g. 1.0.0
+  step         Int      @db.SmallInt // 1 = questionnaire, 2 = labs
+  coefficients Json
+  means        Json
+  thresholds   Json
+  testAuroc    Float    @map("test_auroc")
+  ciLow        Float    @map("ci_low")
+  ciHigh       Float    @map("ci_high")
+  evidence     Json? // pass mark, ablation, cost per 1,000
+  isActive     Boolean  @default(false) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  riskResults  RiskResult[]
+  budgetPoints BudgetCurvePoint[]
+
+  @@unique([version, step])
+  @@map("model_versions")
+}
+
+model BudgetCurvePoint {
+  modelVersionId String @map("model_version_id") @db.Uuid
+  testsPer1000   Int    @map("tests_per_1000") @db.SmallInt // 0-1000, steps of 10
+  casesModel     Float  @map("cases_model")
+  casesRule      Float  @map("cases_rule")
+  casesRandom    Float  @map("cases_random")
+
+  modelVersion ModelVersion @relation(fields: [modelVersionId], references: [id], onDelete: Cascade)
+
+  @@id([modelVersionId, testsPer1000])
+  @@map("budget_curve_points")
+}
+
+model Setting {
+  key       String   @id // uacr_price, missed_after_days, small_cell_min
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model AuditLog {
+  id       String   @id @default(uuid()) @db.Uuid
+  userId   String?  @map("user_id") @db.Uuid
+  action   String // e.g. VIEW_ASSESSMENT, SAVE_DECISION, RECORD_UACR
+  entity   String
+  entityId String?  @map("entity_id")
+  at       DateTime @default(now())
+  details  Json?
+
+  user StaffUser? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}
