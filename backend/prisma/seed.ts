@@ -1,11 +1,13 @@
 // Seeds reference data: the 80 Cagayan de Oro barangays, the 42 YAKAP clinics and
-// risk model v1.0.0 (step 1 = resident questions, step 2 = YAKAP labs).
+// risk model v1.0.0 (step 1 = resident questions, step 2 = YAKAP labs), and, when
+// SEED_DEMO_PASSWORD is set, demo staff accounts for the doctor, BHW and CHO screens.
 // Safe to run more than once: every row is upserted on its natural key.
 // Run with: npx prisma db seed
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { hash } from 'bcryptjs';
 import {
   ClinicSector,
   LocationPrecision,
@@ -132,10 +134,61 @@ async function seedModel(): Promise<void> {
   console.log(`model_versions: ${m.version} (steps 1 and 2)`);
 }
 
+// Demo accounts only; never set SEED_DEMO_PASSWORD on a real deployment
+async function seedDemoStaff(barangayIds: Map<string, number>): Promise<void> {
+  const password = process.env.SEED_DEMO_PASSWORD;
+  if (!password) {
+    console.log('staff: skipped (set SEED_DEMO_PASSWORD to add demo accounts)');
+    return;
+  }
+  if (password.length < 8)
+    throw new Error('SEED_DEMO_PASSWORD needs 8+ characters');
+  const passwordHash = await hash(password, 10);
+  const cho = await prisma.clinic.findFirst({
+    where: { sector: 'PUBLIC', name: { contains: 'CHO', mode: 'insensitive' } },
+  });
+  const bonbon = barangayIds.get('Bonbon');
+  const accounts: Prisma.StaffUserUncheckedCreateInput[] = [
+    {
+      email: 'doctor@demo.nephlux',
+      fullName: 'Dr. A. Reyes',
+      role: 'DOCTOR',
+      clinicId: cho?.id ?? null,
+      passwordHash,
+      status: 'ACTIVE',
+    },
+    {
+      email: 'bhw@demo.nephlux',
+      fullName: 'L. Dalisay',
+      role: 'BHW',
+      barangayId: bonbon ?? null,
+      passwordHash,
+      status: 'ACTIVE',
+    },
+    {
+      email: 'cho@demo.nephlux',
+      fullName: 'CHO analyst',
+      role: 'CHO',
+      choUnit: 'NCD',
+      passwordHash,
+      status: 'ACTIVE',
+    },
+  ];
+  for (const a of accounts) {
+    await prisma.staffUser.upsert({
+      where: { email: a.email },
+      create: a,
+      update: a,
+    });
+  }
+  console.log(`staff: ${accounts.map((a) => a.email).join(', ')}`);
+}
+
 async function main(): Promise<void> {
   const barangayIds = await seedBarangays();
   await seedClinics(barangayIds);
   await seedModel();
+  await seedDemoStaff(barangayIds);
 }
 
 main()

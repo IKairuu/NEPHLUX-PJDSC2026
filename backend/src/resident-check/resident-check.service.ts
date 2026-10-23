@@ -4,16 +4,15 @@ import {
   InternalServerErrorException,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { ModelVersion } from '../generated/prisma/client';
 import { BarangayRow } from '../barangays/barangays.repository';
 import { BarangaysService } from '../barangays/barangays.service';
 import {
   decodeClinicCode,
   encodeClinicCode,
 } from '../common/clinic-code/clinic-code';
+import { haversineKm } from '../common/geo/haversine';
+import { ActiveModel, parseModelVersion } from '../common/risk/model-version';
 import {
-  RiskModel,
-  RiskThresholds,
   bmiFrom,
   reasons,
   scoreStep1,
@@ -40,12 +39,6 @@ const DISCLAIMER =
   'better than asking about diabetes and blood pressure, so the YAKAP clinic, with your lab tests, ' +
   'decides who gets the urine test. Built from U.S. survey data; not yet validated in Filipino ' +
   'patients. Nothing you entered was saved.';
-
-interface ActiveModel {
-  version: string;
-  model: RiskModel;
-  thresholds: RiskThresholds;
-}
 
 @Injectable()
 export class ResidentCheckService {
@@ -147,48 +140,14 @@ export class ResidentCheckService {
         'No active resident-check model. Run the database seed first.',
       );
     }
-    return parseModelVersion(row);
+    const parsed = parseModelVersion(row);
+    if (!parsed) {
+      throw new InternalServerErrorException(
+        `Model version ${row.version} (step ${row.step}) is malformed`,
+      );
+    }
+    return parsed;
   }
-}
-
-function parseModelVersion(row: ModelVersion): ActiveModel {
-  const coefficients = row.coefficients as {
-    intercept?: unknown;
-    coef?: unknown;
-  } | null;
-  const means = row.means as Record<string, number> | null;
-  const thresholds = row.thresholds as unknown as RiskThresholds | null;
-  if (
-    typeof coefficients?.intercept !== 'number' ||
-    typeof coefficients.coef !== 'object' ||
-    coefficients.coef === null ||
-    !means ||
-    typeof thresholds?.step1_go_to_yakap !== 'number'
-  ) {
-    throw new InternalServerErrorException(
-      `Model version ${row.version} (step ${row.step}) is malformed`,
-    );
-  }
-  return {
-    version: row.version,
-    model: {
-      intercept: coefficients.intercept,
-      coef: coefficients.coef as Record<string, number>,
-      mean: means,
-    },
-    thresholds,
-  };
-}
-
-function haversineKm(a: [number, number], b: [number, number]): number {
-  const R = 6371;
-  const r = Math.PI / 180;
-  const dLat = (b[0] - a[0]) * r;
-  const dLon = (b[1] - a[1]) * r;
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
 }
 
 function toNearbyClinic(c: ClinicWithBarangay, km: number): NearbyClinicDto {

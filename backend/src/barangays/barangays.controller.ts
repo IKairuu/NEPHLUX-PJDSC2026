@@ -1,10 +1,12 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Public } from '../auth/decorators/public.decorator';
 import { BarangaysService } from './barangays.service';
 import { BarangayQueryDto } from './dto/barangay-query.dto';
 import { BarangayResponseDto } from './dto/barangay-response.dto';
 
 // Public reference data: the resident check needs the list without an account.
-// POST/PATCH/DELETE (ADMIN only) come once the auth module and RolesGuard exist.
+// POST/PATCH/DELETE (ADMIN only) can be added with @Roles('ADMIN').
+@Public()
 @Controller('barangays')
 export class BarangaysController {
   constructor(private readonly barangaysService: BarangaysService) {}

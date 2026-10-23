@@ -174,25 +174,37 @@ export function step1Level(p: number, t: RiskThresholds): Step1Level {
   return p >= t.step1_go_to_yakap ? 'HIGHER' : 'LOWER';
 }
 
+// Lab unit conversions (Philippine labs often report SI units)
+export const SI_TO_CONVENTIONAL = {
+  creatinineUmolLToMgDl: (v: number) => v / 88.42,
+  cholesterolMmolLToMgDl: (v: number) => v * 38.67,
+  hemoglobinGLToGdL: (v: number) => v / 10,
+};
+
 export function step2Level(p: number, t: RiskThresholds): Step2Level {
   if (p >= t.step2_high) return 'HIGH';
   if (p >= t.step2_moderate) return 'MODERATE';
   return 'LOW';
 }
 
+// Plain-language label for a reason; features are the model inputs (0/1 for yes/no answers)
+export function reasonText(
+  key: string,
+  features: Record<string, number>,
+): string {
+  if (key === 'female') return features.female ? 'Female sex' : 'Male sex';
+  if (features[key] === 0 && NO_TEXT[key]) return NO_TEXT[key];
+  return REASON_TEXT[key] ?? key;
+}
+
 // Largest contributions first; ignores anything under 0.05 on the logit scale
 export function reasons(r: RiskScore, n = 4): RiskReasonItem[] {
   return Object.keys(r.contributions)
-    .map((key) => {
-      const value = r.contributions[key];
-      let text = REASON_TEXT[key] ?? key;
-      if (key === 'female') {
-        text = r.features.female ? 'Female sex' : 'Male sex';
-      } else if (r.features[key] === 0 && NO_TEXT[key]) {
-        text = NO_TEXT[key];
-      }
-      return { key, text, value };
-    })
+    .map((key) => ({
+      key,
+      text: reasonText(key, r.features),
+      value: r.contributions[key],
+    }))
     .filter((o) => Math.abs(o.value) >= 0.05)
     .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
     .slice(0, n);
