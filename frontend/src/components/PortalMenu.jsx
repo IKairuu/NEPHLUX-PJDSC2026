@@ -3,11 +3,12 @@ import clsx from 'clsx'
 import Icon from './Icon'
 import { ROLES, ROLE_KEYS } from '../data/content'
 import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 export default function PortalMenu() {
   const open = useUIStore((s) => s.portalOpen)
   const setOpen = useUIStore((s) => s.setPortalOpen)
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   const root = useRef(null), btn = useRef(null), menu = useRef(null)
 
   useEffect(() => {

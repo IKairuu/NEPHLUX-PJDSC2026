@@ -2,11 +2,12 @@ import { useEffect, useRef } from 'react'
 import Icon, { BrandMark } from './Icon'
 import { ROLES, ROLE_KEYS, SECTIONS } from '../data/content'
 import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 export default function MobileNav() {
   const open = useUIStore((s) => s.mobileNavOpen)
   const setOpen = useUIStore((s) => s.setMobileNavOpen)
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   const closeBtn = useRef(null)
 
   useEffect(() => {

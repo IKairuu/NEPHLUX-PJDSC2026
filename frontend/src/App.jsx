@@ -1,44 +1,28 @@
+import { useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation } from 'react-router'
 import Sprite from './components/Sprite'
-import Nav from './components/Nav'
-import MobileNav from './components/MobileNav'
 import NephraFab from './components/NephraFab'
 import Toast from './components/Toast'
-import Hero from './sections/Hero'
-import Features from './sections/Features'
-import HowItWorks from './sections/HowItWorks'
-import Evidence from './sections/Evidence'
-import Nephra from './sections/Nephra'
-import Impact from './sections/Impact'
-import Benefits from './sections/Benefits'
-import Access from './sections/Access'
-import Faq from './sections/Faq'
-import DemoCta from './sections/DemoCta'
-import Footer from './sections/Footer'
-import { useReveal } from './hooks/useReveal'
+import Landing from './pages/Landing'
+import SignIn from './pages/SignIn'
+
+// new page starts at the top; in-page #anchors keep their own scrolling
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
 
 export default function App() {
-  useReveal()
   return (
     <>
-      <a className="skip" href="#main-landing">Skip to content</a>
       <Sprite />
-      <Nav />
-      <MobileNav />
-      <main id="main-landing">
-        <Hero />
-        <div className="zone">
-          <Features />
-          <HowItWorks />
-          <Evidence />
-          <Nephra />
-          <Impact />
-          <Benefits />
-          <Access />
-          <Faq />
-          <DemoCta />
-          <Footer />
-        </div>
-      </main>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login/resident" element={<SignIn />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <NephraFab />
       <Toast />
     </>

@@ -1,11 +1,11 @@
 import Icon from '../components/Icon'
-import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 const CAN = ['Explains the steps, the words and where to go next', 'Shows the difference between screening and diagnosis', 'Helps staff find features on their screens']
 const CANT = ['Never diagnoses or reads your own lab results', 'Never changes a risk score or approves a referral', 'Sends medical questions to a YAKAP doctor']
 
 export default function Nephra() {
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   return (
     <section className="sec" id="nephra" aria-labelledby="nT">
       <div className="wrap neph">

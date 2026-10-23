@@ -7,6 +7,6 @@ export default function Icon({ name, className = 'ic', style }) {
   )
 }
 
-export function BrandMark() {
-  return <span className="mark"><svg><use href="#i-logo" /></svg></span>
+export function BrandMark({ className }) {
+  return <span className={className ? `mark ${className}` : 'mark'}><svg><use href="#i-logo" /></svg></span>
 }

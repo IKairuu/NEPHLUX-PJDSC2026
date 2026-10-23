@@ -1,9 +1,9 @@
 import Icon from '../components/Icon'
 import { DEMO_STEPS } from '../data/content'
-import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 export default function DemoCta() {
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   return (
     <section className="sec" id="demo-cta" aria-labelledby="dT">
       <div className="wrap">

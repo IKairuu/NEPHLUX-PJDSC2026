@@ -340,6 +340,22 @@
   .foot .wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
   @media (max-width: 760px) { .foot .wrap { grid-template-columns: 1fr; } }
 
+  .note { border-radius: 14px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; }
+
+  /* ---------- auth ---------- */
+  .auth { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; background: var(--bg); }
+  .auth-art { background: var(--brand); color: #fff; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+  .auth-art::after { content: ""; position: absolute; right: -30%; bottom: -30%; width: 90%; aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 0 0 70px rgba(255, 255, 255, .03), 0 0 0 140px rgba(255, 255, 255, .02); }
+  .auth-art h2 { font-size: clamp(28px, 3.2vw, 42px); letter-spacing: -.04em; line-height: 1.05; max-width: 420px; }
+  .auth-art p { color: rgba(255, 255, 255, .8); max-width: 420px; margin-top: 12px; }
+  .auth-form { padding: 48px clamp(20px, 5vw, 72px); display: flex; flex-direction: column; justify-content: center; max-width: 620px; width: 100%; margin: 0 auto; }
+  .auth-form h1 { font-size: clamp(28px, 3vw, 38px); letter-spacing: -.035em; }
+  .rolepick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 22px 0 6px; }
+  .rolepick button { border: 1px solid var(--line-2); background: var(--surface); border-radius: 14px; padding: 10px 6px; font-size: 12.5px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; line-height: 1.2; }
+  .rolepick button svg { width: 20px; height: 20px; }
+  .rolepick button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+  @media (max-width: 860px) { .auth { grid-template-columns: 1fr; } .auth-art { padding: 28px 20px; min-height: auto; } .auth-art .big { display: none; } .rolepick { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
   /* Nephra launcher */
   .nfab { position: fixed; right: 20px; bottom: 20px; z-index: 85; display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .12); background: var(--brand); color: #fff; box-shadow: 0 18px 40px -16px rgba(111, 0, 0, .8); font-weight: 500; font-size: 14px; }
   .nfab .orb { width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFD7DE, #E0505A 45%, #3A0530 80%); box-shadow: 0 0 18px rgba(255, 140, 160, .6); animation: breathe 5s ease-in-out infinite; }

@@ -5,9 +5,10 @@ import PortalMenu from './PortalMenu'
 import ThemeToggle from './ThemeToggle'
 import { SECTIONS } from '../data/content'
 import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 export default function Nav() {
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
   // the bar is light over the hero and turns dark once the hero has scrolled away

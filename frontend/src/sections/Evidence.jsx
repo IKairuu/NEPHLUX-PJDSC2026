@@ -2,10 +2,10 @@ import { PassChip } from '../components/Chip'
 import SectionHead from '../components/SectionHead'
 import { EV } from '../data/evidence'
 import { f3, pct } from '../lib/format'
-import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 export default function Evidence() {
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   const a = EV.test_auroc, m = EV.matched, P = EV.prevalence, pm = EV.pass_mark, gain = EV.extra_cases_step2
   const rows = [
     ['Step 2 AUROC lower bound above 0.70', pm['c1_auroc_ci_lower_gt_0.70']],

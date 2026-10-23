@@ -1,7 +1,7 @@
 import Icon from '../components/Icon'
 import { EV, CLINIC_COUNT } from '../data/evidence'
 import { f3 } from '../lib/format'
-import { useUIStore } from '../store/useUIStore'
+import { useGo } from '../hooks/useGo'
 
 const KIDNEY = 'M300 120c-92 0-150 78-150 178 0 108 62 182 150 182 54 0 78-30 78-74v-30c0-34-34-44-34-74s34-38 34-72v-36c0-44-24-74-78-74z'
 const URETER = 'M378 330c40 0 64 14 90 40s40 70 40 120'
@@ -51,7 +51,7 @@ function Kidney() {
 }
 
 export default function Hero() {
-  const navigate = useUIStore((s) => s.navigate)
+  const navigate = useGo()
   return (
     <section className="hero" id="top" aria-labelledby="heroTitle">
       <div className="wrap">
