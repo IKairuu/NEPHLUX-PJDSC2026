@@ -7,6 +7,7 @@ import { ROLES } from '../data/content'
 function pathFor(target) {
   if (target === 'home') return '/'
   if (target === 'resident') return '/resident/check'
+  if (target === 'account') return '/account'
   const [screen, role] = target.split(':')
   if (screen === 'login' && ROLES[role]) return `/login/${role}`
   if (screen === 'register') return `/register/${role || 'doctor'}`

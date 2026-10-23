@@ -70,15 +70,16 @@ function RequestForm({ role }) {
   const message = useRegisterStore((s) => s.message)
   const setField = useRegisterStore((s) => s.setField)
   const submit = useRegisterStore((s) => s.submit)
+  const busy = useRegisterStore((s) => s.busy)
   const form = useRef(null)
 
   useEffect(() => { form.current?.querySelector('input')?.focus({ preventScroll: true }) }, [])
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault()
-    if (submit()) return
+    if (await submit()) return
     const first = useRegisterStore.getState().errors[0]
-    form.current?.querySelector(`[name="${first}"]`)?.focus()
+    if (first) form.current?.querySelector(`[name="${first}"]`)?.focus()
   }
 
   // shared props for every field: value from the store, red outline while it fails
@@ -119,7 +120,7 @@ function RequestForm({ role }) {
             <label className="f" htmlFor="rg-place">Unit</label>
             <select {...field('place')}>
               <option value="">Choose your unit</option>
-              {CHO_UNITS.map((u) => <option key={u}>{u}</option>)}
+              {CHO_UNITS.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
             </select>
           </>
         )}
@@ -128,10 +129,10 @@ function RequestForm({ role }) {
         <input {...field('contact')} type="email" autoComplete="off" placeholder="name@clinic.example" />
 
         <p className={clsx('text-[13px] min-h-5 mt-2', message ? 'text-high' : 'muted')} role="status">{message}</p>
-        <button className="btn primary w-full" type="submit">Send access request</button>
+        <button className="btn primary w-full" type="submit" disabled={busy}>{busy ? 'Sending…' : 'Send access request'}</button>
       </form>
 
-      <p className="muted text-[12.5px] mt-3">Demo only: nothing you type here is saved or sent.</p>
+      <p className="muted text-[12.5px] mt-3">Once the City Health Office approves you, your sign-in details are emailed to this address.</p>
       <p className="muted text-[13px] mt-2">
         Already invited? <Link to={`/login/${role}`} onClick={(e) => { e.preventDefault(); go(`login:${role}`) }} className="underline">Sign in</Link>
       </p>
@@ -146,9 +147,9 @@ function Sent({ role }) {
   return (
     <div className="text-center my-auto py-5">
       <div className="w-[140px] mx-auto"><NephraFace emotion="celebrating" size={140} title="Nephra, celebrating" /></div>
-      <h1 ref={heading} tabIndex={-1} className="mt-2 outline-none">Request ready</h1>
+      <h1 ref={heading} tabIndex={-1} className="mt-2 outline-none">Request received</h1>
       <p className="muted mt-2.5">
-        In a real rollout the City Health Office would now check {CHECKED_BY[role]}, then send an invite. In this demo nothing was saved or sent.
+        You'll be contacted by email once approved. The City Health Office first checks {CHECKED_BY[role]}.
       </p>
       <div className="grid gap-2 mt-5">
         <button className="btn primary" onClick={() => go(`login:${role}`)}>Go to sign in</button>

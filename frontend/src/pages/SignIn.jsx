@@ -85,7 +85,6 @@ function ResidentBody({ startRef }) {
 function StaffForm({ role, firstRef }) {
   const go = useGo()
   const setSession = useUIStore((s) => s.setSession)
-  const notify = useUIStore((s) => s.notify)
   const r = ROLES[role]
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -107,7 +106,7 @@ function StaffForm({ role, firstRef }) {
       }
       setSession({ role, name: res.user.fullName, token: res.accessToken, expiresAt: Date.now() + toMs(res.expiresIn), user: res.user })
       // TODO: open the role's home screen once the staff screens are ported
-      notify(`Signed in as ${res.user.fullName}. The ${r.short || r.name} screens are not ported to React yet.`)
+      go('account')
     } catch (e) {
       setBad({ email: e.status === 401, password: e.status === 401 })
       setMsg(e.message)

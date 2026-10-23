@@ -47,6 +47,13 @@ export const api = {
   auth: {
     login: (email, password) => request('/auth/login', { method: 'POST', body: { email, password } }),
     me: () => request('/auth/me', { auth: true }),
+    updateMe: (body) => request('/auth/me', { method: 'PATCH', body, auth: true }),
+    // a wrong current password comes back as 400, so it does not sign the staff member out
+    changePassword: (currentPassword, newPassword) => request('/auth/me/password', { method: 'PATCH', body: { currentPassword, newPassword }, auth: true }),
+  },
+  // public: a doctor or CHO staff member asks for an account; the City Health Office approves it and emails them
+  accessRequests: {
+    create: (body) => request('/access-requests', { method: 'POST', body }),
   },
   barangays: {
     // boundaries add ~85 KB, so ask for them only for the map

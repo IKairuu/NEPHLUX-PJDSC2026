@@ -25,4 +25,37 @@ export class AuthRepository {
       },
     });
   }
+
+  updatePassword(id: string, passwordHash: string): Promise<StaffUser> {
+    return this.prisma.staffUser.update({
+      where: { id },
+      data: {
+        passwordHash,
+        auditLogs: {
+          create: {
+            action: 'CHANGE_PASSWORD',
+            entity: 'staff_users',
+            entityId: id,
+          },
+        },
+      },
+    });
+  }
+
+  updateProfile(id: string, data: { fullName?: string }): Promise<StaffUser> {
+    return this.prisma.staffUser.update({
+      where: { id },
+      data: {
+        ...data,
+        auditLogs: {
+          create: {
+            action: 'UPDATE_PROFILE',
+            entity: 'staff_users',
+            entityId: id,
+            details: { fields: Object.keys(data) },
+          },
+        },
+      },
+    });
+  }
 }

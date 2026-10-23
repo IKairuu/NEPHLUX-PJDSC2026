@@ -62,4 +62,9 @@ const CLINIC_ROWS = [
 
 export const CLINICS = CLINIC_ROWS.map(([name, isPublic], i) => ({ id: 'Y' + (i + 1), name, public: isPublic }))
 
-export const CHO_UNITS = ['Nursing Division', 'Health Education and Promotion Unit (HEPU)', 'Other CHO unit']
+// values are the backend's ChoUnit enum
+export const CHO_UNITS = [
+  { value: 'NCD', label: 'Non-communicable disease (NCD) cluster' },
+  { value: 'EPIDEMIOLOGY', label: 'Epidemiology and surveillance' },
+  { value: 'PLANNING', label: 'Planning' },
+]

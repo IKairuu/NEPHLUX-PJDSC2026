@@ -42,6 +42,12 @@ enum StaffStatus {
   DISABLED
 }
 
+enum AccessRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum Sex {
   F
   M
@@ -83,9 +89,10 @@ model Barangay {
   centreLon Float? @map("centre_lon")
   boundary  Json? // GeoJSON polygon
 
-  clinics  Clinic[]
-  patients Patient[]
-  staff    StaffUser[]
+  clinics        Clinic[]
+  patients       Patient[]
+  staff          StaffUser[]
+  accessRequests AccessRequest[]
 
   @@map("barangays")
 }
@@ -104,9 +111,10 @@ model Clinic {
   locationPrecision   LocationPrecision @default(APPROXIMATE) @map("location_precision")
   accreditationExpiry DateTime?         @map("accreditation_expiry") @db.Date
 
-  barangay    Barangay     @relation(fields: [barangayId], references: [id])
-  doctors     StaffUser[]
-  assessments Assessment[]
+  barangay       Barangay        @relation(fields: [barangayId], references: [id])
+  doctors        StaffUser[]
+  assessments    Assessment[]
+  accessRequests AccessRequest[]
 
   @@index([barangayId])
   @@map("clinics")
@@ -137,6 +145,29 @@ model StaffUser {
 
   @@index([role])
   @@map("staff_users")
+}
+
+// Sign-up requests from the public register page. Accounts are created by hand
+// after review, so nothing here can log in.
+model AccessRequest {
+  id           String              @id @default(uuid()) @db.Uuid
+  fullName     String              @map("full_name")
+  email        String
+  role         StaffRole
+  prcLicenseNo String?             @map("prc_license_no") // doctors only
+  clinicId     String?             @map("clinic_id") @db.Uuid // doctors only
+  barangayId   Int?                @map("barangay_id") // BHW only
+  choUnit      ChoUnit?            @map("cho_unit") // CHO only
+  status       AccessRequestStatus @default(PENDING)
+  createdAt    DateTime            @default(now()) @map("created_at")
+  reviewedAt   DateTime?           @map("reviewed_at")
+
+  clinic   Clinic?   @relation(fields: [clinicId], references: [id])
+  barangay Barangay? @relation(fields: [barangayId], references: [id])
+
+  @@index([email])
+  @@index([status])
+  @@map("access_requests")
 }
 
 // ---------------------------------------------------------------- PATIENTS AND ASSESSMENTS
