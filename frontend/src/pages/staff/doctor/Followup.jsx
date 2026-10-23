@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import Icon from '../../../components/Icon'
 import { allPages, api } from '../../../lib/api'
 import { useApi } from '../../../hooks/useApi'
+import { useUIStore } from '../../../store/useUIStore'
 import { Head, Kpi, Live, RiskChip, Status, UacrCell, daysSince, isoDate } from '../ui'
 import ReferralSlip from './ReferralSlip'
 
@@ -49,7 +50,7 @@ export default function Followup() {
         {TABS.map(([k, label], i) => <Kpi key={k} lead={i === 0} label={label} value={G?.[k].length} text={i === 0 ? 'need a reminder' : undefined} />)}
       </div>
       <div className="note text-[13px] mt-3.5">
-        <Icon name="info" /> Results are shown when the uACR value is on record. Recording a result from this screen needs an API endpoint for uACR results, which the backend does not have yet.
+        <Icon name="info" /> When the lab sends a uACR result, record it here. Results are not edited: a wrong entry is followed by a repeat result.
       </div>
       <div className="ftabs" role="tablist" aria-label="Follow-up lists">
         {TABS.map(([k, label, , icon]) => (
@@ -74,6 +75,7 @@ export default function Followup() {
                 <span className="act">
                   <Link className="btn sm" to={`/doctor/assessments/${r.assessmentId}`}>Open</Link>
                   {r.decision !== 'NO_REFERRAL' && <button className="btn sm" onClick={() => setSlipId(r.id)}><Icon name="print" />Slip</button>}
+                  {r.decision !== 'NO_REFERRAL' && <RecordUacr assessmentId={r.assessmentId} repeat={r.latestUacrMgG != null} onDone={q.reload} />}
                 </span>
               </div>
             )
@@ -83,5 +85,44 @@ export default function Followup() {
       </Status>
       {slipId && <ReferralSlip id={slipId} onClose={() => setSlipId(null)} />}
     </>
+  )
+}
+
+// POST /uacr-results for one referral. The API answers with a message (for example, suspected albuminuria).
+function RecordUacr({ assessmentId, repeat, onDone }) {
+  const notify = useUIStore((s) => s.notify)
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [bad, setBad] = useState(false)
+
+  if (!open) return <button className="btn sm" onClick={() => setOpen(true)}><Icon name="flask" />{repeat ? 'Repeat uACR' : 'Record uACR'}</button>
+
+  async function save(e) {
+    e.preventDefault()
+    const v = Number(value)
+    if (value.trim() === '' || !Number.isFinite(v) || v < 0 || v > 5000) return setBad(true)
+    setBusy(true)
+    try {
+      const res = await api.uacrResults.create({ assessmentId, valueMgG: Math.round(v * 10) / 10 })
+      notify(res.message)
+      setOpen(false)
+      setValue('')
+      onDone()
+    } catch (err) {
+      notify(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form className="rec" onSubmit={save} noValidate>
+      <label className="sr-only" htmlFor={`u-${assessmentId}`}>uACR result in mg/g</label>
+      <input id={`u-${assessmentId}`} className={clsx('in', bad && 'bad')} inputMode="decimal" placeholder="mg/g" autoFocus value={value}
+        onChange={(e) => { setValue(e.target.value); setBad(false) }} />
+      <button className="btn sm primary" type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
+      <button className="btn sm" type="button" onClick={() => setOpen(false)} aria-label="Cancel"><Icon name="x" /></button>
+    </form>
   )
 }

@@ -154,4 +154,19 @@
 @media print {
   body > *:not(#printArea) { display: none !important; }
   #printArea { display: block !important; color: #000; font: 13px/1.5 Georgia, serif; }
+
+  /* CHO: funnel, outreach list, weekly sparkline, filter selects (from the prototype) */
+  .fun { display: grid; gap: 10px; margin-top: 8px; }
+  .fun .fr { display: grid; grid-template-columns: 150px 1fr 56px; gap: 10px; align-items: center; font-size: 13px; }
+  .fun .fb { height: 22px; border-radius: 7px; background: var(--surface-2); overflow: hidden; }
+  .fun .fb i { display: block; height: 100%; border-radius: 7px; }
+  .prio { display: grid; gap: 8px; }
+  .prio .pr { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); font-size: 13.5px; }
+  .prio .pr .n { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+  .prio small { display: block; color: var(--muted); font-size: 12px; }
+  .kpi .spark { display: block; margin-top: 10px; opacity: .9; }
+  @media (max-width: 560px) { .kpi .spark { display: none; } }
+  .filters select { width: auto; min-height: 38px; padding: 6px 34px 6px 12px; font-size: 13.5px; border-radius: 999px; }
+  .rec { display: flex; gap: 6px; align-items: center; }
+  .rec .in { width: 96px; min-height: 34px; padding: 4px 10px; font-size: 13px; }
 }

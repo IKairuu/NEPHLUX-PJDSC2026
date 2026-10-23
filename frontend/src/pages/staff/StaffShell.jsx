@@ -50,7 +50,10 @@ export default function StaffShell({ role, title, children }) {
         </div>
         <nav className="snav" aria-label={`${r.name} screens`}>{nav.map(link)}</nav>
         <div className="spacer" />
-        <div className="snav"><button onClick={signOut}><Icon name="out" className="" />Sign out</button></div>
+        <div className="snav">
+          <Link to="/account"><Icon name="res" className="" />Account</Link>
+          <button onClick={signOut}><Icon name="out" className="" />Sign out</button>
+        </div>
         <div className="sfoot">Signed in through the NEPHLUX API · screening support, not a diagnosis</div>
       </aside>
       <div className="min-w-0">

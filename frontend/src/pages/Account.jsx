@@ -44,7 +44,7 @@ function AccountPage({ session }) {
       <div className="auth-top">
         <Link className="brand" to="/"><BrandMark />NEPHLUX</Link>
         <span className="flex gap-2">
-          <button className="btn sm glass" onClick={() => go('home')}><Icon name="back" />Home</button>
+          <Link className="btn sm glass" to={`/${session.role}`}><Icon name="back" />Dashboard</Link>
           <ThemeToggle className="glass" />
         </span>
       </div>
@@ -55,7 +55,7 @@ function AccountPage({ session }) {
           <p>{session.user?.email}<br />{r?.name || session.user?.role}</p>
           <div className="neph">
             <span className="mini"><NephraFace emotion="happy" size={54} /></span>
-            <span>The {r?.short || r?.name || 'staff'} screens are not ported to React yet. You can change your password here.</span>
+            <span>Change your password here, then head back to the {r?.short || r?.name || 'staff'} dashboard.</span>
           </div>
           <p className="fine">If the City Health Office emailed you a password, change it the first time you sign in.</p>
         </aside>

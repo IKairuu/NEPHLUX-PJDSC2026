@@ -80,6 +80,18 @@ export const api = {
     slip: (id) => request(`/referrals/${id}/slip`, { auth: true }),
     markSlipPrinted: (id) => request(`/referrals/${id}/slip-printed`, { method: 'POST', auth: true }),
   },
+  // DOCTOR (or BHW): results back from the lab; never edited, a wrong entry is followed by a repeat
+  uacrResults: {
+    create: (body) => request('/uacr-results', { method: 'POST', body, auth: true }),
+    list: (assessmentId) => request('/uacr-results', { query: { assessmentId }, auth: true }),
+  },
+  // CHO only: counts by barangay, small cells come back as "<5"
+  cityInsights: {
+    overview: ({ period, sector } = {}) => request('/city-insights/overview', { query: { period, sector }, auth: true }),
+    map: ({ period, sector } = {}) => request('/city-insights/map', { query: { period, sector }, auth: true }),
+    budget: (tests) => request('/city-insights/budget', { query: { tests }, auth: true }),
+    strategies: () => request('/city-insights/strategies', { auth: true }),
+  },
 }
 
 // Lists are paged at most 100 rows a page; the follow-up screen needs every referral, so walk the pages.
