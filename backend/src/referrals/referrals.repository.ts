@@ -43,7 +43,7 @@ export class ReferralsRepository {
     skip: number,
     take: number,
   ): Promise<[ReferralFull[], number]> {
-    return this.prisma.$transaction([
+    return Promise.all([
       this.prisma.referralDecision.findMany({
         where,
         include: REFERRAL_INCLUDE,

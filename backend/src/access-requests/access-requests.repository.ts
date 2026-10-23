@@ -86,7 +86,7 @@ export class AccessRequestsRepository {
     take: number,
   ): Promise<{ rows: AccessRequestRow[]; total: number }> {
     const where: Prisma.AccessRequestWhereInput = status ? { status } : {};
-    const [rows, total] = await this.prisma.$transaction([
+    const [rows, total] = await Promise.all([
       this.prisma.accessRequest.findMany({
         where,
         include: ACCESS_REQUEST_INCLUDE,

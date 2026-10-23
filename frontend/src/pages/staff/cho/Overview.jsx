@@ -10,8 +10,10 @@ const PUBLIC = CLINICS.filter((c) => c.public)
 
 // counts from /city-insights are numbers, or "<5" when a cell is too small to show
 const sup = (n) => (n == null ? '—' : typeof n === 'number' ? n.toLocaleString() : n)
-const num = (n) => (typeof n === 'number' ? n : 0)
-const per1k = (v) => (v == null ? '—' : v.toFixed(1))
+// for drawing only (bars, sparkline): a suppressed "<5" draws as 1 so it is visible but never read as 0
+const num = (n) => (typeof n === 'number' ? n : n ? 1 : 0)
+// a handful of screenings in a city of 728k is a tiny rate; keep it from rounding to 0.0
+const per1k = (v) => (v == null ? '—' : v === 0 ? '0' : v < 0.01 ? '<0.01' : v < 1 ? v.toFixed(2) : v.toFixed(1))
 
 // Outlines and centres from GET /barangays, joined with the counts from GET /city-insights/overview,
 // plus the nearest public YAKAP clinic for the map popup
@@ -31,11 +33,12 @@ function join(geo, stats) {
 
 // map colour. raw is null when the API withheld a rate (small counts); it colours as 0 and reads as "—"
 const METRICS = {
-  reach: { label: 'Screened per 1,000', raw: (b) => b.stats?.screenedPer1000 ?? null, f: (v) => v.toFixed(1) },
+  reach: { label: 'Screened per 1,000', raw: (b) => b.stats?.screenedPer1000 ?? null, f: (v) => (v < 0.01 ? '0.01' : v < 1 ? v.toFixed(2) : v.toFixed(1)) },
   done: { label: 'Referrals completed', raw: (b) => b.stats?.completedShare ?? null, f: (v) => pct(v) },
   pop: { label: 'Population 2020', raw: (b) => b.pop2020, f: (v) => Math.round(v).toLocaleString() },
 }
-for (const m of Object.values(METRICS)) m.v = (b) => m.raw(b) ?? 0
+// a barangay whose counts are suppressed still had screenings, so it takes the lightest colour, not none
+for (const m of Object.values(METRICS)) m.v = (b) => m.raw(b) ?? (typeof b.stats?.screened === 'string' ? 1e-9 : 0)
 
 function breaks(vals) { // 4 quantile classes over positive values; class 0 = none
   const nz = vals.filter((v) => v > 0).sort((a, b) => a - b)

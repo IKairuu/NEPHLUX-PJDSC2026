@@ -87,7 +87,7 @@ export class AssessmentsRepository {
     skip: number,
     take: number,
   ): Promise<[AssessmentFull[], number]> {
-    return this.prisma.$transaction([
+    return Promise.all([
       this.prisma.assessment.findMany({
         where,
         include: ASSESSMENT_INCLUDE,
