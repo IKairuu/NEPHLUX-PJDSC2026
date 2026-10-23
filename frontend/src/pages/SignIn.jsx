@@ -5,17 +5,18 @@ import Icon, { BrandMark } from '../components/Icon'
 import NephraFace from '../components/NephraFace'
 import ThemeToggle from '../components/ThemeToggle'
 import { Aurora } from '../sections/Hero'
-import { DEMO_PASSWORD, ROLES, ROLE_KEYS } from '../data/content'
+import { ROLES, ROLE_KEYS } from '../data/content'
 import { useGo } from '../hooks/useGo'
 import { api } from '../lib/api'
 import { useUIStore } from '../store/useUIStore'
 
-// backend StaffRole -> the frontend's role keys (ADMIN may sign in through any staff card)
-const ROLE_OF = { DOCTOR: 'doctor', BHW: 'bhw', CHO: 'cho' }
+// backend StaffRole -> the frontend's role keys (ADMIN may sign in through any staff card).
+// The backend still has BHW accounts, but v6 has no BHW screens, so they are turned away below.
+const ROLE_OF = { DOCTOR: 'doctor', CHO: 'cho' }
 const EXPIRES_MS = { h: 3600e3, m: 60e3, s: 1e3, d: 864e5 }
 const toMs = (s) => { const m = /^(\d+)([smhd])$/.exec(s || ''); return m ? +m[1] * EXPIRES_MS[m[2]] : 8 * 3600e3 }
 
-const SUBTITLE = { resident: 'No account needed', doctor: 'YAKAP clinic', bhw: 'One barangay', cho: 'City-wide counts' }
+const SUBTITLE = { resident: 'No account needed', doctor: 'YAKAP clinic', cho: 'City-wide counts' }
 
 // /login/:role. key={role} gives each role a fresh form, as switching roles did in the prototype.
 export default function SignInRoute() {
@@ -43,18 +44,18 @@ function SignIn({ role }) {
       <div className="auth-card glass">
         <aside className="auth-side">
           <div className="eyebrow text-white/70">Access Portal</div>
-          <h2>One pathway, four roles.</h2>
-          <p>Residents check without an account. YAKAP doctors, barangay health workers and the City Health Office sign in to their own screens.</p>
+          <h2>One pathway, three roles.</h2>
+          <p>Residents check without an account. YAKAP doctors and the City Health Office sign in to their own screens.</p>
           <div className="neph">
             <span className="mini"><NephraFace emotion="happy" size={54} /></span>
-            <span>New here? Try a demo account, or watch the guided demo from the home page.</span>
+            <span>New here? Watch the guided demo from the home page.</span>
           </div>
           <p className="fine">Prototype sign-in for demonstration only. It is not secure and is not connected to PhilHealth or to real patient records.</p>
         </aside>
         <div className="auth-form">
           <div className="eyebrow">Sign in</div>
           <h1>{ROLES[role].name}</h1>
-          <div className="rolepick" role="group" aria-label="Role">
+          <div className="rolepick three" role="group" aria-label="Role">
             {ROLE_KEYS.map((k) => (
               <button key={k} type="button" aria-pressed={k === role} onClick={() => go(`login:${k}`)}>
                 <span className="ri"><Icon name={ROLES[k].icon} className="" /></span>
@@ -100,7 +101,9 @@ function StaffForm({ role, firstRef }) {
       const theirRole = ROLE_OF[res.user.role]
       if (res.user.role !== 'ADMIN' && theirRole !== role) {
         setBad({ email: true, password: false })
-        return setMsg(`This is a ${ROLES[theirRole]?.name || res.user.role} account. Choose that role above to sign in.`)
+        return setMsg(theirRole
+          ? `This is a ${ROLES[theirRole].name} account. Choose that role above to sign in.`
+          : 'This account has no screen in this version. Sign in with a YAKAP doctor or City Health Office account.')
       }
       setSession({ role, name: res.user.fullName, token: res.accessToken, expiresAt: Date.now() + toMs(res.expiresIn), user: res.user })
       // TODO: open the role's home screen once the staff screens are ported
@@ -121,15 +124,6 @@ function StaffForm({ role, firstRef }) {
     signIn(em, password)
   }
 
-  function fillDemo() {
-    setEmail(r.email)
-    setPassword(DEMO_PASSWORD)
-    setBad({ email: false, password: false })
-    setMsg('')
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    setTimeout(() => signIn(r.email, DEMO_PASSWORD), reduce ? 0 : 250) // a beat so the filled-in fields are seen
-  }
-
   return (
     <>
       <form noValidate onSubmit={onSubmit}>
@@ -142,15 +136,8 @@ function StaffForm({ role, firstRef }) {
         <p className="muted text-[13px] min-h-5 mt-2" role="status">{msg}</p>
         <button className="btn primary w-full" type="submit" disabled={busy}>{busy ? 'Signing in…' : `Sign in as ${r.name}`}</button>
       </form>
-      <div className="demo-acc">
-        <div>
-          <div className="font-semibold text-sm">Demo account</div>
-          <div className="mono">{r.email} · {DEMO_PASSWORD}</div>
-        </div>
-        <button className="btn sm" type="button" onClick={fillDemo} disabled={busy}>Use demo account</button>
-      </div>
       <p className="muted text-[13px] mt-4">
-        New staff? <a href="#" onClick={(e) => { e.preventDefault(); go('register') }}>Request access</a>
+        New staff? <a href="#" className="underline" onClick={(e) => { e.preventDefault(); go('register') }}>Request access</a>
       </p>
     </>
   )

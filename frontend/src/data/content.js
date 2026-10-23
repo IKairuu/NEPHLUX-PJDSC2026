@@ -7,11 +7,11 @@ export const SECTIONS = [
   ['#faq', 'FAQ'],
 ]
 
-export const ROLE_KEYS = ['resident', 'doctor', 'bhw', 'cho']
+// v6: no barangay health worker role; the YAKAP clinic that orders a uACR test follows it up
+export const ROLE_KEYS = ['resident', 'doctor', 'cho']
 export const ROLES = {
   resident: { name: 'Resident', icon: 'res', blurb: 'Two-minute awareness check. No account, nothing saved.' },
-  doctor: { name: 'YAKAP Doctor', icon: 'doc', blurb: 'Enter YAKAP labs, review the risk, decide the referral.', email: 'doctor@demo.nephlux', demoName: 'Dr. A. Reyes' },
-  bhw: { name: 'Barangay Health Worker', short: 'BHW', icon: 'bhw', blurb: 'Follow up missed referrals and rechecks.', email: 'bhw@demo.nephlux', demoName: 'L. Dalisay' },
+  doctor: { name: 'YAKAP Doctor', icon: 'doc', blurb: 'Enter YAKAP labs, decide the referral, follow it up.', email: 'doctor@demo.nephlux', demoName: 'Dr. A. Reyes' },
   cho: { name: 'City Health Office', short: 'CHO', icon: 'cho', blurb: 'Screening reach by barangay, test budget, outreach.', email: 'cho@demo.nephlux', demoName: 'CHO analyst' },
 }
 
@@ -22,18 +22,15 @@ export const DEMO_PASSWORD = 'demo-2026'
 export const BENEFITS = [
   { icon: 'res', role: 'Residents', q: 'Should I get my kidneys checked?', scene: 'res',
     items: ['Two minutes on a phone, in English, Bisaya or Tagalog', 'No account, no name, nothing saved or sent', 'A clinic code so the form is not filled in twice', 'The nearest YAKAP clinic, and which ones are free'] },
-  { icon: 'doc', role: 'YAKAP Doctors', q: 'Who needs the urine test first?', scene: 'doc',
-    items: ['Uses labs YAKAP already pays for', 'Shows the top reasons, not a black box', 'Flags missing values instead of guessing', 'The doctor keeps the decision, and overrides need a reason'] },
-  { icon: 'bhw', role: 'Health workers', q: 'Who do I visit this week?', scene: 'bhw',
-    items: ['One list per barangay, sorted by days overdue', 'Missed referrals, overrides and rechecks apart', 'Record the uACR result at the door', 'Cannot change any risk score'] },
+  { icon: 'doc', role: 'YAKAP clinics', q: 'Who needs the urine test first?', scene: 'doc',
+    items: ['Uses labs YAKAP already pays for', 'Shows the top reasons, not a black box', 'Flags missing values instead of guessing', 'The doctor keeps the decision, and overrides need a reason', 'One follow-up list until every uACR result is in'] },
   { icon: 'cho', role: 'City Health Office', q: 'Where should the tests go?', scene: 'cho',
     items: ['Screening reach per 1,000 residents in 80 barangays', 'Referral completion, with cells under 5 hidden', 'A budget slider grounded in the test-set results', 'Outreach list: large population, low reach'] },
 ]
 
 export const ACCESS = [
   ['Residents', 'Free to use', 'No account and no data kept. Works on a basic phone browser. The YAKAP check-up itself is free at public YAKAP clinics; private YAKAP clinics may charge up to ₱900 a year.'],
-  ['YAKAP doctors', 'Part of the consult', 'Runs beside the YAKAP lab results the clinic already has. A real rollout needs clinic accounts and record keeping under the Data Privacy Act.'],
-  ['Barangay health workers', 'Existing routines', 'Fits the home visits BHWs already make, under the CHO Nursing Division. Needs a phone and the referral list for their barangay.'],
+  ['YAKAP clinics', 'Part of the consult', 'Runs beside the YAKAP lab results the clinic already has, and the clinic follows up its own referrals. A real rollout needs clinic accounts and record keeping under the Data Privacy Act.'],
   ['City Health Office', 'Budget for uACR', 'uACR is not in the YAKAP benefit. The city decides how many tests it can fund; the slider shows who to test first. Price assumed ₱600 (₱300–1,200).'],
 ]
 
@@ -63,6 +60,6 @@ export const DEMO_STEPS = [
   'The risk estimate appears',
   'She reviews the reasons and the data',
   'She approves and prints the slip',
-  'The BHW sees a missed referral',
+  'The clinic sees a missed referral',
   'The city sees counts, not names',
 ]

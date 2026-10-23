@@ -6,13 +6,13 @@ import NephraFace from '../components/NephraFace'
 import ThemeToggle from '../components/ThemeToggle'
 import { Aurora } from '../sections/Hero'
 import { ROLES } from '../data/content'
-import { BARANGAYS, CHO_UNITS, CLINICS } from '../data/city'
+import { CHO_UNITS, CLINICS } from '../data/city'
 import { useGo } from '../hooks/useGo'
 import { REGISTER_ROLES, useRegisterStore } from '../store/useRegisterStore'
 import './register.css'
 
-const SUBTITLE = { doctor: 'YAKAP clinic', bhw: 'One barangay', cho: 'City-wide counts' }
-const CHECKED_BY = { doctor: 'the PRC licence and the YAKAP clinic', bhw: "with the barangay's nurse", cho: 'with the unit head' }
+const SUBTITLE = { doctor: 'YAKAP clinic', cho: 'City-wide counts' }
+const CHECKED_BY = { doctor: 'the PRC licence and the YAKAP clinic', cho: 'with the unit head' }
 
 // /register/:role. Residents never register, so any other role falls back to the doctor form, as in the prototype.
 export default function RegisterRoute() {
@@ -44,13 +44,13 @@ function Register({ role }) {
         <aside className="auth-side">
           <div className="eyebrow text-white/70">Request staff access</div>
           <h2>Staff accounts are invited, not open.</h2>
-          <p>Residents never need an account. Doctors, health workers and City Health Office staff ask for access; the City Health Office checks who they are, then sends an invite.</p>
+          <p>Residents never need an account. YAKAP doctors and City Health Office staff ask for access; the City Health Office checks who they are, then sends an invite.</p>
           <ol className="steps3" aria-label="How access works">
             <li><b>1</b> Request</li><li><b>2</b> CHO checks</li><li><b>3</b> Invite by email</li>
           </ol>
           <div className="neph">
             <span className="mini"><NephraFace emotion="explaining" size={54} /></span>
-            <span>Doctors are checked against their PRC licence and YAKAP clinic. Health workers are confirmed by their barangay's nurse.</span>
+            <span>Doctors are checked against their PRC licence and YAKAP clinic. CHO staff are confirmed by their unit head.</span>
           </div>
           <p className="fine">Prototype sign-in for demonstration only. It is not secure and is not connected to PhilHealth or to real patient records.</p>
         </aside>
@@ -86,13 +86,11 @@ function RequestForm({ role }) {
     id: 'rg-' + k, name: k, value: fields[k], onChange: (e) => setField(k, e.target.value),
     className: clsx('in', errors.includes(k) && 'bad'), 'aria-invalid': errors.includes(k) || undefined,
   })
-  const bhw = role === 'bhw'
-
   return (
     <>
       <div className="eyebrow">Request access · staff</div>
       <h1>{ROLES[role].name} access</h1>
-      <div className="rolepick three" role="group" aria-label="Role">
+      <div className="rolepick" role="group" aria-label="Role">
         {REGISTER_ROLES.map((k) => (
           <button key={k} type="button" aria-pressed={k === role} onClick={() => navigate(`/register/${k}`, { replace: true })}>
             <span className="ri"><Icon name={ROLES[k].icon} className="" /></span>
@@ -116,15 +114,6 @@ function RequestForm({ role }) {
             </select>
           </>
         )}
-        {bhw && (
-          <>
-            <label className="f" htmlFor="rg-place">Barangay you cover</label>
-            <select {...field('place')}>
-              <option value="">Choose barangay</option>
-              {BARANGAYS.map((b) => <option key={b}>{b}</option>)}
-            </select>
-          </>
-        )}
         {role === 'cho' && (
           <>
             <label className="f" htmlFor="rg-place">Unit</label>
@@ -135,17 +124,16 @@ function RequestForm({ role }) {
           </>
         )}
 
-        <label className="f" htmlFor="rg-contact">{bhw ? 'Mobile number or email' : 'Work email'}</label>
-        <input {...field('contact')} type={bhw ? 'text' : 'email'} autoComplete="off"
-          placeholder={bhw ? '09xx xxx xxxx or name@email.com' : 'name@clinic.example'} />
+        <label className="f" htmlFor="rg-contact">Work email</label>
+        <input {...field('contact')} type="email" autoComplete="off" placeholder="name@clinic.example" />
 
         <p className={clsx('text-[13px] min-h-5 mt-2', message ? 'text-high' : 'muted')} role="status">{message}</p>
         <button className="btn primary w-full" type="submit">Send access request</button>
       </form>
 
-      <p className="muted text-[12.5px] mt-3">Demo only: nothing you type here is saved or sent. To look around now, use the demo account instead.</p>
+      <p className="muted text-[12.5px] mt-3">Demo only: nothing you type here is saved or sent.</p>
       <p className="muted text-[13px] mt-2">
-        Already invited? <Link to={`/login/${role}`} onClick={(e) => { e.preventDefault(); go(`login:${role}`) }}>Sign in</Link>
+        Already invited? <Link to={`/login/${role}`} onClick={(e) => { e.preventDefault(); go(`login:${role}`) }} className="underline">Sign in</Link>
       </p>
     </>
   )
@@ -163,7 +151,7 @@ function Sent({ role }) {
         In a real rollout the City Health Office would now check {CHECKED_BY[role]}, then send an invite. In this demo nothing was saved or sent.
       </p>
       <div className="grid gap-2 mt-5">
-        <button className="btn primary" onClick={() => go(`login:${role}`)}>Use the demo account instead</button>
+        <button className="btn primary" onClick={() => go(`login:${role}`)}>Go to sign in</button>
         <button className="btn" onClick={() => go('home')}>Back to home</button>
       </div>
     </div>
