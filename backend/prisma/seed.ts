@@ -1,0 +1,146 @@
+// Seeds reference data: the 80 Cagayan de Oro barangays, the 42 YAKAP clinics and
+// risk model v1.0.0 (step 1 = resident questions, step 2 = YAKAP labs).
+// Safe to run more than once: every row is upserted on its natural key.
+// Run with: npx prisma db seed
+import 'dotenv/config';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import {
+  ClinicSector,
+  LocationPrecision,
+  Prisma,
+  PrismaClient,
+} from '../src/generated/prisma/client';
+
+interface BarangaySeed {
+  psgcCode: string;
+  name: string;
+  codeIndex: number;
+  pop2020: number;
+  pop2024: number | null;
+  centreLat: number | null;
+  centreLon: number | null;
+  boundary: Prisma.InputJsonValue | null;
+}
+
+interface ClinicSeed {
+  yakapRef: string;
+  name: string;
+  shortName: string | null;
+  sector: ClinicSector;
+  phone: string | null;
+  address: string | null;
+  barangay: string;
+  lat: number;
+  lon: number;
+  locationPrecision: LocationPrecision;
+  accreditationExpiry: string | null;
+}
+
+interface ModelStepSeed {
+  intercept: number;
+  coef: Record<string, number>;
+  mean: Record<string, number>;
+  auroc: { auroc: number; ci: [number, number] };
+}
+
+interface ModelSeed {
+  version: string;
+  thresholds: Record<string, number>;
+  steps: Record<'1' | '2', ModelStepSeed>;
+  evidence: Prisma.InputJsonValue;
+}
+
+function load<T>(file: string): T {
+  return JSON.parse(
+    readFileSync(join(__dirname, 'seed-data', file), 'utf8'),
+  ) as T;
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+});
+
+async function seedBarangays(): Promise<Map<string, number>> {
+  const rows = load<BarangaySeed[]>('barangays.json');
+  for (const b of rows) {
+    const data = {
+      ...b,
+      boundary: b.boundary ?? Prisma.DbNull,
+    };
+    await prisma.barangay.upsert({
+      where: { psgcCode: b.psgcCode },
+      create: data,
+      update: data,
+    });
+  }
+  const all = await prisma.barangay.findMany({
+    select: { id: true, name: true },
+  });
+  console.log(`barangays: ${rows.length}`);
+  return new Map(all.map((b) => [b.name, b.id]));
+}
+
+async function seedClinics(barangayIds: Map<string, number>): Promise<void> {
+  const rows = load<ClinicSeed[]>('clinics.json');
+  for (const c of rows) {
+    const barangayId = barangayIds.get(c.barangay);
+    if (!barangayId) throw new Error(`Unknown barangay "${c.barangay}"`);
+    const { barangay: _name, accreditationExpiry, ...rest } = c;
+    const data = {
+      ...rest,
+      barangayId,
+      accreditationExpiry: accreditationExpiry
+        ? new Date(accreditationExpiry)
+        : null,
+    };
+    await prisma.clinic.upsert({
+      where: { yakapRef: c.yakapRef },
+      create: data,
+      update: data,
+    });
+  }
+  console.log(`clinics: ${rows.length}`);
+}
+
+async function seedModel(): Promise<void> {
+  const m = load<ModelSeed>('model-v1.json');
+  for (const step of [1, 2] as const) {
+    const s = m.steps[step];
+    const data = {
+      coefficients: { intercept: s.intercept, coef: s.coef },
+      means: s.mean,
+      thresholds: m.thresholds,
+      testAuroc: s.auroc.auroc,
+      ciLow: s.auroc.ci[0],
+      ciHigh: s.auroc.ci[1],
+      evidence: m.evidence,
+      isActive: true,
+    };
+    // one active model per step
+    await prisma.modelVersion.updateMany({
+      where: { step, NOT: { version: m.version } },
+      data: { isActive: false },
+    });
+    await prisma.modelVersion.upsert({
+      where: { version_step: { version: m.version, step } },
+      create: { version: m.version, step, ...data },
+      update: data,
+    });
+  }
+  console.log(`model_versions: ${m.version} (steps 1 and 2)`);
+}
+
+async function main(): Promise<void> {
+  const barangayIds = await seedBarangays();
+  await seedClinics(barangayIds);
+  await seedModel();
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  })
+  .finally(() => void prisma.$disconnect());
