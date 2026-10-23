@@ -1,19 +1,9 @@
 import { useRef } from 'react'
 import Icon from '../components/Icon'
-import { Chip, LevelChip } from '../components/Chip'
+import { LevelChip } from '../components/Chip'
 import SectionHead from '../components/SectionHead'
 import { BENEFITS } from '../data/content'
 import { useUIStore } from '../store/useUIStore'
-
-function Visit({ who, title, sub, chip }) {
-  return (
-    <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center">
-      <span className="w-9 h-9 rounded-xl bg-surface-2 grid place-items-center text-xs">{who}</span>
-      <span><b>{title}</b><br /><small className="muted">{sub}</small></span>
-      {chip}
-    </div>
-  )
-}
 
 // small SAMPLE previews of each role's screen
 const SCENES = {
@@ -36,13 +26,6 @@ const SCENES = {
           <div className="rbar"><i className="up" style={{ width: `${w}%` }} /></div>
         </div>
       ))}
-    </>
-  ),
-  bhw: (
-    <>
-      <div className="eyebrow">Bonbon · SAMPLE</div>
-      <Visit who="R.S." title="Approved 15 d ago" sub="No uACR result yet" chip={<Chip kind="missed" icon="clock">Missed</Chip>} />
-      <Visit who="M.T." title="Moderate risk" sub="Labs again within 12 months" chip={<Chip kind="follow" icon="dia">Recheck</Chip>} />
     </>
   ),
   cho: (

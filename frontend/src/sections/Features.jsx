@@ -49,17 +49,17 @@ const FEATURES = [
         </div>
       </div>
     ) },
-  { role: 'bhw', n: '03', title: 'Who to visit this week.', cta: 'Open as a BHW', target: 'login:bhw',
-    text: 'The barangay health worker sees only her barangay: referrals with no uACR result after 14 days, overrides to confirm, and rechecks.',
-    ticks: ['Sorted by days overdue', 'Record the uACR result at the door', 'Sees the risk level, never changes it'],
+  { role: 'doctor', who: 'YAKAP clinic · Follow-up', n: '03', title: 'The clinic that orders the test follows it up.', cta: 'Open as a doctor', target: 'login:doctor',
+    text: "Every referral stays on the clinic's own Follow-up list until the uACR result is recorded. No extra role, no hand-off.",
+    ticks: ['Missed: no result 14 days after referral, oldest first', 'Overrides and moderate-risk rechecks kept apart', 'Record the uACR result when it comes back'],
     pic: (
       <div className="fpic glass" aria-hidden="true">
-        <div className="lab">Bonbon · missed referrals · SAMPLE</div>
+        <div className="lab">Clinic follow-up · missed referrals · SAMPLE</div>
         <div className="mt-1.5">
-          {[['V.Y.', 46], ['O.K.', 43], ['R.S.', 15]].map(([who, d]) => (
+          {[['V.Y.', 46, 'Puerto'], ['O.K.', 43, 'Bugo'], ['R.S.', 15, 'Bonbon']].map(([who, d, brgy]) => (
             <div className="visit" key={who}>
               <span className="av">{who}</span>
-              <span><b>Approved {d} days ago</b><small>No uACR result yet</small></span>
+              <span><b>Referred {d} days ago</b><small>{brgy} · no uACR result yet</small></span>
               <Chip kind="missed" icon="clock">{d} d</Chip>
             </div>
           ))}
@@ -89,16 +89,16 @@ export default function Features() {
     <section className="sec" id="features" aria-labelledby="fT">
       <div className="wrap">
         <SectionHead eyebrow="What NEPHLUX does" id="fT"
-          title={<>One pathway, four people, <span className="serif">each with one job.</span></>}
+          title={<>One pathway, three roles, <span className="serif">each with one job.</span></>}
           text="Everything here works in the prototype. Patient records are SAMPLE data; the 42 YAKAP clinics and 80 barangays are real public data." />
         <div className="rows">
           {FEATURES.map((f) => {
             const r = ROLES[f.role]
             return (
-              <article className="frow reveal" key={f.role}>
+              <article className="frow reveal" key={f.n}>
                 <div className="ftext">
                   <span className="num">{f.n}</span>
-                  <span className="who"><Icon name={r.icon} />{r.name}</span>
+                  <span className="who"><Icon name={r.icon} />{f.who || r.name}</span>
                   <h3>{f.title}</h3>
                   <p>{f.text}</p>
                   <ul className="ticks">{f.ticks.map((t) => <li key={t}><Icon name="check" />{t}</li>)}</ul>

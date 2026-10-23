@@ -6,7 +6,7 @@ import SectionHead from '../components/SectionHead'
 import { EV } from '../data/evidence'
 
 const STEPS = [
-  { title: 'Check', who: 'Resident', icon: 'res', where: 'At home or with a BHW · 2 minutes',
+  { title: 'Check', who: 'Resident', icon: 'res', where: 'At home, on a phone · 2 minutes',
     what: 'Answers 10 questions: age, sex, weight, height, diabetes, high blood pressure, BP medicine, smoking, family history, barangay.',
     adds: 'A higher or lower chance, the reasons, and a clinic code. The code is the answers written short.',
     never: 'Diagnoses, or saves or sends the answers.',
@@ -43,9 +43,9 @@ const STEPS = [
         <div className="muted text-[12.5px]">uACR is the one test here that YAKAP does not cover.</div>
       </>
     ) },
-  { title: 'Follow-up & city view', who: 'BHW · CHO', icon: 'cho', where: 'Day 14 onward',
-    what: 'The BHW visits people with no uACR result after 14 days. The CHO plans tests and outreach by barangay.',
-    adds: 'One list per barangay, and city counts per 1,000 residents with small cells hidden.',
+  { title: 'Follow-up & city view', who: 'YAKAP clinic · CHO', icon: 'cho', where: 'Day 14 onward',
+    what: 'The clinic that made the referral reminds anyone with no uACR result after 14 days. The CHO plans tests and outreach by barangay.',
+    adds: 'One follow-up list per clinic, and city counts per 1,000 residents with small cells hidden.',
     never: 'Shows names to the city, or claims how common kidney disease is.',
     preview: (
       <>
@@ -130,8 +130,8 @@ export default function HowItWorks() {
           <div className="pv" aria-hidden="true">{s.preview}</div>
           <div className="meta">
             <span><b className="text-text">Step {step + 1} of {STEPS.length} · {s.who}</b> · {s.where}</span>
-            <span>
-              <button className="btn xs" disabled={step === 0} onClick={() => setStep(step - 1)}><Icon name="back" />Back</button>{' '}
+            <span className="flex items-center gap-1.5">
+              <button className="btn xs" disabled={step === 0} onClick={() => setStep(step - 1)}><Icon name="back" />Back</button>
               <button className="btn xs" disabled={step === last} onClick={() => setStep(step + 1)}>Next<Icon name="arrow" /></button>
             </span>
           </div>

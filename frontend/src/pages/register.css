@@ -1,8 +1,6 @@
 /* Register page only. Everything else (.auth, .auth-card, .rolepick, .in) is shared with sign-in in index.css. */
 @layer components {
-  .rolepick.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .steps3 { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; flex-wrap: wrap; }
   .steps3 li { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .1); color: rgba(255, 255, 255, .8); border: 1px solid rgba(255, 255, 255, .15); }
   .steps3 b { color: #fff; }
-  @media (max-width: 520px) { .rolepick.three { grid-template-columns: 1fr 1fr; } }
 }

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import Icon, { BrandMark } from './Icon'
 import PortalMenu from './PortalMenu'
-import ThemeToggle from './ThemeToggle'
 import { SECTIONS } from '../data/content'
 import { useUIStore } from '../store/useUIStore'
 import { useGo } from '../hooks/useGo'
@@ -29,13 +28,14 @@ export default function Nav() {
       <nav className="nav-links" aria-label="Sections">
         {SECTIONS.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
       </nav>
-      <button className="btn ghost hide-sm" onClick={() => navigate('demo')}>Guided demo</button>
-      <PortalMenu />
-      <button className="btn ghost hide-sm" onClick={() => navigate('register')}>Register</button>
-      <ThemeToggle />
-      <button className="icon-btn burger" aria-label="Open menu" aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen(true)}>
-        <Icon name="menu" className="" />
-      </button>
+      <div className="nav-end">
+        <button className="btn ghost hide-sm" onClick={() => navigate('demo')}>Guided demo</button>
+        <PortalMenu />
+        <button className="btn ghost hide-sm" onClick={() => navigate('register')}>Register</button>
+        <button className="icon-btn burger" aria-label="Open menu" aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen(true)}>
+          <Icon name="menu" className="" />
+        </button>
+      </div>
     </header>
   )
 }
