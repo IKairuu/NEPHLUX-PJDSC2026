@@ -1,0 +1,365 @@
+{
+  "version": "1.0.0",
+  "trained_on": "NHANES 2011-2016 (adults 20+, no known kidney disease)",
+  "tested_on": "NHANES 2017-March 2020 pre-pandemic",
+  "outcome": "urine albumin-creatinine ratio >= 30 mg/g",
+  "thresholds": {
+    "step2_high": 0.07615138191352633,
+    "step2_moderate": 0.04483603093241831,
+    "step1_go_to_yakap": 0.051578488602901235
+  },
+  "steps": {
+    "1": {
+      "intercept": -4.12701181442615,
+      "coef": {
+        "age": 0.017011185076042008,
+        "age_sq": 0.058269647320651055,
+        "female": 0.11418626160832876,
+        "dm_hx": 0.9986469448515136,
+        "htn_hx": 0.6676510419841889,
+        "bp_med": -0.2017493540436854,
+        "smoker": 0.3543113611673084,
+        "fam_dm": 0.06393934803156888,
+        "cvd_hx": 0.538145124091243,
+        "bmi": 0.010970566132735376
+      },
+      "mean": {
+        "age": 48.7260838150289,
+        "age_sq": 3.0268793352601158,
+        "female": 0.5060693641618497,
+        "dm_hx": 0.12247109826589596,
+        "htn_hx": 0.3511560693641618,
+        "bp_med": 0.25852601156069366,
+        "smoker": 0.19841040462427745,
+        "fam_dm": 0.40715317919075145,
+        "cvd_hx": 0.08648843930635838,
+        "bmi": 29.115317919075146
+      },
+      "auroc": {
+        "auroc": 0.7179328379339902,
+        "ci": [
+          0.6985790806588822,
+          0.7365605748450225
+        ]
+      }
+    },
+    "2": {
+      "intercept": -9.806199487565053,
+      "coef": {
+        "age": 0.011159049038523874,
+        "age_sq": 0.048641205229667986,
+        "female": -0.028492643726415384,
+        "dm_hx": 0.4394004850541598,
+        "htn_hx": 0.3133106117675931,
+        "bp_med": -0.0541417511952633,
+        "smoker": 0.31064973183369626,
+        "fam_dm": 0.00453747890011263,
+        "cvd_hx": 0.5712527234796541,
+        "bmi": 0.0005291454043353944,
+        "sbp": 0.0230178210336882,
+        "dbp": 0.010596570075195644,
+        "hba1c": 0.2865751874034832,
+        "egfr": 0.021486804136659557,
+        "egfr_low": 0.3885952358079925,
+        "tchol": 0.0013896484172051845,
+        "hdl": -0.00033761655818342434,
+        "hgb": -0.12377357865028998,
+        "wbc": 0.051610154537852726,
+        "plt": -0.000047400789130391004
+      },
+      "mean": {
+        "age": 48.7260838150289,
+        "age_sq": 3.0268793352601158,
+        "female": 0.5060693641618497,
+        "dm_hx": 0.12247109826589596,
+        "htn_hx": 0.3511560693641618,
+        "bp_med": 0.25852601156069366,
+        "smoker": 0.19841040462427745,
+        "fam_dm": 0.40715317919075145,
+        "cvd_hx": 0.08648843930635838,
+        "bmi": 29.115317919075146,
+        "sbp": 123.76775048169556,
+        "dbp": 70.6596098265896,
+        "hba1c": 5.773475433526012,
+        "egfr": 95.75482528443736,
+        "egfr_low": 0.6200374904084771,
+        "tchol": 191.0373554913295,
+        "hdl": 53.07247109826589,
+        "hgb": 13.995462427745666,
+        "wbc": 7.169465317919075,
+        "plt": 236.9567196531792
+      },
+      "auroc": {
+        "auroc": 0.7565961978450257,
+        "ci": [
+          0.7371748387399245,
+          0.7747959287257039
+        ]
+      }
+    }
+  },
+  "evidence": {
+    "n": {
+      "train": 13840,
+      "test": 6655,
+      "train_cases": 1545,
+      "test_cases": 797,
+      "test_asian": 789,
+      "test_asian_cases": 88
+    },
+    "prevalence": {
+      "train_unweighted": 0.11163294797687862,
+      "train_weighted": 0.0898321976423557,
+      "test_unweighted": 0.1197595792637115,
+      "test_weighted": 0.09239559893917103,
+      "test_asian_unweighted": 0.11153358681875793,
+      "test_asian_weighted": 0.10201835013914451,
+      "test_dm_or_htn_unweighted": 0.18680981595092025,
+      "test_neither_unweighted": 0.055375552282768775,
+      "test_neither_weighted": 0.046907240872966834,
+      "test_cases_without_dm_or_htn_share": 0.23588456712672523,
+      "test_cases_with_egfr_ge60_share": 0.848180677540778,
+      "test_cases_with_egfr_ge60_share_weighted": 0.8922781849801604
+    },
+    "test_auroc": {
+      "step1_lr": {
+        "auroc": 0.7179328379339902,
+        "ci": [
+          0.6985790806588822,
+          0.7365605748450225
+        ]
+      },
+      "step2_lr": {
+        "auroc": 0.7565961978450257,
+        "ci": [
+          0.7371748387399245,
+          0.7747959287257039
+        ]
+      },
+      "step2_gbt": {
+        "auroc": 0.7658331023687753,
+        "ci": [
+          0.7475968982387885,
+          0.7837944765974854
+        ]
+      },
+      "rule_dm_or_htn": {
+        "auroc": 0.6557859513290922,
+        "ci": [
+          0.6389653042347285,
+          0.6705554873054225
+        ]
+      },
+      "egfr_lt60_only": {
+        "auroc": 0.5528642532405362,
+        "ci": [
+          0.5403634691550944,
+          0.5650392554227678
+        ]
+      },
+      "age_only": {
+        "auroc": 0.64393136518688,
+        "ci": [
+          0.6230480353114097,
+          0.6629123198783895
+        ]
+      },
+      "step2_minus_step1": {
+        "diff": 0.03866335991103553,
+        "ci": [
+          0.025521185456560794,
+          0.051626706528092564
+        ]
+      }
+    },
+    "calibration_slope_step2": 0.9454104714042191,
+    "matched": {
+      "rule": {
+        "referred": 3260,
+        "cases_found": 609,
+        "sensitivity": 0.7641154328732748,
+        "ppv": 0.18680981595092025
+      },
+      "step1_lr": {
+        "referred": 3260,
+        "cases_found": 608,
+        "sensitivity": 0.7628607277289837,
+        "ppv": 0.18650306748466258
+      },
+      "step2_lr": {
+        "referred": 3260,
+        "cases_found": 641,
+        "sensitivity": 0.8042659974905897,
+        "ppv": 0.19662576687116565
+      }
+    },
+    "extra_cases_step2": [
+      32,
+      12,
+      51.02499999999998
+    ],
+    "pathway_per100": {
+      "cases": 11.97595792637115,
+      "step1_sent_to_yakap": 79.72952667167543,
+      "step1_cases_among_sent": 11.164537941397446,
+      "step2_referred_uacr": 46.8069120961683,
+      "step2_cases_found": 9.451540195341849
+    },
+    "asian": {
+      "n": 789,
+      "cases": 88,
+      "step1_lr": {
+        "auroc": 0.7188270003890544,
+        "ci": [
+          0.664392941628933,
+          0.7738757328609803
+        ]
+      },
+      "step2_lr": {
+        "auroc": 0.7411976397354428,
+        "ci": [
+          0.6890134817553272,
+          0.7920729950586719
+        ]
+      },
+      "rule_dm_or_htn": {
+        "auroc": 0.6632570354039684,
+        "ci": [
+          0.6138183033194735,
+          0.712414259046695
+        ]
+      }
+    },
+    "ablation": [
+      {
+        "model": "questionnaire only",
+        "auroc": 0.7179328379339902,
+        "ci": [
+          0.6977520490613008,
+          0.7349120328758144
+        ],
+        "cases_found_at_rule_share": 608
+      },
+      {
+        "model": "+ measured BP",
+        "auroc": 0.7265862981400463,
+        "ci": [
+          0.7066342484602608,
+          0.7458646182515853
+        ],
+        "cases_found_at_rule_share": 613
+      },
+      {
+        "model": "+ HbA1c",
+        "auroc": 0.7415954246313742,
+        "ci": [
+          0.7195151955458371,
+          0.7617711639282331
+        ],
+        "cases_found_at_rule_share": 625
+      },
+      {
+        "model": "+ creatinine (eGFR)",
+        "auroc": 0.7504406889440729,
+        "ci": [
+          0.729437454970865,
+          0.769904353572636
+        ],
+        "cases_found_at_rule_share": 634
+      },
+      {
+        "model": "+ lipid profile",
+        "auroc": 0.7502125802075297,
+        "ci": [
+          0.7293134590825999,
+          0.7695302193296429
+        ],
+        "cases_found_at_rule_share": 635
+      },
+      {
+        "model": "+ CBC (full step 2)",
+        "auroc": 0.7565961978450257,
+        "ci": [
+          0.7362352686742415,
+          0.7746192882926516
+        ],
+        "cases_found_at_rule_share": 641
+      }
+    ],
+    "cost_per_1000": {
+      "test_everyone_uacr": {
+        "uacr_tests": 1000,
+        "cases_found": 119.7595792637115,
+        "cases_missed": 0,
+        "cost_base": 600000,
+        "cost_per_case_base": 5010.037641154328,
+        "cost_low": 300000,
+        "cost_per_case_low": 2505.018820577164,
+        "cost_high": 1200000,
+        "cost_per_case_high": 10020.075282308657,
+        "breakeven_dialysis_years_base": 0.6056935190793459
+      },
+      "rule_dm_or_htn": {
+        "uacr_tests": 489.8572501878287,
+        "cases_found": 91.51014274981218,
+        "cases_missed": 28.249436513899326,
+        "cost_base": 293914.3501126972,
+        "cost_per_case_base": 3211.822660098522,
+        "cost_low": 146957.1750563486,
+        "cost_per_case_low": 1605.911330049261,
+        "cost_high": 587828.7002253945,
+        "cost_per_case_high": 6423.645320197044,
+        "breakeven_dialysis_years_base": 0.29670336171279754
+      },
+      "step2_model_same_referrals": {
+        "uacr_tests": 489.8572501878287,
+        "cases_found": 96.31855747558227,
+        "cases_missed": 23.441021788129234,
+        "cost_base": 293914.3501126972,
+        "cost_per_case_base": 3051.482059282371,
+        "cost_low": 146957.1750563486,
+        "cost_per_case_low": 1525.7410296411856,
+        "cost_high": 587828.7002253945,
+        "cost_per_case_high": 6102.964118564742,
+        "breakeven_dialysis_years_base": 0.29670336171279754
+      },
+      "two_step_pathway_fixed_thresholds": {
+        "uacr_tests": 468.069120961683,
+        "cases_found": 94.51540195341848,
+        "cases_missed": 25.244177310293026,
+        "cost_base": 280841.4725770098,
+        "cost_per_case_base": 2971.383147853737,
+        "cost_low": 140420.7362885049,
+        "cost_per_case_low": 1485.6915739268684,
+        "cost_high": 561682.9451540196,
+        "cost_per_case_high": 5942.766295707474,
+        "breakeven_dialysis_years_base": 0.2835064330476578
+      }
+    },
+    "hd_per_year": 990600,
+    "pass_mark": {
+      "c1_auroc_ci_lower_gt_0.70": true,
+      "c2_more_cases_than_rule_at_same_referrals": true,
+      "c3_calibration_slope_0.8_1.2": true,
+      "step1_auroc_ci_lower_gt_0.70": false,
+      "step1_more_cases_than_rule": false,
+      "step2_overall_pass": true
+    },
+    "composite_outcome_step1": {
+      "auroc": 0.7624076797314367,
+      "ci": [
+        0.7459707789777571,
+        0.7774439786041164
+      ],
+      "prevalence_test": 0.16033057851239668,
+      "merwacs_reported_internal": [
+        0.68,
+        0.7
+      ],
+      "merwacs_reported_external_knhanes": [
+        0.71,
+        0.73
+      ]
+    }
+  }
+}
