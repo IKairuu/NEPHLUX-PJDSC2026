@@ -14,7 +14,10 @@ export default function Nav() {
   // the bar is light over the hero and turns dark once the hero has scrolled away
   const [dark, setDark] = useState(false)
   useEffect(() => {
-    const onScroll = () => setDark(window.scrollY > window.innerHeight * 0.82)
+    const onScroll = () => {
+      const hero = document.getElementById('top')
+      setDark(window.scrollY > Math.max(200, (hero ? hero.offsetHeight : window.innerHeight) - 90))
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)

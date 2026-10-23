@@ -1,6 +1,7 @@
 import Nav from '../components/Nav'
 import MobileNav from '../components/MobileNav'
 import Hero from '../sections/Hero'
+import StatBar from '../sections/StatBar'
 import Features from '../sections/Features'
 import HowItWorks from '../sections/HowItWorks'
 import Evidence from '../sections/Evidence'
@@ -23,6 +24,7 @@ export default function Landing() {
       <main id="main-landing">
         <Hero />
         <div className="zone">
+          <StatBar />
           <Features />
           <HowItWorks />
           <Evidence />

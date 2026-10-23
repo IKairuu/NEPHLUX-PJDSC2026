@@ -20,7 +20,7 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login/resident" element={<SignIn />} />
+        <Route path="/login/:role" element={<SignIn />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <NephraFab />

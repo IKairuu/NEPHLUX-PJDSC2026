@@ -6,12 +6,12 @@ export function useReveal() {
     const els = Array.from(document.querySelectorAll('.reveal'))
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     if (!('IntersectionObserver' in window) || reduce) {
-      els.forEach((e) => e.classList.add('in'))
+      els.forEach((e) => e.classList.add('shown'))
       return
     }
     const io = new IntersectionObserver((entries) => {
       entries.forEach((x) => {
-        if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target) }
+        if (x.isIntersecting) { x.target.classList.add('shown'); io.unobserve(x.target) }
       })
     }, { rootMargin: '0px 0px -8% 0px' })
     els.forEach((e) => io.observe(e))

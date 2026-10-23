@@ -7,8 +7,8 @@ export default function Impact() {
     <section className="sec" id="impact" aria-labelledby="iT">
       <div className="wrap">
         <SectionHead eyebrow="Impact" id="iT"
-          title={<>What we <span className="serif">measured</span>, and what we hope for.</>}
-          text="Research findings on the left. Potential that still needs to be tested on the right." />
+          title={<>What we measured, <span className="serif">and what we hope for.</span></>}
+          text="Research findings on the left. Potential that still has to be tested on the right." />
         <div className="impact reveal">
           <div className="col">
             <div className="eyebrow">Measured · U.S. NHANES test set</div>

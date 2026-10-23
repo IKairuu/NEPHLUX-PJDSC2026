@@ -1,8 +1,10 @@
-export default function SectionHead({ eyebrow, id, title, text }) {
+export default function SectionHead({ eyebrow, id, title, text, children }) {
   return (
-    <div className="sh reveal">
-      <div><div className="eyebrow">{eyebrow}</div><h2 id={id}>{title}</h2></div>
+    <header className="sh reveal">
+      <div className="eyebrow">{eyebrow}</div>
+      <h2 id={id}>{title}</h2>
       {text && <p>{text}</p>}
-    </div>
+      {children}
+    </header>
   )
 }

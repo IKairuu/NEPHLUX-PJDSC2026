@@ -1,4 +1,4 @@
-import { PassChip } from '../components/Chip'
+import Icon from '../components/Icon'
 import SectionHead from '../components/SectionHead'
 import { EV } from '../data/evidence'
 import { f3, pct } from '../lib/format'
@@ -14,7 +14,7 @@ export default function Evidence() {
     ['Step 1 (no labs) AUROC lower bound above 0.70', pm['step1_auroc_ci_lower_gt_0.70']],
     ['Step 1 finds more cases than the rule', pm.step1_more_cases_than_rule],
   ]
-  const stats = [
+  const trio = [
     ['Step 2 AUROC', f3(a.step2_lr.auroc)],
     ['Rule AUROC', f3(a.rule_dm_or_htn.auroc)],
     ['Calibration', EV.calibration_slope_step2.toFixed(2)],
@@ -23,27 +23,35 @@ export default function Evidence() {
     <section className="sec" id="evidence" aria-labelledby="eT">
       <div className="wrap">
         <SectionHead eyebrow="Evidence" id="eT"
-          title={<>A pass mark written <span className="serif">before</span> training.</>}
+          title={<>A pass mark written <span className="serif">before training.</span></>}
           text="Trained on NHANES 2011–2016, tested once on 2017–March 2020. Where it failed, it says so." />
         <div className="evi reveal">
-          <div className="card">
+          <div>
             <div className="eyebrow">Same number of tests, more cases</div>
-            <div className="bigstat mt-3.5">+{gain[0]}<small>cases</small></div>
-            <p className="muted mt-3">
+            <div className="bigstat mt-[18px]">+{gain[0]}<small>cases</small></div>
+            <p className="muted mt-[18px] max-w-[560px]">
               Referring the same {pct(m.rule.referred / EV.n.test)} of {EV.n.test.toLocaleString('en-US')} test adults as "everyone with diabetes or high blood pressure", the lab model found {m.step2_lr.cases_found} of {EV.n.test_cases} cases and the rule found {m.rule.cases_found} (95% CI of the gain +{Math.round(gain[1])} to +{Math.round(gain[2])}). A real but modest gain.
             </p>
-            <div className="grid grid-cols-3 gap-3.5 mt-[18px] max-[900px]:grid-cols-2 max-[520px]:grid-cols-1">
-              {stats.map(([label, v]) => <div key={label}><div className="eyebrow">{label}</div><div className="mono text-[22px]">{v}</div></div>)}
+            <div className="trio">
+              {trio.map(([label, v]) => <div key={label}><div className="eyebrow">{label}</div><span className="mono">{v}</span></div>)}
             </div>
-            <p className="muted text-[12.5px] mt-3.5">
+            <p className="muted text-[13px] mt-4">
               {pct(P.test_cases_with_egfr_ge60_share)} of cases had a normal-looking creatinine, and {pct(P.test_cases_without_dm_or_htn_share)} had neither diabetes nor high blood pressure.
             </p>
           </div>
-          <div className="card">
+          <div>
             <div className="eyebrow">Pass mark · written before training</div>
-            {rows.map(([label, pass]) => <div className="passrow" key={label}><span>{label}</span><PassChip pass={pass} /></div>)}
-            <p className="muted text-[12.5px] mt-3">Step 1, the questionnaire, did no better than the simple rule, so the resident check stays awareness only. Not yet validated in Filipino patients.</p>
-            <button className="btn sm mt-3.5" onClick={() => navigate('evidence')}>Open the full evidence</button>
+            <ul className="pm mt-2.5">
+              {rows.map(([label, pass]) => (
+                <li key={label} className={pass ? 'ok' : 'no'}>
+                  <span className="mk"><Icon name={pass ? 'check' : 'x'} className="" /></span>
+                  <span>{label}</span>
+                  <span className={`chip ${pass ? 'pass' : 'fail'}`}>{pass ? 'Pass' : 'Fail'}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="muted text-[13px] mt-3.5">Step 1, the questionnaire, did no better than the simple rule, so the resident check stays awareness only. Not yet validated in Filipino patients.</p>
+            <button className="btn sm mt-4" onClick={() => navigate('evidence')}>Open the full evidence</button>
           </div>
         </div>
       </div>

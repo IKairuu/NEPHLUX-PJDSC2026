@@ -1,18 +1,21 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { useUIStore } from '../store/useUIStore'
+import { ROLES } from '../data/content'
 
 // Screens that exist as routes. Anything else falls back to the store's "not ported yet" notice.
-const ROUTES = {
-  home: '/',
-  'login:resident': '/login/resident',
+function pathFor(target) {
+  if (target === 'home') return '/'
+  const [screen, role] = target.split(':')
+  if (screen === 'login' && ROLES[role]) return `/login/${role}`
+  return null
 }
 
 export function useGo() {
   const navigate = useNavigate()
   const pending = useUIStore((s) => s.navigate)
   return useCallback((target) => {
-    const path = ROUTES[target]
+    const path = pathFor(target)
     if (!path) return pending(target)
     useUIStore.setState({ portalOpen: false, mobileNavOpen: false })
     navigate(path)

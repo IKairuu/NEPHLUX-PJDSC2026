@@ -35,3 +35,5 @@ export const EV = {
 
 // PhilHealth YAKAP accredited providers in Cagayan de Oro, 30 Sep 2026
 export const CLINIC_COUNT = 42
+// PSGC 2023 barangays of Cagayan de Oro City
+export const BARANGAY_COUNT = 80
