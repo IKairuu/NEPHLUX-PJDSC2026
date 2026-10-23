@@ -4,7 +4,7 @@ import Icon from '../components/Icon'
 import { LevelChip } from '../components/Chip'
 import ClinicMap from '../components/ClinicMap'
 import ResidentShell from '../components/ResidentShell'
-import { LANGS, OFFLINE, QUESTIONS, YES_NO } from '../data/residentQuestions'
+import { LANGS, OFFLINE, QUESTIONS, UNAVAILABLE, YES_NO } from '../data/residentQuestions'
 import { bmiFrom } from '../lib/engine'
 import { BARANGAYS } from '../lib/city'
 import { api, barangayList } from '../lib/api'
@@ -51,6 +51,7 @@ export default function ResidentCheck() {
       setStatus('done')
     } catch (e) {
       if (id !== run.current) return
+      if (e.status >= 500) console.warn('Resident check API:', e.status, e.message) // the setup note, for whoever runs the server
       setError(e)
       setStatus('error')
     }
@@ -98,10 +99,12 @@ export default function ResidentCheck() {
               <div className="eyebrow">Your awareness result</div>
               {status === 'error'
                 ? <>
-                    {error?.status === 0
+                    {/* no connection, or a server-side fault (5xx, e.g. "no active model"): a plain message in the
+                        resident's language. Server setup notes are for staff, so they go to the console only. */}
+                    {error?.status === 0 || error?.status >= 500
                       ? <div role="alert" className="mt-2.5">
-                          <p className="text-high">{OFFLINE[lang]}</p>
-                          {lang !== 'en' && <div className="fil">{OFFLINE.en}</div>}
+                          <p className="text-high">{(error.status === 0 ? OFFLINE : UNAVAILABLE)[lang]}</p>
+                          {lang !== 'en' && <div className="fil">{(error.status === 0 ? OFFLINE : UNAVAILABLE).en}</div>}
                         </div>
                       : <p role="alert" className="mt-2.5 text-high">{error?.message}</p>}
                     <div className="wiz-nav">
