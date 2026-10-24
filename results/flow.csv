@@ -1,0 +1,8 @@
+step,train,test,removed_train,removed_test
+All NHANES participants in DEMO,29902,15560,,
+Age 20+,17048,9232,12854.0,6328.0
+Not pregnant,16856,9145,192.0,87.0
+Has urine albumin-creatinine ratio,15827,8234,1029.0,911.0
+Answered diabetes and BP questions,15827,8234,0.0,0.0
+No known kidney disease or dialysis (hidden-damage target),15274,7912,553.0,322.0
+"Complete BMI, BP and YAKAP labs (complete-case)",13840,6655,1434.0,1257.0

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import clsx from 'clsx'
 import Icon from '../../../components/Icon'
 import { api } from '../../../lib/api'
@@ -10,6 +10,8 @@ import { DecisionChip, Head, Live, RiskChip, Status, UacrCell, isoDate, levelKey
 import ReferralSlip from './ReferralSlip'
 
 const DIP_POSITIVE = ['1', '2', '3']
+// API dipstick grade -> strip reading shown to the doctor
+const DIP_SHORT = { NEG: 'neg', TRACE: 'trace', ONE_PLUS: '1', TWO_PLUS: '2', THREE_PLUS: '3' }
 const MIN_REASON = 5
 
 function Gauge({ p, level }) {
@@ -40,10 +42,10 @@ function Reasons({ reasons }) {
 // GET /assessments/:id, then the decision through POST /referrals
 export default function Review() {
   const { id } = useParams()
-  const dip = useLocation().state?.dip || ''
   const q = useApi(() => api.assessments.get(id), [id])
   const [slipId, setSlipId] = useState(null)
   const a = q.data
+  const dip = (a && DIP_SHORT[a.inputs.dipProtein]) || ''
 
   return (
     <>
@@ -88,12 +90,14 @@ function RiskCard({ a, dip }) {
         ? `Refer for a uACR test: the urinalysis shows protein ${dip}+ (clinical rule beside the model; the model's own suggestion is "${r.suggestionText}").`
         : r.suggestionText}</p>
       {dipPos && (
-        <div className="note risk mt-2.5"><Icon name="alert" /> <b>Urinalysis protein {dip}+.</b> Protein on the YAKAP dipstick means refer for uACR whatever the score. This rule sits beside the model; the model never sees urinalysis.</div>
+        <div className="note risk mt-2.5"><Icon name="alert" /> <b>Urinalysis protein {dip}+.</b> Protein on the YAKAP dipstick means refer for uACR whatever the score. This rule applies on top of the score.</div>
       )}
       {a.warnings.map((w) => <div key={w} className="note warn mt-2.5 text-[13px]"><Icon name="alert" /> {w}</div>)}
       <h3 className="mt-[18px] mb-1 text-[15px]">Top reasons</h3>
       <Reasons reasons={r.reasons} />
-      <p className="muted text-xs mt-2.5">Model {r.modelVersion}: Step 2, logistic regression on YAKAP labs, trained on U.S. NHANES 2011–2016 (no dipstick). Not yet validated in Filipino patients. Screening support, not a diagnosis.</p>
+      <p className="muted text-xs mt-2.5">{r.modelVersion.startsWith('2u')
+        ? `Step 2U (model ${r.modelVersion}): logistic regression on YAKAP labs and the urine dipstick, learned on Korean KNHANES 2021–2024 and tested once on 2019–2020.`
+        : `Step 2 (model ${r.modelVersion}): logistic regression on YAKAP labs, trained on U.S. NHANES 2011–2016.`} Not yet tested in Filipino patients. Screening support, not a diagnosis.</p>
     </div>
   )
 }
@@ -194,6 +198,8 @@ function Inputs({ a }) {
     ['Total cholesterol', `${Math.round(i.tcholMgDl)} mg/dL`], ['HDL', `${Math.round(i.hdlMgDl)} mg/dL`], ['Hemoglobin', `${i.hgbGDl.toFixed(1)} g/dL`],
     ['WBC', `${i.wbc} ×10⁹/L`], ['Platelets', `${i.platelets} ×10⁹/L`],
   ]
+  const strip = (g) => ({ NEG: 'Negative', TRACE: 'Trace', ONE_PLUS: '1+', TWO_PLUS: '2+', THREE_PLUS: '3+ or more' })[g] || 'Not done'
+  const dip = [['Protein', strip(i.dipProtein)], ['Blood', strip(i.dipBlood)], ['Glucose', strip(i.dipGlucose)], ['Specific gravity', i.urineSg ? i.urineSg.toFixed(3) : 'Not done']]
   const hist = [['Diabetes', i.dmHx], ['High BP', i.htnHx], ['BP medicine', i.bpMed], ['Heart attack / stroke / HF', i.cvdHx], ['Smoker', i.smoker], ['Family diabetes', i.famDm]]
   return (
     <div className="card">
@@ -202,6 +208,8 @@ function Inputs({ a }) {
       <div className="inputs">{rows.map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
       <div className="eyebrow mt-4">History</div>
       <div className="inputs">{hist.map(([k, v]) => <div key={k}><small>{k}</small><b>{yn(v)}</b></div>)}</div>
+      <div className="eyebrow mt-4">Urine dipstick</div>
+      <div className="inputs">{dip.map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
       <p className="muted text-xs mt-3">Labs are stored in conventional units (entered in {i.labUnits === 'SI' ? 'SI units' : 'mg/dL'}). Assessments cannot be edited; enter a new one if something was wrong.</p>
     </div>
   )
