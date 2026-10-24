@@ -1,0 +1,30 @@
+NEPHLUX
+Copyright (c) 2026 The NEPHLUX project authors. All rights reserved.
+
+This repository, including its source code, prototype, model coefficients,
+documentation, pitch deck and original graphics, is proprietary. No part of
+it may be copied, modified, distributed, published, sublicensed or used to
+create derivative works without prior written permission from the authors.
+
+Evaluation exception
+The organisers and judges of the Philippine Junior Data Science Challenge
+(PJDSC) 2026 may view, download and run this repository for the sole purpose
+of evaluating the entry. This permission ends when judging is complete and
+does not extend to any other use.
+
+Third-party material
+Third-party material keeps its own licence and is not covered by the
+reservation above:
+  - Leaflet 1.9.4, bundled in index.html (BSD 2-Clause licence).
+  - Philippine barangay boundaries from faeldon/philippines-json-maps (MIT).
+  - Barangay populations from the PSA 2020 Census via the psgc R package (MIT).
+  - Photographs in the pitch deck, used under the Unsplash License; see the
+    Photo Credits section of README.md.
+  - NHANES (CDC) and KNHANES (KDCA) data are used under their own terms;
+    KNHANES files are not redistributed.
+
+Disclaimer
+NEPHLUX is a research prototype for screening support. It is not a medical
+device, does not provide a diagnosis, has not been validated in Filipino
+patients, and is not affiliated with or endorsed by PhilHealth. The software
+is provided "as is", without warranty of any kind.
