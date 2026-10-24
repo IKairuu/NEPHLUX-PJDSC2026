@@ -1,0 +1,116 @@
+{
+ "version": "2u-1.0.0",
+ "name": "Step 2U: YAKAP labs, blood pressure, history and urine dipstick",
+ "outcome": "urine albumin-creatinine ratio >= 30 mg/g",
+ "trained_on": "KNHANES 2021-2024, Korean adults 20+ without known kidney disease (20,465 adults, 1,394 cases)",
+ "tested_on": "KNHANES 2019-2020, scored once (11,047 adults, 912 cases)",
+ "model_type": "L2-penalised logistic regression on standardised inputs; coefficients below are on the raw feature scale",
+ "intercept": 105.25461951969258,
+ "coef": {
+  "age": 0.03752706699948078,
+  "age_sq": -0.012111929163046122,
+  "female": -0.18227318994992198,
+  "dm_hx": 0.6464203100823288,
+  "htn_hx": 0.0927203474641401,
+  "bp_med": 0.16190299041795508,
+  "smoker": -0.055073747602739406,
+  "fam_dm": 0.0008134590601219246,
+  "cvd_hx": 0.23210569885485482,
+  "bmi": 0.022157614448877427,
+  "sbp": 0.02114413155029298,
+  "dbp": 0.016369556252696475,
+  "hba1c": 0.24023698966155674,
+  "egfr": 0.024821054307143313,
+  "egfr_low": 0.3821499114580426,
+  "tchol": 0.00043582937546147516,
+  "hdl": -0.007601134188192328,
+  "hgb": -0.13930377458408413,
+  "wbc": 0.08022126194987325,
+  "plt": -0.0003728867209378055,
+  "pro_trace": 2.958908340183331,
+  "pro_1": 5.248919764844307,
+  "pro_2plus": 8.692210225495028,
+  "bld_pos": 1.1809453265109102,
+  "glu_pos": 1.2748068303027495,
+  "usg": -115.86130004486172
+ },
+ "mean": {
+  "age": 53.83342291717567,
+  "age_sq": 2.9322809675054975,
+  "female": 0.5574395309064256,
+  "dm_hx": 0.1221597849987784,
+  "htn_hx": 0.27886635719521136,
+  "bp_med": 0.26073784510139264,
+  "smoker": 0.15040312729049596,
+  "fam_dm": 0.27329587099926705,
+  "cvd_hx": 0.04815837061006949,
+  "bmi": 24.117508167314217,
+  "sbp": 120.81382034367618,
+  "dbp": 74.80970763091456,
+  "hba1c": 5.6919325677986805,
+  "egfr": 98.2372230995154,
+  "egfr_low": 0.33078687579366406,
+  "tchol": 187.69381871487906,
+  "hdl": 56.28140728072319,
+  "hgb": 13.794493036892257,
+  "wbc": 6.098895675543611,
+  "plt": 256.0181285120938,
+  "pro_trace": 0.09484485707305156,
+  "pro_1": 0.020620571707793793,
+  "pro_2plus": 0.005961397507940386,
+  "bld_pos": 0.05565599804544344,
+  "glu_pos": 0.050183239677498166,
+  "usg": 1.0190097727828
+ },
+ "dipstick_coding": {
+  "note": "YAKAP strip reading to KNHANES code: negative 0, trace 1, 1+ 2, 2+ 3, 3+ or more 4. Only the protein code was checked against the KDCA guidebook; blood and glucose are assumed to use the same coding.",
+  "pro_trace": "protein = trace",
+  "pro_1": "protein = 1+",
+  "pro_2plus": "protein 2+ or more",
+  "bld_pos": "blood 1+ or more",
+  "glu_pos": "glucose 1+ or more",
+  "usg": "specific gravity, clipped to 1.000-1.040",
+  "missing": "Protein is required. A missing blood, glucose or specific gravity result is set to the learning-data mean and flagged."
+ },
+ "thresholds": {
+  "refer": 0.02548847146444033,
+  "source": "KNHANES 2021-2024 learning data only",
+  "note": "Refer at or above this risk. It refers the same share of the learning data as 'diabetes, high BP or dipstick protein 1+'. There is no separate moderate band."
+ },
+ "rules": [
+  "Dipstick protein 1+ or more means refer for uACR whatever the score.",
+  "Without a dipstick result, use the NHANES Step 2 model (nhanes_step1_step2_v1.json)."
+ ],
+ "test": {
+  "auroc": {
+   "auroc": 0.9173551787708047,
+   "ci": [
+    0.9085198097672762,
+    0.9262496494540894
+   ],
+   "weighted": 0.9269524684234589
+  },
+  "comparator_rule_or_dipstick": {
+   "auroc": 0.7345796657405725,
+   "ci": [
+    0.721437518800494,
+    0.7482264265034898
+   ],
+   "weighted": 0.749662697872123
+  },
+  "auroc_gain_over_no_dipstick": {
+   "diff": 0.13124432009970677,
+   "ci": [
+    0.11648403674744369,
+    0.1466423276608602
+   ]
+  },
+  "pass": {
+   "C1": true,
+   "C2": true,
+   "C3": true,
+   "C4": true,
+   "overall": true
+  }
+ }
+}
