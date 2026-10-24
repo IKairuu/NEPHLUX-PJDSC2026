@@ -124,10 +124,11 @@ export default function HowItWorks() {
           ))}
         </div>
         <div className="steppanel glass reveal" id="howPanel" role="tabpanel" aria-live="polite" aria-labelledby={`hs${step}`} ref={panel}>
-          <div><h4>What happens</h4><p>{s.what}</p></div>
-          <div><h4>What NEPHLUX adds</h4><p>{s.adds}</p></div>
-          <div><h4>What it never does</h4><p className="no">{s.never}</p></div>
-          <div className="pv" aria-hidden="true">{s.preview}</div>
+          {/* keyed by step so each change replays a short cross-fade */}
+          <div className="swap" key={`a${step}`}><h4>What happens</h4><p>{s.what}</p></div>
+          <div className="swap" key={`b${step}`}><h4>What NEPHLUX adds</h4><p>{s.adds}</p></div>
+          <div className="swap" key={`c${step}`}><h4>What it never does</h4><p className="no">{s.never}</p></div>
+          <div className="pv swap" key={`d${step}`} aria-hidden="true">{s.preview}</div>
           <div className="meta">
             <span><b className="text-text">Step {step + 1} of {STEPS.length} · {s.who}</b> · {s.where}</span>
             <span className="flex items-center gap-1.5">
