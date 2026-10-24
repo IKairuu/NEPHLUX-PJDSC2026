@@ -6,7 +6,7 @@ import { Chip, LevelChip } from '../components/Chip'
 import ThemeToggle from '../components/ThemeToggle'
 import { QUESTIONS, RESULT } from '../data/residentQuestions'
 import { DEMO_STEPS, ROLES } from '../data/content'
-import { bmiFrom, egfr, level, reasons, score } from '../lib/engine'
+import { bmiFrom, egfr, level, reasonText, reasons, score } from '../lib/engine'
 import { encode } from '../lib/clinicCode'
 import { BARANGAYS, NAMES, nearest } from '../lib/city'
 import { escapeHtml as h, pct } from '../lib/format'
@@ -31,7 +31,19 @@ const DOCTOR = ROLES.doctor.demoName
 // Step 2U (labs + dipstick) estimate and refer cut for these inputs, from the v8 design's guided demo;
 // Step 2U is not scored in the browser
 const STEP2U_P = 0.10, STEP2U_REFER = 0.025
-const CEB = 'ceb'
+const LANGS = [['en', 'English'], ['ceb', 'Bisaya'], ['fil', 'Tagalog']]
+// the API's English result text; the real check shows it as the server sends it, so RESULT has no English copy
+const EN = {
+  headline: {
+    higher: 'Your answers suggest a higher chance of early kidney damage.',
+    lower: 'Your answers suggest a lower chance of early kidney damage.',
+  },
+  advice: {
+    higher: 'This is not a diagnosis. It means a doctor should look at your kidneys. Book a YAKAP check-up (free at public clinics) and ask about kidney tests.',
+    lower: 'This is not a diagnosis, and a lower chance is not zero. A yearly YAKAP check-up (free at public clinics) is still the best way to catch problems early.',
+  },
+  disclaimer: 'This check is awareness only and is not a diagnosis. In testing, the questions alone did no better than asking about diabetes and blood pressure, so the YAKAP clinic, with your lab tests, decides who gets the urine test. Built from U.S. survey data; not yet validated in Filipino patients. Nothing you entered was saved.',
+}
 
 function useRamon() {
   return useMemo(() => {
@@ -50,10 +62,10 @@ function useRamon() {
   }, [])
 }
 
-// a resident reason in Bisaya, as the result screen shows it
-function cebReason(o, a) {
-  const t = RESULT.reasons[o.key]?.ceb
-  if (!t) return o.text
+// a resident reason in the chosen language, as the result screen shows it
+function reasonIn(o, a, lang) {
+  const t = lang !== 'en' && RESULT.reasons[o.key]?.[lang]
+  if (!t) return reasonText(o, a)
   const no = o.key === 'female' ? !a.female : a[o.key] === false
   return (no && t[1]) || t[0]
 }
@@ -66,9 +78,10 @@ export default function Demo() {
   const R = useRamon()
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(false)
+  const [lang, setLang] = useState('en')
   const timer = useRef(null)
 
-  const steps = useMemo(() => STEPS(R), [R])
+  const steps = useMemo(() => STEPS(R, lang, setLang), [R, lang])
   const s = steps[i], last = i === steps.length - 1
 
   const exit = useCallback(() => {
@@ -195,20 +208,20 @@ function StaffFrame({ role, page, screen, onExit, children }) {
 
 // ---------------------------------------------------------------- the 10 steps
 
-function STEPS(R) {
+function STEPS(R, lang, onLang) {
   return [
     { role: 'resident', screen: 'Awareness check', when: 'Day 0 · Bonbon · Resident',
-      body: 'Mang Ramon, a fictional 58-year-old fisherman in Bonbon, opens the resident check on his phone. No account and no labs. He picks Bisaya.',
-      view: <QuestionScreen i={0} value="58" /> },
+      body: 'Mang Ramon, a fictional 58-year-old fisherman in Bonbon, opens the resident check on his phone. No account and no labs. The check comes in English, Bisaya or Tagalog; switch the language on the screen to see each.',
+      view: <QuestionScreen i={0} value="58" lang={lang} onLang={onLang} /> },
     { role: 'resident', screen: 'Awareness check', when: 'Day 0 · Resident',
       body: 'Diabetes, high blood pressure, smoking, weight and height, and his barangay. Each answer takes one tap. His answers are not stored anywhere.',
-      view: <QuestionScreen i={QUESTIONS.length - 1} value="Bonbon" /> },
+      view: <QuestionScreen i={QUESTIONS.length - 1} value="Bonbon" lang={lang} onLang={onLang} /> },
     { role: 'resident', screen: 'Your result', when: 'Day 0 · Resident',
       body: '"Higher chance" is awareness, never a diagnosis. He gets a 9-character code that carries his answers. The code is the only thing he takes to the clinic, and only if he shows it.',
-      view: <ResultScreen R={R} ring="code" /> },
+      view: <ResultScreen R={R} ring="code" lang={lang} onLang={onLang} /> },
     { role: 'resident', screen: 'Your result', when: 'Day 0 · Resident', block: 'start',
       body: 'The nearest clinics to Bonbon are listed, with the nearest public one marked. The YAKAP check-up is free at public YAKAP clinics; private ones may charge up to ₱900 a year.',
-      view: <ResultScreen R={R} ring="finder" /> },
+      view: <ResultScreen R={R} ring="finder" lang={lang} onLang={onLang} /> },
     { role: 'doctor', page: 'assess', screen: 'New assessment', when: 'Day 3 · YAKAP clinic · Doctor', block: 'start',
       body: `Signed in as a demo YAKAP doctor. She types his code, confirms each answer with him, measures BP ${LABS.sbp}/${LABS.dbp} and enters the YAKAP labs: HbA1c, creatinine, lipids, blood count and the urine dipstick (negative for protein).`,
       view: <AssessScreen R={R} stage="form" ring="form" /> },
@@ -243,27 +256,28 @@ function ResidentHead() {
   )
 }
 
-function LangBar() {
+// the language choice works here as in the real check; the demo starts in English
+function LangBar({ lang, onLang }) {
   return (
     <div className="seg lang mb-3.5" role="group" aria-label="Language">
-      {[['en', 'English'], ['ceb', 'Bisaya'], ['fil', 'Tagalog']].map(([k, n]) => (
-        <button key={k} type="button" className={k === CEB ? 'on' : undefined} aria-pressed={k === CEB} tabIndex={-1}>{n}</button>
+      {LANGS.map(([k, n]) => (
+        <button key={k} type="button" className={k === lang ? 'on' : undefined} aria-pressed={k === lang} onClick={() => onLang(k)}>{n}</button>
       ))}
     </div>
   )
 }
 
-function QuestionScreen({ i, value }) {
+function QuestionScreen({ i, value, lang, onLang }) {
   const q = QUESTIONS[i]
   return (
     <div className="res">
       <ResidentHead />
-      <LangBar />
+      <LangBar lang={lang} onLang={onLang} />
       <div className="card wiz hl-ring">
         <div className="prog" aria-hidden="true">{QUESTIONS.map((_, j) => <i key={j} className={j <= i ? 'on' : undefined} />)}</div>
         <div className="eyebrow">Question {i + 1} of {QUESTIONS.length}</div>
-        <div className="q mt-2">{q.q[CEB]}</div>
-        <div className="fil">{q.q.en}</div>
+        <div className="q mt-2">{q.q[lang] || q.q.en}</div>
+        {lang !== 'en' && <div className="fil">{q.q.en}</div>}
         {q.type === 'brgy'
           ? <select className="in mt-5" value={value} onChange={noop} tabIndex={-1} aria-label="Barangay"><option>{value}</option></select>
           : <input className="in mt-5 text-[20px] min-h-[54px]" value={value} readOnly tabIndex={-1} aria-label={q.q.en} />}
@@ -277,57 +291,58 @@ function QuestionScreen({ i, value }) {
 }
 
 // the result with the clinic finder under it, as the real check shows them
-function ResultScreen({ R, ring }) {
+function ResultScreen({ R, ring, lang, onLang }) {
   const rg = Ring(ring), lv = R.level
-  const advice = RESULT.advice[lv][CEB], bold = RESULT.adviceBold[CEB], b = advice.indexOf(bold)
+  const T = (k) => RESULT[k][lang] ?? RESULT[k].en
+  const advice = lang === 'en' ? EN.advice[lv] : RESULT.advice[lv][lang], bold = T('adviceBold'), b = advice.indexOf(bold)
   return (
     <div className="res">
-      <LangBar />
+      <LangBar lang={lang} onLang={onLang} />
       <div className="card wiz">
-        <div className="eyebrow">{RESULT.title[CEB]}</div>
+        <div className="eyebrow">{T('title')}</div>
         <div className={`verdict ${lv}`}>
           <span className="vi"><Icon name={lv === 'higher' ? 'up' : 'check'} className="" /></span>
           <div>
-            <LevelChip level={lv} text={RESULT.level[lv][CEB]} />
-            <div className="q mt-2 text-[length:clamp(19px,3vw,23px)]">{RESULT.headline[lv][CEB]}</div>
+            <LevelChip level={lv} text={RESULT.level[lv][lang]} />
+            <div className="q mt-2 text-[length:clamp(19px,3vw,23px)]">{lang === 'en' ? EN.headline[lv] : RESULT.headline[lv][lang]}</div>
           </div>
         </div>
         <p className="mt-3.5">{b < 0 ? advice : <>{advice.slice(0, b)}<b>{bold}</b>{advice.slice(b + bold.length)}</>}</p>
-        <div className="layers">{RESULT.layers[CEB].map(([t, s], j) => <div key={t} className={j === 0 ? 'on' : undefined}><b>{t}</b>{s}</div>)}</div>
+        <div className="layers">{T('layers').map(([t, s], j) => <div key={t} className={j === 0 ? 'on' : undefined}><b>{t}</b>{s}</div>)}</div>
         {R.raised.length > 0 && <>
-          <h3 className="mt-[18px] mb-2 text-[15px]">{RESULT.raised[CEB]}</h3>
-          <div className="flex flex-wrap gap-1.5">{R.raised.map((o) => <span key={o.key} className="chip info"><Icon name="up" />{cebReason(o, R.a)}</span>)}</div>
+          <h3 className="mt-[18px] mb-2 text-[15px]">{T('raised')}</h3>
+          <div className="flex flex-wrap gap-1.5">{R.raised.map((o) => <span key={o.key} className="chip info"><Icon name="up" />{reasonIn(o, R.a, lang)}</span>)}</div>
         </>}
         <div className={clsx('codebox', rg('code'))}>
-          <div className="eyebrow">{RESULT.codeTitle[CEB]}</div>
+          <div className="eyebrow">{T('codeTitle')}</div>
           <div className="code">{R.code}</div>
-          <p className="text-[13px]">{RESULT.codeText[CEB]}</p>
+          <p className="text-[13px]">{T('codeText')}</p>
         </div>
-        <p className="muted text-[12.5px] mt-3.5">{RESULT.disclaimer[CEB]}</p>
+        <p className="muted text-[12.5px] mt-3.5">{lang === 'en' ? EN.disclaimer : RESULT.disclaimer[lang]}</p>
         <div className="wiz-nav">
-          <button type="button" className="btn sm" tabIndex={-1}>{RESULT.clear[CEB]}</button>
-          <button type="button" className="btn sm" tabIndex={-1}><Icon name="chat" />{RESULT.askNephra[CEB]}</button>
+          <button type="button" className="btn sm" tabIndex={-1}>{T('clear')}</button>
+          <button type="button" className="btn sm" tabIndex={-1}><Icon name="chat" />{T('askNephra')}</button>
         </div>
       </div>
 
       <div className={clsx('card mt-3.5', rg('finder'))}>
-        <div className="eyebrow">{RESULT.next[CEB]}</div>
-        <h3 className="mt-1.5 text-[20px]">{RESULT.nearestTo[CEB](RAMON.brgy)}</h3>
-        <p className="muted text-[13px] mt-1.5">{RESULT.bring[CEB]}</p>
+        <div className="eyebrow">{T('next')}</div>
+        <h3 className="mt-1.5 text-[20px]">{T('nearestTo')(RAMON.brgy)}</h3>
+        <p className="muted text-[13px] mt-1.5">{T('bring')}</p>
         <div className="clist">
           {R.clinics.map((c, j) => (
             <div key={c.id} className="crow">
               <span className={`pin ${c.public ? 'pub' : 'pri'}`} aria-hidden="true">+</span>
-              <span><b>{c.name}</b><small>{c.public ? RESULT.pub[CEB] : RESULT.pri[CEB]} · {c.brgy}{j === 3 ? ` · ${RESULT.nearestPublic[CEB]}` : ''}</small></span>
+              <span><b>{c.name}</b><small>{c.public ? T('pub') : T('pri')} · {c.brgy}{j === 3 ? ` · ${T('nearestPublic')}` : ''}</small></span>
               <span className="km">~{c.km.toFixed(1)} km</span>
             </div>
           ))}
         </div>
         <div className="legend">
-          <span><i className="dot" style={{ background: '#2E9E62' }} />{RESULT.legendPub[CEB]}</span>
-          <span><i className="dot" style={{ background: '#C98A1B' }} />{RESULT.legendPri[CEB]}</span>
+          <span><i className="dot" style={{ background: '#2E9E62' }} />{T('legendPub')}</span>
+          <span><i className="dot" style={{ background: '#C98A1B' }} />{T('legendPri')}</span>
         </div>
-        <p className="muted text-xs mt-2">{RESULT.mapNote[CEB]}</p>
+        <p className="muted text-xs mt-2">{T('mapNote')}</p>
       </div>
     </div>
   )
