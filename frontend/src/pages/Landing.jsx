@@ -12,12 +12,17 @@ import Access from '../sections/Access'
 import Faq from '../sections/Faq'
 import DemoCta from '../sections/DemoCta'
 import Footer from '../sections/Footer'
+import { useRef } from 'react'
 import { useReveal } from '../hooks/useReveal'
+import { useScrollMotion } from '../hooks/useScrollMotion'
 
 export default function Landing() {
+  const bar = useRef(null)
   useReveal()
+  useScrollMotion(bar)
   return (
     <>
+      <div className="scrollbar" ref={bar} aria-hidden="true" />
       <a className="skip" href="#main-landing">Skip to content</a>
       <Nav />
       <MobileNav />

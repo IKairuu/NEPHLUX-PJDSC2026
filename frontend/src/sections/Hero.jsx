@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Icon from '../components/Icon'
 import { useGo } from '../hooks/useGo'
 
@@ -54,13 +55,17 @@ export function Aurora() {
   return <div className="aurora" aria-hidden="true"><i className="a1" /><i className="a2" /><i className="a3" /></div>
 }
 
+// the entrance plays on the first visit only, not every time someone comes back from the demo
+let introPlayed = false
+
 export default function Hero() {
   const navigate = useGo()
+  const [intro] = useState(() => { const first = !introPlayed; introPlayed = true; return first })
   return (
-    <section className="hero" id="top" aria-labelledby="heroTitle">
+    <section className={intro ? 'hero intro' : 'hero'} id="top" aria-labelledby="heroTitle">
       <Aurora />
       <div className="wrap">
-        <div>
+        <div className="hcopy">
           <span className="kick glass-l"><b>SCREENING SUPPORT</b>Cagayan de Oro City · PhilHealth YAKAP labs</span>
           <h1 id="heroTitle">Smarter screening for <span className="serif">early</span> kidney damage.</h1>
           <p className="lede">YAKAP already covers HbA1c, creatinine, lipids, a blood count and a urinalysis. It does not cover the urine albumin test (uACR) that shows kidney damage early. NEPHLUX uses the labs YAKAP already pays for to help the doctor decide who should get that test first.</p>
