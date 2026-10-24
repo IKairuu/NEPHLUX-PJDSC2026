@@ -553,6 +553,9 @@ The pitch deck uses free photos under the [Unsplash License](https://unsplash.co
 
 ## References
 
+<details>
+<summary><b>Show all 23 references (APA 7)</b></summary>
+
 Abdulsamad, B. (2026). *psgc: Philippine Standard Geographic Code* (Version 0.1.2) [R package]. Comprehensive R Archive Network. https://cran.r-project.org/web/packages/psgc/index.html
 
 Baclig, C. E. (2026, January 27). This one-minute test could save your kidneys. *INQUIRER.net*. https://newsinfo.inquirer.net/2173691/this-one-minute-test-could-save-your-kidneys
@@ -598,6 +601,8 @@ Van Calster, B., McLernon, D. J., van Smeden, M., Wynants, L., & Steyerberg, E. 
 Vickers, A. J., & Elkin, E. B. (2006). Decision curve analysis: A novel method for evaluating prediction models. *Medical Decision Making, 26*(6), 565–574. https://doi.org/10.1177/0272989X06295361
 
 Yoo, D., Nguyen, V. K., Maggiore, U., & Jolliet, O. (2026). MERWACS: Development and external validation of a non-invasive machine learning tool for identifying subjects to be screened for CKD. *PLOS Digital Health, 5*(7), e0001486. https://doi.org/10.1371/journal.pdig.0001486
+
+</details>
 
 ---
 
