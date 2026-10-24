@@ -66,7 +66,7 @@ function Flowchart() {
   ]
   return (
     <div className="flowchart reveal">
-      <div className="fhd"><b>Per 100 adults, held-out U.S. NHANES 2017–2020</b><span>Thresholds fixed on training data. Not Philippine numbers.</span></div>
+      <div className="fhd"><b>Per 100 adults, held-out test data (NHANES 2017–2020)</b><span>U.S. national survey data. Next step: testing with Philippine YAKAP records.</span></div>
       {rows.map(([label, sub, v], i) => (
         <div key={label} className={clsx('fl', i === 3 && 'found')}>
           <span className="lbl">{label}{sub && <small>{sub}</small>}</span>
