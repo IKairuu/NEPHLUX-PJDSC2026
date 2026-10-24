@@ -1,5 +1,6 @@
 import Icon from '../components/Icon'
 import SectionHead from '../components/SectionHead'
+import CountUp from '../components/CountUp'
 import { EV, EXPECTED, RESIDENT_ROWS, STEP2U as U } from '../data/evidence'
 import { f3, pct } from '../lib/format'
 import { useGo } from '../hooks/useGo'
@@ -15,9 +16,9 @@ export default function Evidence() {
     ['Step 2 (U.S. test) finds more cases than "diabetes or high BP"', pm.c2_more_cases_than_rule_at_same_referrals],
   ]
   const trio = [
-    ['Step 2U AUROC', f3(U.auroc.auroc)],
-    ['Rule or dipstick', f3(U.auroc_comparator.auroc)],
-    ['Calibration', U.calibration.slope.toFixed(2)],
+    ['Step 2U AUROC', U.auroc.auroc, f3],
+    ['Rule or dipstick', U.auroc_comparator.auroc, f3],
+    ['Calibration', U.calibration.slope, (v) => v.toFixed(2)],
   ]
   const s2k = U.step2_vs_plain_rule
   return (
@@ -27,14 +28,14 @@ export default function Evidence() {
           title={<>A pass mark written <span className="serif">before training.</span></>}
           text="Step 2U learned on Korean KNHANES 2021–2024 and was tested once on 2019–2020; Step 2 on U.S. NHANES. Every criterion set before training is shown here." />
         <div className="evi reveal">
-          <div>
+          <div className="evi-lead">
             <div className="eyebrow">Step 2U · same number of tests, more cases</div>
-            <div className="bigstat mt-[18px]">+{m.step2u.extra}<small>cases</small></div>
+            <div className="bigstat mt-[18px]"><CountUp to={m.step2u.extra} format={(v) => `+${Math.round(v)}`} /><small>cases</small></div>
             <p className="muted mt-[18px] max-w-[560px]">
               Referring the same {pct(U.comparator_share)} of {U.n.toLocaleString('en-US')} Korean test adults (KNHANES 2019–2020) as "diabetes, high BP or dipstick protein 1+", Step 2U (labs + dipstick) found {m.step2u.cases_found} of {U.cases} cases and the comparator {m.comparator.cases_found} (95% CI of the gain +{m.step2u.extra_ci[0]} to +{m.step2u.extra_ci[1]}).
             </p>
             <div className="trio">
-              {trio.map(([label, v]) => <div key={label}><div className="eyebrow">{label}</div><span className="mono">{v}</span></div>)}
+              {trio.map(([label, v, fmt]) => <div key={label}><div className="eyebrow">{label}</div><span className="mono"><CountUp to={v} format={fmt} /></span></div>)}
             </div>
             <p className="muted text-[13px] mt-4">
               Among adults with neither diabetes nor high BP, Step 2U caught {pct(U.no_dm_no_htn.step2u_sensitivity)} of cases vs {pct(U.no_dm_no_htn.comparator_sensitivity)} for the comparator. Without the dipstick, the U.S. labs-only Step 2 found +{s2k.extra} vs the plain rule on the same Korean adults (95% CI {s2k.extra_ci[0]} to +{s2k.extra_ci[1]}): not clearly better. That is why the dipstick matters.
