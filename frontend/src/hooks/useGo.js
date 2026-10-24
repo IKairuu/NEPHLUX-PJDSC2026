@@ -8,6 +8,7 @@ function pathFor(target) {
   if (target === 'home') return '/'
   if (target === 'resident') return '/resident/check'
   if (target === 'account') return '/account'
+  if (target === 'demo') return '/demo'
   const [screen, role] = target.split(':')
   if (screen === 'login' && ROLES[role]) return `/login/${role}`
   if (screen === 'register') return `/register/${role || 'doctor'}`

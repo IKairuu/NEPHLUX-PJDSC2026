@@ -17,7 +17,6 @@ function loadSession() {
 const PENDING = {
   resident: 'The resident check is not ported to React yet.',
   app: 'The staff screens are not ported to React yet.',
-  demo: 'The guided demo is not ported to React yet.',
   evidence: 'The full evidence screen is not ported to React yet.',
 }
 

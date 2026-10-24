@@ -549,6 +549,33 @@
   @media (max-width: 640px) { .nfab { padding: 4px; } .nfab span:not(.orb) { display: none; } }
   @media (max-width: 900px) { body.in-app .nfab { bottom: 84px; right: 14px; padding: 6px; } body.in-app .nfab span:not(.orb) { display: none; } }
 
+  /* Guided demo (/demo): control bar fixed at the bottom, a ring on what each step is about */
+  .gdemo { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: min(980px, calc(100% - 20px)); z-index: 90; border-radius: 22px; background: var(--surface-solid); border: 1px solid var(--line-2); box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .75); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; align-items: center; }
+  .gdemo::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 22px 22px 0 0; background: var(--brand); }
+  .gdemo .dh { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .gdemo h4 { font-size: 16px; margin-top: 4px; }
+  .gdemo p { font-size: 13.5px; color: var(--muted); margin-top: 3px; max-width: 680px; }
+  .gdemo .ctl { display: flex; gap: 6px; align-items: center; }
+  .gdemo .icon-btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .gdemo .dots { grid-column: 1 / -1; display: flex; gap: 4px; }
+  .gdemo .dots button { flex: 1; height: 6px; border-radius: 9px; border: 0; background: var(--line-2); padding: 0; }
+  .gdemo .dots button.done { background: var(--accent); }
+  .gdemo .dots button.on { background: var(--brand); }
+  :root:not([data-theme="light"]) .gdemo .dots button.on { background: linear-gradient(90deg, #9C2A5A, #E0505A); }
+  @media (max-width: 700px) { .gdemo { grid-template-columns: 1fr; bottom: 8px; padding: 12px; } .gdemo p { font-size: 12.5px; } .gdemo .ctl { justify-content: space-between; } }
+  .gdemo-main { padding-bottom: 240px; }
+  .gdemo-screen { animation: npop .3s var(--ease); }
+  body.demo-on .nfab { bottom: 170px; }
+  @media (max-width: 700px) { body.demo-on .nfab { display: none; } }
+  .hl-ring { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 18px; animation: ringp 1.6s ease-in-out 3; }
+  @keyframes ringp { 50% { outline-color: transparent; } }
+  .gdemo-slip { background: #fff; color: #111; border-radius: 18px; padding: 24px; font: 14px/1.5 Georgia, serif; }
+  .gdemo-slip .tag { font: 600 10px/1 monospace; letter-spacing: .12em; color: #a33; margin: 0 0 8px; }
+  .gdemo-slip h2 { font-family: var(--ui); font-size: 18px; color: #111; }
+  .gdemo-slip table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  .gdemo-slip td, .gdemo-slip th { border: 1px solid #bbb; padding: 6px 9px; text-align: left; vertical-align: top; }
+  @media (prefers-reduced-motion: reduce) { .hl-ring, .gdemo-screen { animation: none; } }
+
   /* Nephra chat panel (v7 .npanel); full screen on phones */
   .npanel { position: fixed; right: 20px; bottom: 20px; z-index: 95; width: min(400px, calc(100% - 24px)); height: min(620px, calc(100vh - 40px)); border-radius: 24px; background: var(--surface-solid); border: 1px solid var(--line-2); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7); display: flex; flex-direction: column; overflow: hidden; animation: npop .25s var(--ease); }
   @media (max-width: 520px) { .npanel { right: 8px; bottom: 8px; width: calc(100% - 16px); height: calc(100% - 16px); height: calc(100dvh - 16px); } }

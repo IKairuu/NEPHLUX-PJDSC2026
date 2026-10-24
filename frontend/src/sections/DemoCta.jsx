@@ -11,7 +11,7 @@ export default function DemoCta() {
           <div>
             <div className="eyebrow text-white/75">Guided demo · 10 steps · SAMPLE patient</div>
             <h2 id="dT">Follow Mang Ramon from a 10-question check to a uACR result.</h2>
-            <p>A fictional 58-year-old from Bonbon. Every screen is the real app, signed in as demo users.</p>
+            <p>A fictional 58-year-old from Bonbon. Each step shows the app's real screens with SAMPLE data; nothing is saved or sent.</p>
             <button className="btn mt-5" onClick={() => navigate('demo')}><Icon name="play" />Start the guided demo</button>
           </div>
           <ol>{DEMO_STEPS.map((t) => <li key={t}>{t}</li>)}</ol>

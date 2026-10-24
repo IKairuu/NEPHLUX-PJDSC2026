@@ -14,6 +14,7 @@ import { useUIStore } from './store/useUIStore'
 // the check and the staff screens bring Leaflet and the city data, so they load only when opened
 const ResidentCheck = lazy(() => import('./pages/ResidentCheck'))
 const StaffArea = lazy(() => import('./pages/staff/StaffArea'))
+const Demo = lazy(() => import('./pages/Demo'))
 
 // lets store.navigate('register') (Nav, MobileNav) use the router
 function RouterBridge() {
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/register" element={<Navigate to="/register/doctor" replace />} />
         <Route path="/register/:role" element={<Register />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/demo" element={<Suspense fallback={null}><Demo /></Suspense>} />
         <Route path="/doctor/*" element={<Suspense fallback={null}><StaffArea role="doctor" /></Suspense>} />
         <Route path="/cho/*" element={<Suspense fallback={null}><StaffArea role="cho" /></Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
