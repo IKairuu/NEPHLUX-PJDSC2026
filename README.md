@@ -465,6 +465,34 @@ npm run dev
 
 Open http://localhost:5173. Residents can start the 2-minute check with no account; clinic and City Health Office staff sign in through the Access Portal. All patient records in the demo are SAMPLE data.
 
+### Demo accounts
+
+For demonstration, two staff accounts are already set up. Sign in through the Access Portal with the matching role:
+
+| Role | Email | Password |
+|---|---|---|
+| YAKAP clinic doctor | `clinic_test@gmail.com` | `abc123ABC` |
+| City Health Office (CHO) | `cho_test@gmail.com` | `abc123ABC` |
+
+The doctor account is linked to a YAKAP clinic, so it can enter assessments, decide referrals, print slips and record uACR results. The CHO account sees the city overview, map, funnel, test budget and evidence. These are shared demo accounts: please don't change their passwords.
+
+### Requesting access (not part of the demo)
+
+Real staff don't sign up and start straight away. They request access, and a person checks them before an account exists:
+
+1. **Request.** On the Register page, a doctor or a City Health Office staff member fills in their name, work email and role details: a doctor gives their YAKAP clinic and PRC licence number, and CHO staff give their unit. The API saves the request as `PENDING`, refuses an email that already has an account or a waiting request, and stores no password.
+2. **Notify.** The API emails the request to the team inbox (`MAIL_TO`) through SMTP, with the reply-to set to the requester. The email lists the details to check.
+3. **Check and approve.** The approver checks the details (for a doctor, the PRC licence against the clinic), creates the staff account with status `ACTIVE` in the database, and marks the request `APPROVED` (`PATCH /access-requests/:id`, admin only).
+4. **Sign-in details.** The approver replies to the requester by email with their sign-in details.
+5. **First sign-in.** The new user signs in and changes their password on the Account page.
+
+This flow is hard to demonstrate in a judging setting, for two reasons:
+
+- **SMTP credentials.** The notice email needs a mail account and app password (`MAIL_USER`, `MAIL_APP_PASSWORD`), which can't be shared in a public repository. Without them the API still saves the request but skips the email with a warning.
+- **Database and admin access.** Approval means creating the staff account in the database and acting as an admin. Giving outside users that access would expose the project's database credentials.
+
+So use the demo accounts above to see the clinic and CHO screens. The Register page can still be opened to see the request form.
+
 The early design prototype, [`index.html`](index.html), also opens on its own in a browser.
 
 ---
