@@ -1,0 +1,30 @@
+# Raw survey data stays off GitHub.
+# KNHANES (KDCA) files are used under their data-use terms and may not be redistributed.
+data_private/
+data/raw/
+*.xpt
+*.XPT
+*.sas7bdat
+*.sav
+*.dta
+*knhanes*
+*KNHANES*.csv
+*nhanes*.csv
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.tmp
