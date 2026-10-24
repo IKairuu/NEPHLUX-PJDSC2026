@@ -1,15 +1,15 @@
-# Raw survey data stays off GitHub.
-# KNHANES (KDCA) files are used under their data-use terms and may not be redistributed.
+# KNHANES (KDCA) raw files are used under KDCA's data-use terms and may not be redistributed.
+# Put them in data/knhanes/ on your own machine; only the README there is tracked.
+data/knhanes/*
+!data/knhanes/README.md
 data_private/
-data/raw/
-*.xpt
-*.XPT
 *.sas7bdat
 *.sav
 *.dta
-*knhanes*
-*KNHANES*.csv
-*nhanes*.csv
+# Pickled model objects run code when loaded; the app uses the JSON files in models/.
+*.pkl
+
+# NHANES (CDC) files are public domain and are tracked in data/raw/.
 
 # Secrets
 .env
