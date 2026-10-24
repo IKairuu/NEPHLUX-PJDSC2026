@@ -1,0 +1,114 @@
+/* Motion layer for the landing page and onboarding. Only opacity and transforms move (plus a one-time blur on
+   heading text), so the browser can run it on the compositor. Nothing loops except what was already there and
+   one slow sheen on the demo band. With reduced motion everything is shown at once (rules at the bottom and the
+   global reduced-motion rule in index.css). Same layer as index.css, loaded after it, so these rules win. */
+@layer components {
+  :root { --mv-ease: cubic-bezier(.16, 1, .3, 1); }
+
+  /* scroll progress line (width set by useScrollMotion) */
+  .scrollbar { position: fixed; left: 0; top: 0; z-index: 90; width: 100%; height: 2px; transform-origin: 0 50%; transform: scaleX(0); pointer-events: none;
+    background: linear-gradient(90deg, #4A0119, #B4485F 55%, #F27D90); box-shadow: 0 0 10px rgba(242, 125, 144, .55); }
+
+  /* hero entrance, first visit only: copy rises line by line, the kidney settles in, the cards land one by one.
+     It uses the separate translate/scale properties so it never fights the cards' existing bob animation. */
+  .hero.intro .hcopy > * { animation: mvRise 1.1s var(--mv-ease) both; }
+  .hero.intro .hcopy > h1, .hero.intro .hcopy > .lede { animation-name: mvRiseBlur; }
+  .hero.intro .hcopy > :nth-child(2) { animation-delay: .1s; }
+  .hero.intro .hcopy > :nth-child(3) { animation-delay: .2s; }
+  .hero.intro .hcopy > :nth-child(4) { animation-delay: .3s; }
+  .hero.intro .hcopy > :nth-child(n+5) { animation-delay: .4s; }
+  .hero.intro .stage svg.kid { animation: mvSettle 1.8s var(--mv-ease) .15s both; }
+  .float.f2 { --bob: -3s; }
+  .float.f3 { --bob: -5s; }
+  .hero.intro .float { animation-name: mvLand, bob; animation-duration: 1.1s, 8s; animation-timing-function: var(--mv-ease), ease-in-out;
+    animation-iteration-count: 1, infinite; animation-fill-mode: both, none; animation-delay: var(--land, .7s), var(--bob, 0s); }
+  .hero.intro .float.f2 { --land: .85s; }
+  .hero.intro .float.f3 { --land: 1s; }
+
+  /* section reveal: a longer, softer rise than before */
+  .reveal { transform: translate3d(0, 40px, 0) scale(.985); transition: opacity 1s var(--mv-ease), transform 1.1s var(--mv-ease); }
+  .reveal.shown { transform: none; }
+
+  /* section heads: eyebrow, title, text rise in order; the title comes out of a light blur, then its serif words glow once */
+  .sh.reveal, .sh.reveal.shown { opacity: 1; transform: none; }
+  .sh.reveal > * { opacity: 0; transform: translate3d(0, 26px, 0); transition: opacity .9s var(--mv-ease), transform 1s var(--mv-ease), filter 1s var(--mv-ease); }
+  .sh.reveal > h2 { filter: blur(6px); transition-delay: .08s; }
+  .sh.reveal > :nth-child(3) { transition-delay: .18s; }
+  .sh.reveal > :nth-child(n+4) { transition-delay: .26s; }
+  .sh.shown > *, .sh.shown > h2 { opacity: 1; transform: none; filter: none; }
+  .sh.shown h2 .serif { animation: mvGlow 1.8s var(--mv-ease) .5s both; }
+
+  /* features: the text rises, the preview slides in from its own side with a small turn */
+  .frow { perspective: 1400px; }
+  .frow.reveal, .frow.reveal.shown { opacity: 1; transform: none; }
+  .frow.reveal .ftext { opacity: 0; transform: translate3d(0, 30px, 0); transition: opacity .9s var(--mv-ease), transform 1s var(--mv-ease); }
+  .frow.reveal .fpic { opacity: 0; transform: translate3d(64px, 0, 0) rotateY(-9deg); transition: opacity 1s var(--mv-ease) .12s, transform 1.3s var(--mv-ease) .12s; }
+  .frow.reveal:nth-child(even) .fpic { transform: translate3d(-64px, 0, 0) rotateY(9deg); }
+  .frow.shown .ftext, .frow.shown .fpic, .frow.shown:nth-child(even) .fpic { opacity: 1; transform: none; }
+  @media (max-width: 900px) {
+    .frow.reveal .fpic, .frow.reveal:nth-child(even) .fpic { transform: translate3d(0, 36px, 0); }
+  }
+
+  /* how it works: the line draws across, then each step lights up in order; the panel text cross-fades per step */
+  .steps::before { transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.4s var(--mv-ease) .15s; }
+  .steps.shown::before { transform: none; }
+  .steps.reveal, .steps.reveal.shown { opacity: 1; transform: none; }
+  .steps.reveal button { opacity: 0; transform: translate3d(0, 16px, 0); transition: opacity .7s var(--mv-ease), transform .8s var(--mv-ease); }
+  .steps.reveal button:nth-of-type(2) { transition-delay: .14s; }
+  .steps.reveal button:nth-of-type(3) { transition-delay: .28s; }
+  .steps.reveal button:nth-of-type(4) { transition-delay: .42s; }
+  .steps.reveal button:nth-of-type(5) { transition-delay: .56s; }
+  .steps.shown button { opacity: 1; transform: none; }
+  .steppanel > .swap { animation: mvSwap .5s var(--mv-ease) both; }
+  .steppanel > .swap:nth-child(2) { animation-delay: .04s; }
+  .steppanel > .swap:nth-child(3) { animation-delay: .08s; }
+  .steppanel > .swap:nth-child(4) { animation-delay: .12s; }
+  .flowchart .fl:nth-child(3) .tr i { transition-delay: .12s; }
+  .flowchart .fl:nth-child(4) .tr i { transition-delay: .24s; }
+  .flowchart .fl:nth-child(5) .tr i { transition-delay: .36s; }
+
+  /* evidence: +94 stays in view while the pass-mark rows tick in */
+  @media (min-width: 901px) { .evi-lead { position: sticky; top: 110px; } }
+  .evi .pm li:nth-child(1) { --k: 0; } .evi .pm li:nth-child(2) { --k: 1; } .evi .pm li:nth-child(3) { --k: 2; }
+  .evi .pm li:nth-child(4) { --k: 3; } .evi .pm li:nth-child(5) { --k: 4; }
+  .evi .pm ~ .pm { --base: .85s; }
+  .evi.reveal .pm li { opacity: 0; transform: translate3d(16px, 0, 0); transition: opacity .6s var(--mv-ease), transform .7s var(--mv-ease);
+    transition-delay: calc(var(--base, .3s) + var(--k, 0) * .11s); }
+  .evi.shown .pm li { opacity: 1; transform: none; }
+  .evi.shown .pm li.ok .mk { animation: mvTick .6s var(--mv-ease) both; animation-delay: calc(var(--base, .3s) + var(--k, 0) * .11s + .15s); }
+
+  /* guided demo band: one slow light drifting across */
+  .cta-band > * { position: relative; z-index: 1; }
+  .cta-band::before { content: ""; position: absolute; z-index: 0; left: -30%; top: -40%; width: 60%; height: 180%; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(255, 190, 205, .2), transparent); animation: mvSheen 16s ease-in-out infinite alternate; }
+
+  /* onboarding: the request-access card rises in; each resident question slides in */
+  .auth-card { animation: mvCard .9s var(--mv-ease) both; }
+  .auth-side > * { animation: mvRise .8s var(--mv-ease) both; }
+  .auth-side > :nth-child(2) { animation-delay: .08s; }
+  .auth-side > :nth-child(3) { animation-delay: .16s; }
+  .auth-side > :nth-child(n+4) { animation-delay: .24s; }
+  .wiz > div { animation: mvStep .45s var(--mv-ease) both; }
+
+  .count { font-variant-numeric: tabular-nums; }
+  .statbar .count, .statbar .count span { display: inline; font-size: inherit; color: inherit; margin: 0; line-height: inherit; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scrollbar { display: none; }
+    .reveal, .sh.reveal > *, .frow.reveal .ftext, .frow.reveal .fpic, .frow.reveal:nth-child(even) .fpic,
+    .steps.reveal button, .evi.reveal .pm li { opacity: 1; transform: none; filter: none; transition: none; }
+    .steps::before { transform: none; transition: none; }
+    .cta-band::before { animation: none; }
+  }
+}
+
+@keyframes mvRise { from { opacity: 0; translate: 0 28px; } }
+@keyframes mvRiseBlur { from { opacity: 0; translate: 0 34px; filter: blur(8px); } to { filter: none; } }
+@keyframes mvSettle { from { opacity: 0; scale: .9; } }
+@keyframes mvLand { from { opacity: 0; translate: 0 26px; scale: .96; } }
+@keyframes mvGlow { 40% { filter: brightness(1.4) drop-shadow(0 0 14px rgba(242, 125, 144, .5)); } }
+@keyframes mvSwap { from { opacity: 0; translate: 0 8px; } }
+@keyframes mvTick { 0% { scale: .4; opacity: 0; } 60% { scale: 1.18; opacity: 1; } }
+@keyframes mvSheen { to { transform: translate3d(190%, 10%, 0); } }
+@keyframes mvCard { from { opacity: 0; translate: 0 30px; scale: .975; } }
+@keyframes mvStep { from { opacity: 0; translate: 18px 0; } }
