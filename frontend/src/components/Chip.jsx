@@ -9,9 +9,10 @@ const LEVELS = {
   lower: { text: 'Lower chance', icon: 'dot' },
 }
 
-export function LevelChip({ level }) {
+// text replaces the English label, for example a translated one on the resident result
+export function LevelChip({ level, text }) {
   const o = LEVELS[level]
-  return <span className={`chip ${level}`}><Icon name={o.icon} />{o.text}</span>
+  return <span className={`chip ${level}`}><Icon name={o.icon} />{text || o.text}</span>
 }
 
 export function Chip({ kind, icon, children }) {

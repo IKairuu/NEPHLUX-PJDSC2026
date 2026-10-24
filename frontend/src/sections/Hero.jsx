@@ -73,17 +73,17 @@ export default function Hero() {
         <div className="stage" aria-hidden="true">
           <Kidney />
           <div className="float glass-l f1">
-            <div className="fh">Step 1 · resident check <span className="dtag">DEMO</span></div>
+            <div className="fh">Step 1 · resident check</div>
             <div className="fv"><span className="dot" style={{ background: '#B23A26' }} />Higher chance</div>
             <div className="fs">Awareness only · clinic code given</div>
           </div>
           <div className="float glass-l f2">
-            <div className="fh">Step 2 · YAKAP labs <span className="dtag">DEMO</span></div>
+            <div className="fh">Step 2 · YAKAP labs</div>
             <div className="fv">uACR referral</div>
             <div className="fs">Doctor approved · slip printed</div>
           </div>
           <div className="float glass-l f3">
-            <div className="fh">City Health Office <span className="dtag">DEMO</span></div>
+            <div className="fh">City Health Office</div>
             <div className="fv"><span className="mono">80</span> barangays</div>
             <div className="fs">Screening reach, not prevalence</div>
           </div>

@@ -4,7 +4,7 @@ import Icon from '../components/Icon'
 import { LevelChip } from '../components/Chip'
 import ClinicMap from '../components/ClinicMap'
 import ResidentShell from '../components/ResidentShell'
-import { LANGS, OFFLINE, QUESTIONS, UNAVAILABLE, YES_NO } from '../data/residentQuestions'
+import { LANGS, OFFLINE, QUESTIONS, RESULT, UNAVAILABLE, YES_NO } from '../data/residentQuestions'
 import { bmiFrom } from '../lib/engine'
 import { BARANGAYS } from '../lib/city'
 import { api, barangayList } from '../lib/api'
@@ -93,10 +93,10 @@ export default function ResidentCheck() {
         </div>
         <p className="muted text-xs mt-1.5 mb-3.5">Bisaya and Tagalog are draft translations for review by native speakers.</p>
         {done && status === 'done' && result
-          ? <Result key={answers.brgy || 'none'} a={answers} res={result} onClear={clear} onBarangay={changeBarangay} />
+          ? <Result key={answers.brgy || 'none'} a={answers} res={result} lang={lang} onClear={clear} onBarangay={changeBarangay} />
           : done
           ? <div className="card wiz" aria-live="polite">
-              <div className="eyebrow">Your awareness result</div>
+              <div className="eyebrow">{RESULT.title[lang]}</div>
               {status === 'error'
                 ? <>
                     {/* no connection, or a server-side fault (5xx, e.g. "no active model"): a plain message in the
@@ -108,11 +108,11 @@ export default function ResidentCheck() {
                         </div>
                       : <p role="alert" className="mt-2.5 text-high">{error?.message}</p>}
                     <div className="wiz-nav">
-                      <button type="button" className="btn sm" onClick={() => { setStatus('idle'); setStep(QUESTIONS.length - 1) }}><Icon name="back" />Back</button>
-                      <button type="button" className="btn primary" onClick={() => check(answers)}>Try again<Icon name="arrow" /></button>
+                      <button type="button" className="btn sm" onClick={() => { setStatus('idle'); setStep(QUESTIONS.length - 1) }}><Icon name="back" />{RESULT.back[lang]}</button>
+                      <button type="button" className="btn primary" onClick={() => check(answers)}>{RESULT.tryAgain[lang]}<Icon name="arrow" /></button>
                     </div>
                   </>
-                : <p className="muted mt-2.5">Working out your result…</p>}
+                : <p className="muted mt-2.5">{RESULT.working[lang]}</p>}
             </div>
           : <div className="card wiz" aria-live="polite">
               <Question key={step} i={step} a={answers} lang={lang} onAnswer={answer} onBack={() => setStep((s) => Math.max(0, s - 1))} />
@@ -204,15 +204,25 @@ function Question({ i, a, lang, onAnswer, onBack }) {
   )
 }
 
-// keeps the prototype's bold on the call to action inside the server's advice text
-function Advice({ text }) {
-  const k = 'YAKAP check-up (free at public clinics)', i = text.indexOf(k)
-  return i < 0 ? text : <>{text.slice(0, i)}<b>{k}</b>{text.slice(i + k.length)}</>
+// keeps the bold on the call to action inside the advice text
+function Advice({ text, bold }) {
+  const i = text.indexOf(bold)
+  return i < 0 ? text : <>{text.slice(0, i)}<b>{bold}</b>{text.slice(i + bold.length)}</>
 }
 
-function Result({ a, res, onClear, onBarangay }) {
+// a reason from the API in the chosen language; the server's English text when there is no translation
+function reasonText(o, lang) {
+  const t = lang !== 'en' && RESULT.reasons[o.key]?.[lang]
+  if (!t) return o.text
+  const no = o.key === 'female' ? o.text.startsWith('Male') : /^No(t)? /.test(o.text)
+  return (no && t[1]) || t[0]
+}
+
+function Result({ a, res, lang, onClear, onBarangay }) {
   const go = useGo()
   const lv = res.level === 'HIGHER' ? 'higher' : 'lower', higher = lv === 'higher'
+  const T = (k) => RESULT[k][lang] ?? RESULT[k].en
+  const fromServer = (k, en) => (lang === 'en' ? en : RESULT[k][lv]?.[lang] ?? en)
   const brgyName = res.barangay?.name || a.brgy
   // the API returns the three nearest clinics, plus the nearest public one when none of those is public;
   // yakapRef matches the map's pin ids
@@ -235,47 +245,45 @@ function Result({ a, res, onClear, onBarangay }) {
   return (
     <>
       <div className="card wiz" aria-live="polite">
-        <div className="eyebrow">Your awareness result</div>
+        <div className="eyebrow">{T('title')}</div>
         <div className={`verdict ${lv}`}>
           <span className="vi"><Icon name={higher ? 'up' : 'check'} className="" /></span>
           <div>
-            <LevelChip level={lv} />
-            <div className="q mt-2 text-[length:clamp(19px,3vw,23px)]">{res.headline}</div>
+            <LevelChip level={lv} text={RESULT.level[lv][lang]} />
+            <div className="q mt-2 text-[length:clamp(19px,3vw,23px)]">{fromServer('headline', res.headline)}</div>
           </div>
         </div>
-        <p className="mt-3.5"><Advice text={res.advice} /></p>
-        <div className="layers" aria-label="Where you are in the pathway">
-          <div className="on"><b>1 · This check</b>Awareness only</div>
-          <div><b>2 · YAKAP labs</b>Doctor estimates risk</div>
-          <div><b>3 · Diagnosis</b>Only a doctor, with repeat urine tests</div>
+        <p className="mt-3.5"><Advice text={fromServer('advice', res.advice)} bold={T('adviceBold')} /></p>
+        <div className="layers" aria-label={T('layersLabel')}>
+          {T('layers').map(([b, s], i) => <div key={b} className={i === 0 ? 'on' : undefined}><b>{b}</b>{s}</div>)}
         </div>
         {res.reasons.length > 0 && <>
-          <h3 className="mt-[18px] mb-2 text-[15px]">What raised your result</h3>
-          <div className="flex flex-wrap gap-1.5">{res.reasons.map((o) => <span key={o.key} className="chip info"><Icon name="up" />{o.text}</span>)}</div>
+          <h3 className="mt-[18px] mb-2 text-[15px]">{T('raised')}</h3>
+          <div className="flex flex-wrap gap-1.5">{res.reasons.map((o) => <span key={o.key} className="chip info"><Icon name="up" />{reasonText(o, lang)}</span>)}</div>
         </>}
         <div className="codebox">
-          <div className="eyebrow">Your clinic code</div>
+          <div className="eyebrow">{T('codeTitle')}</div>
           <div className="code" aria-label={'Clinic code ' + res.code.split('').join(' ')}>{res.code}</div>
-          <p className="text-[13px]">Show this code at the YAKAP clinic. Staff type it in and check each answer with you. The code is your answers written short; it is not saved anywhere. Take a photo or write it down.</p>
+          <p className="text-[13px]">{T('codeText')}</p>
           <details className="mt-1.5 text-[13px]">
-            <summary className="cursor-pointer">What the code contains</summary>
-            <p className="mt-1.5">Age {a.age} · {a.female ? 'female' : 'male'} · {a.w} kg · {a.ht} cm · {brgyName || 'no barangay'} · your 6 yes/no answers. No name, no phone number.</p>
+            <summary className="cursor-pointer">{T('codeSummary')}</summary>
+            <p className="mt-1.5">{T('codeContains')(a, brgyName)}</p>
           </details>
         </div>
-        <p className="muted text-[12.5px] mt-3.5">{res.disclaimer}</p>
+        <p className="muted text-[12.5px] mt-3.5">{lang === 'en' ? res.disclaimer : RESULT.disclaimer[lang]}</p>
         <div className="wiz-nav">
-          <button type="button" className="btn sm" onClick={onClear}>Clear my answers</button>
-          <button type="button" className="btn sm" onClick={() => go('nephra')}><Icon name="chat" />Questions? Ask Nephra</button>
+          <button type="button" className="btn sm" onClick={onClear}>{T('clear')}</button>
+          <button type="button" className="btn sm" onClick={() => go('nephra')}><Icon name="chat" />{T('askNephra')}</button>
         </div>
       </div>
 
       <div className="card mt-3.5">
-        <div className="eyebrow">Next step · a YAKAP check-up</div>
-        <h3 className="mt-1.5 text-[20px]">{rows.length ? `Nearest YAKAP clinics to ${brgyName}` : 'Choose your barangay to see the nearest clinics'}</h3>
-        <p className="muted text-[13px] mt-1.5">Bring your PhilHealth ID or number. YAKAP services are free at public YAKAP clinics; a private YAKAP clinic may charge up to ₱900 a year in total (PhilHealth Advisory 2026-0003).</p>
+        <div className="eyebrow">{T('next')}</div>
+        <h3 className="mt-1.5 text-[20px]">{rows.length ? T('nearestTo')(brgyName) : T('chooseBrgy')}</h3>
+        <p className="muted text-[13px] mt-1.5">{T('bring')}</p>
         {!rows.length && (
-          <select className="in mt-3" aria-label="Your barangay" value="" onChange={(e) => onBarangay(e.target.value)}>
-            <BarangayOptions placeholder="Choose your barangay" />
+          <select className="in mt-3" aria-label={T('choosePlaceholder')} value="" onChange={(e) => onBarangay(e.target.value)}>
+            <BarangayOptions placeholder={T('choosePlaceholder')} />
           </select>
         )}
         <div className="clist">
@@ -284,26 +292,26 @@ function Result({ a, res, onClear, onBarangay }) {
               <span className={`pin ${c.public ? 'pub' : 'pri'}`} aria-hidden="true">+</span>
               <span>
                 <b>{c.name}</b>
-                <small>{c.public ? 'Public · YAKAP check-up free' : 'Private · may charge up to ₱900 a year'} · {c.brgy}{i === 3 ? ' · nearest public clinic' : ''}</small>
+                <small>{c.public ? T('pub') : T('pri')} · {c.brgy}{i === 3 ? ` · ${T('nearestPublic')}` : ''}</small>
               </span>
               <span className="km">~{c.km.toFixed(1)} km</span>
             </button>
           ))}
         </div>
         <div className="flex justify-between items-center gap-2 flex-wrap mt-3">
-          <button type="button" className="btn sm" onClick={() => openMap()}><Icon name="map" />Show on map</button>
-          <div className="seg" role="group" aria-label="Map background">
-            {['outline', 'map', 'satellite'].map((k) => (
-              <button key={k} type="button" className={k === base ? 'on' : undefined} aria-pressed={k === base} onClick={() => setBase(k)}>{k[0].toUpperCase() + k.slice(1)}</button>
+          <button type="button" className="btn sm" onClick={() => openMap()}><Icon name="map" />{T('showMap')}</button>
+          <div className="seg" role="group" aria-label={T('mapLabel')}>
+            {['outline', 'map', 'satellite'].map((k, i) => (
+              <button key={k} type="button" className={k === base ? 'on' : undefined} aria-pressed={k === base} onClick={() => setBase(k)}>{T('bases')[i]}</button>
             ))}
           </div>
         </div>
         <div ref={mapBox}>{mapOpen && <ClinicMap from={a.brgy || null} base={base} focus={focus} />}</div>
         <div className="legend">
-          <span><i className="dot" style={{ background: '#2E9E62' }} />Public: YAKAP check-up free</span>
-          <span><i className="dot" style={{ background: '#C98A1B' }} />Private: up to ₱900 a year</span>
+          <span><i className="dot" style={{ background: '#2E9E62' }} />{T('legendPub')}</span>
+          <span><i className="dot" style={{ background: '#C98A1B' }} />{T('legendPri')}</span>
         </div>
-        <p className="muted text-xs mt-2">Clinics: PhilHealth YAKAP list, 30 Sep 2026. Pins are approximate (barangay level). Map pictures load from the internet. Your answers went to the NEPHLUX server only to work out this result; it keeps none of them.</p>
+        <p className="muted text-xs mt-2">{T('mapNote')}</p>
       </div>
     </>
   )

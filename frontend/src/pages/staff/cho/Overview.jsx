@@ -9,6 +9,10 @@ import CityMap from './CityMap'
 const PUBLIC = CLINICS.filter((c) => c.public)
 
 // counts from /city-insights are numbers, or "<5" when a cell is too small to show
+// the API sends PhilHealth's full uppercase clinic name; show the short name from the city list when there is one
+const SHORT = Object.fromEntries(CLINICS.map((c) => [c.fullName.toUpperCase(), c.name]))
+const clinicName = (n) => SHORT[String(n).toUpperCase()] || n
+const stepName = (s) => s.replace(/\s*>=\s*/, ' ≥')
 const sup = (n) => (n == null ? '—' : typeof n === 'number' ? n.toLocaleString() : n)
 // for drawing only (bars, sparkline): a suppressed "<5" draws as 1 so it is visible but never read as 0
 const num = (n) => (typeof n === 'number' ? n : n ? 1 : 0)
@@ -193,26 +197,26 @@ function Body({ rows, ov }) {
           <div className="fun">
             {ov.funnel.map((f, i) => (
               <div key={f.step} className="fr">
-                <span>{f.step}</span>
+                <span>{stepName(f.step)}</span>
                 <span className="fb"><i style={{ width: `${(top ? Math.max(1, (100 * num(f.count)) / top) : 0).toFixed(1)}%`, background: FUNNEL_COLOUR[i % FUNNEL_COLOUR.length] }} /></span>
                 <span className="num mono">{sup(f.count)}</span>
               </div>
             ))}
           </div>
-          {T.completedShare != null && <p className="muted text-[12.5px] mt-2.5">{pct(1 - T.completedShare)} of referrals have no result yet. Each YAKAP clinic sees its own as missed referrals after 14 days.</p>}
+          {T.completedShare != null && <p className="muted text-[13.5px] mt-3.5">{pct(1 - T.completedShare)} of referrals have no result yet. Each YAKAP clinic sees its own as missed referrals after 14 days.</p>}
         </div>
         <div className="card">
           <div className="eyebrow">Outreach priorities · large population, low reach</div>
-          <div className="prio mt-2.5">
+          <div className="prio mt-3.5">
             {ov.outreachPriorities.map((p) => (
               <div key={p.barangay.id} className="pr">
                 <span className="n">{String(p.rank).padStart(2, '0')}</span>
-                <span><b>{p.barangay.name}</b><small>{p.population2020.toLocaleString()} residents{p.nearestClinic && ` · nearest clinic ${p.nearestClinic.name}`}</small></span>
-                <span className="mono text-[13px]">{per1k(p.screenedPer1000)}<small className="inline muted"> /1k</small></span>
+                <span><b>{p.barangay.name}</b><small>{p.population2020.toLocaleString()} residents{p.nearestClinic && ` · nearest clinic ${clinicName(p.nearestClinic.name)}`}</small></span>
+                <span className="v">{per1k(p.screenedPer1000)}<small>/1k</small></span>
               </div>
             ))}
           </div>
-          <p className="muted text-[12.5px] mt-2.5">Barangays with many residents and the fewest screenings per 1,000. Candidates for barangay outreach or a screening day; a planning aid, not a measure of disease.</p>
+          <p className="muted text-[13.5px] mt-3.5">Barangays with 5,000+ residents and the fewest screenings per 1,000. Candidates for barangay outreach or a screening day; a planning aid, not a measure of disease.</p>
         </div>
       </div>
     </>
