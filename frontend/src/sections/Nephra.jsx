@@ -19,8 +19,8 @@ const QUESTIONS = [
   { q: 'My creatinine is 110. Is that bad?', id: 'refuse_values', scope: 'medical',
     a: "I can't read or judge your own numbers or results. A doctor reads them together with your history and other tests, so please show them to your YAKAP doctor.\n\nIf you feel very unwell, go to an emergency room." },
 ]
-const CAN = ['Explain the steps, the words and where to go next', 'Show the difference between screening and diagnosis', 'Help staff find features on their screens', 'Answer in plain English, with Bisaya and Tagalog questions understood']
-const NEVER = ['Diagnoses, or reads your own lab results', 'Changes a risk score or approves a referral', 'Keeps or sends what you type', 'Answers medical questions: it sends you to a YAKAP doctor']
+const CAN = ['Explain the steps, the words and where to go next', 'Show the difference between screening and diagnosis', 'Help staff find features on their screens', 'Answer in English, Bisaya or Tagalog']
+const NEVER = ['Diagnoses, or reads your own lab results', 'Changes a risk score or approves a referral', 'Calculates risk scores, eGFR or costs, or advises on medicines', 'Stores what you type: questions go to the AI model to be answered, then are discarded']
 
 export default function Nephra() {
   const [emotion, setEmotion] = useState('happy')
@@ -47,7 +47,7 @@ export default function Nephra() {
       <div className="wrap">
         <SectionHead eyebrow="Meet Nephra" id="nT"
           title={<>Your guide to the app, <span className="serif">never a doctor.</span></>}
-          text="Nephra answers questions about NEPHLUX, YAKAP and the uACR test from a fixed set of checked answers. It is not a live AI, it never reads your results, and it sends medical questions to a YAKAP doctor." />
+          text="Nephra is an AI help assistant for questions about NEPHLUX, YAKAP and the uACR test. It only rewords answers our team has checked and never reads your results." />
         <div className="nstage reveal">
           <div className="npod glass">
             <div className="who"><NephraFace emotion={emotion} size={260} title={`Nephra, ${mood.name.toLowerCase()}`} /></div>
@@ -61,7 +61,7 @@ export default function Nephra() {
           <div className="nchat glass">
             <div className="hd">
               <span className="mini"><NephraFace emotion="happy" size={42} /></span>
-              <div><b>Nephra</b><div className="muted text-xs">Demo assistant · checked answers, not a live AI</div></div>
+              <div><b>Nephra</b><div className="muted text-xs">AI assistant · rewords checked answers, not for diagnosis</div></div>
             </div>
             <div className="log" ref={logRef} aria-live="polite">
               {log.map((m, i) => <div key={i} className={`bub ${m.who}`}>{m.text}</div>)}

@@ -24,7 +24,7 @@ export default function MobileNav() {
     <div className="mnav" role="dialog" aria-label="Menu" onClick={(e) => { if (e.target === e.currentTarget) close() }}>
       <div className="panel">
         <div className="flex justify-between items-center mb-2.5">
-          <span className="brand"><BrandMark />NEPHLUX</span>
+          <span className="brand"><BrandMark /></span>
           <button ref={closeBtn} className="icon-btn" aria-label="Close menu" onClick={close}><Icon name="x" className="" /></button>
         </div>
         {SECTIONS.map(([href, label]) => <a key={href} href={href} onClick={close}>{label}</a>)}

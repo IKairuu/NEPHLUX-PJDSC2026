@@ -84,7 +84,8 @@ function Returning({ s }) {
   )
 }
 
-function SlipBody({ s }) {
+// also used by the guided demo with a SAMPLE slip
+export function SlipBody({ s }) {
   return (
     <div className="rf">
       <Referring s={s} />

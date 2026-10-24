@@ -24,7 +24,7 @@ export default function Nav() {
 
   return (
     <header className={clsx('nav', dark && 'dark')}>
-      <a className="brand" href="#top" aria-label="NEPHLUX home"><BrandMark />NEPHLUX</a>
+      <a className="brand" href="#top" aria-label="NEPHLUX home"><BrandMark /></a>
       <nav className="nav-links" aria-label="Sections">
         {SECTIONS.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
       </nav>

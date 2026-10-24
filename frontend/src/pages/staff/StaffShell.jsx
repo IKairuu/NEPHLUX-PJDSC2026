@@ -43,7 +43,7 @@ export default function StaffShell({ role, title, children }) {
   return (
     <div className="app">
       <aside className="side" aria-label="Main navigation">
-        <Link className="brand" to="/"><BrandMark />NEPHLUX</Link>
+        <Link className="brand" to="/"><BrandMark /></Link>
         <div className="who">
           <span className="av">{initialsOf(name)}</span>
           <span><b>{name}</b><small>{r.name}</small></span>

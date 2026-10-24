@@ -34,7 +34,7 @@ function Register({ role }) {
     <div className="auth">
       <Aurora />
       <div className="auth-top">
-        <Link className="brand" to="/"><BrandMark />NEPHLUX</Link>
+        <Link className="brand" to="/"><BrandMark /></Link>
         <span className="flex gap-2">
           <button className="btn sm glass" onClick={() => go('home')}><Icon name="back" />Home</button>
           <ThemeToggle className="glass" />

@@ -42,7 +42,7 @@ function AccountPage({ session }) {
     <div className="auth">
       <Aurora />
       <div className="auth-top">
-        <Link className="brand" to="/"><BrandMark />NEPHLUX</Link>
+        <Link className="brand" to="/"><BrandMark /></Link>
         <span className="flex gap-2">
           <Link className="btn sm glass" to={`/${session.role}`}><Icon name="back" />Dashboard</Link>
           <ThemeToggle className="glass" />

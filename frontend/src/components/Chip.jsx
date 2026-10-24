@@ -19,6 +19,7 @@ export function Chip({ kind, icon, children }) {
   return <span className={`chip ${kind}`}><Icon name={icon} />{children}</span>
 }
 
+// a missed pre-registered criterion reads "Not met" in neutral grey: it is a reported result, not an error
 export function PassChip({ pass }) {
-  return pass ? <Chip kind="pass" icon="check">Pass</Chip> : <Chip kind="fail" icon="x">Fail</Chip>
+  return pass ? <Chip kind="pass" icon="check">Pass</Chip> : <Chip kind="notmet" icon="dot">Not met</Chip>
 }

@@ -7,7 +7,7 @@ import { api } from '../lib/api'
 import { useUIStore } from '../store/useUIStore'
 
 const GREETING = "Hi, I'm Nephra. I can explain how NEPHLUX works, what YAKAP covers, what a uACR test is, and where to go next. I can't diagnose or read your own results."
-const DISCLAIMER = 'Help assistant · checked answers, not for diagnosis.'
+const DISCLAIMER = 'Help assistant · answered by AI from checked answers, not for diagnosis.'
 const SUGGESTIONS = ['What is NEPHLUX?', 'Where is the nearest YAKAP clinic?', 'What is my risk score?', 'My creatinine is 110. Is that bad?']
 
 // Replies come from POST /nephra/chat. When the API cannot be reached, these approved answers (same shape as

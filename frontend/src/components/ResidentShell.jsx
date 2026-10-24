@@ -15,7 +15,7 @@ export default function ResidentShell({ children }) {
     <div className="app resident">
       <div>
         <div className="top">
-          <Link className="brand mr-1.5" to="/"><BrandMark />NEPHLUX</Link>
+          <Link className="brand mr-1.5" to="/"><BrandMark /></Link>
           <span className="crumb" />
           <span className="rolechip"><Icon name="res" />Resident</span>
           <button className="btn sm ghost" onClick={() => go('home')}>Home</button>

@@ -7,6 +7,12 @@ export default function Icon({ name, className = 'ic', style }) {
   )
 }
 
+// the N mark from assets/logo plus the NEPH·LUX wordmark
 export function BrandMark({ className }) {
-  return <span className={className ? `mark ${className}` : 'mark'}><svg><use href="#i-logo" /></svg></span>
+  return (
+    <>
+      <img className={className ? `mark ${className}` : 'mark'} src="/logo/icon-192.png" alt="" width="30" height="30" />
+      <span className="wm">NEPH<b>LUX</b></span>
+    </>
+  )
 }

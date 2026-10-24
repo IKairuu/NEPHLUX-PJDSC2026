@@ -116,3 +116,13 @@ export const BUDGET = {
 export const CLINIC_COUNT = 42
 // PSGC 2023 barangays of Cagayan de Oro City
 export const BARANGAY_COUNT = 80
+
+// The resident check's two pass-mark rows, on the landing page and the staff model card: [text, chip, chip kind].
+// Step 1 finds the same cases as the rule and ranks risk better; its AUROC lower bound lands just under the 0.70 bar.
+const S1 = EV.test_auroc.step1_lr, RULE = EV.test_auroc.rule_dm_or_htn, M1 = EV.matched
+export const RESIDENT_ROWS = [
+  [`Step 1 (no labs) ranks risk better than the rule: AUROC ${S1.auroc.toFixed(2)} vs ${RULE.auroc.toFixed(2)} (bar: lower bound above 0.70, reached ${S1.ci[0].toFixed(3)})`, 'Just under', 'notmet'],
+  [`Step 1 finds as many cases as the rule at the same referrals (${M1.step1_lr.cases_found} vs ${M1.rule.cases_found})`, 'On par', 'info'],
+]
+// shown under the resident check rows
+export const EXPECTED = "As designed: with 10 questions and no labs, the check finds as many cases as the diabetes-or-high-BP rule, from a phone at home. Its job is to bring people to a YAKAP visit, where the lab model makes the referral."

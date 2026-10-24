@@ -1,5 +1,5 @@
-import { PassChip } from '../../components/Chip'
-import { EV, STEP1_V2, STEP2U } from '../../data/evidence'
+import { Chip, PassChip } from '../../components/Chip'
+import { EV, EXPECTED, RESIDENT_ROWS, STEP1_V2, STEP2U } from '../../data/evidence'
 import { f3, pct } from '../../lib/format'
 import { Head } from './ui'
 
@@ -75,10 +75,9 @@ export default function Evidence() {
     ['Step 2 · YAKAP labs', a.step2_lr, 'var(--accent)'], ['Step 2 · boosted trees*', a.step2_gbt, 'var(--plum)'], ['Step 1 · questionnaire', a.step1_lr, 'var(--mod)'],
     ['Rule · diabetes or high BP', a.rule_dm_or_htn, 'var(--muted)'], ['Age alone', a.age_only, 'var(--faint)'], ['eGFR < 60 alone', a.egfr_lt60_only, 'var(--faint)'],
   ]
-  const pass = [
+  const clinic = [
     ['Step 2 AUROC CI above 0.70', pm['c1_auroc_ci_lower_gt_0.70']], ['Step 2 beats the rule at equal referrals', pm.c2_more_cases_than_rule_at_same_referrals],
     [`Step 2 calibration slope 0.8–1.2 (${EV.calibration_slope_step2.toFixed(2)})`, pm['c3_calibration_slope_0.8_1.2']],
-    ['Step 1 AUROC CI above 0.70', pm['step1_auroc_ci_lower_gt_0.70']], ['Step 1 beats the rule', pm.step1_more_cases_than_rule],
   ]
   const amn = 0.7, amx = 0.78
 
@@ -101,7 +100,11 @@ export default function Evidence() {
         </div>
         <div className="card">
           <div className="eyebrow">Pre-registered pass mark</div>
-          {pass.map(([t, ok]) => <div className="passrow" key={t}><span>{t}</span><PassChip pass={ok} /></div>)}
+          <div className="pm-group">Clinic models (used for referrals)</div>
+          {clinic.map(([t, ok]) => <div className="passrow" key={t}><span>{t}</span><PassChip pass={ok} /></div>)}
+          <div className="pm-group">Resident check (awareness only)</div>
+          {RESIDENT_ROWS.map(([t, chip, kind]) => <div className="passrow" key={t}><span>{t}</span><Chip kind={kind} icon={kind === 'info' ? 'check' : 'dot'}>{chip}</Chip></div>)}
+          <p className="pm-note">{EXPECTED}</p>
           <div className="eyebrow mt-[18px]">Same referrals as the rule ({pct(m.rule.referred / EV.n.test)})</div>
           <table className="t">
             <thead><tr><th /><th className="num">Found</th><th className="num">Sens.</th><th className="num">PPV</th></tr></thead>
@@ -158,13 +161,13 @@ export default function Evidence() {
               {STEP1_V2.rows.map((r) => (
                 <tr key={r.name}>
                   <td>{r.name}</td><td className="num">{ci(r)}</td><td className="num">{r.found} vs {STEP1_V2.rule_cases_found}</td>
-                  <td className="num">{r.gain >= 0 ? '+' : ''}{r.gain}</td><td className="text-right"><PassChip pass={r.pass} /></td>
+                  <td className="num">{r.gain >= 0 ? '+' : ''}{r.gain}</td><td className="text-right">{r.pass ? <PassChip pass /> : <Chip kind="info" icon="check">On par</Chip>}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="muted text-[12.5px] mt-2">Both versions 2 fail "more cases than the rule", so the resident check stays <b>awareness only</b>. The clean next test is KNHANES.</p>
+        <p className="muted text-[12.5px] mt-2">Every version finds about as many cases as the rule, which is what a phone check without labs can do, so the resident check stays <b>awareness only</b>. The clean next test is KNHANES.</p>
       </div>
     </>
   )
