@@ -97,8 +97,7 @@ export class NephraAgent {
         if (text) return { text, model };
         this.logger.warn(`${model} returned no text`);
       } catch (err) {
-        // never log the prompt: it contains the user's question
-        this.logger.warn(`${model} failed: ${(err as Error).name}`);
+        this.logger.warn(`${model} failed: ${describeError(err)}`);
       } finally {
         clearTimeout(timer);
       }
@@ -113,4 +112,18 @@ function providerOptionsFor(model: string): ProviderOptions | undefined {
   if (model.startsWith('google/gemini-2.5'))
     return { google: { thinkingConfig: { thinkingBudget: 0 } } };
   return undefined;
+}
+
+// Status code and the provider's own error text (for example "API key not
+// valid"). Never the request body: it contains the user's question.
+function describeError(err: unknown): string {
+  const e = err as {
+    name?: string;
+    message?: string;
+    statusCode?: number;
+    cause?: { code?: string };
+  };
+  const status = e.statusCode ?? e.cause?.code ?? 'no status';
+  const text = (e.message ?? '').replace(/\s+/g, ' ').slice(0, 200);
+  return `${e.name ?? 'Error'} (${status}) ${text}`;
 }
