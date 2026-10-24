@@ -450,15 +450,22 @@ NEPHLUX-PJDSC2026/
 
 **Easiest: open the live demo at https://nephlux-pjdsc-2026.vercel.app** and sign in with one of the [demo accounts](#demo-accounts) below. Nothing to install.
 
-**Or run the web app on your own computer.** The API (the web service in `backend/`) is already deployed on Render at **https://nephlux-pjdsc2026.onrender.com**, with its database seeded. You only need Node.js 20+ to run the web app against it:
+**Or run the web app on your own computer.** The API (the web service in `backend/`) is already deployed on Render at **https://nephlux-pjdsc2026.onrender.com**, with its database seeded. You only need Git and Node.js 20+ to run the web app against it:
 
-1. In `frontend/`, rename `.env.example` to `.env` (or copy it). It already points the app at the deployed API:
+1. Clone the repository and go into its folder:
+
+   ```bash
+   git clone <repository-url>
+   cd NEPHLUX-PJDSC2026
+   ```
+
+2. In `frontend/`, rename `.env.example` to `.env` (or copy it). It already points the app at the deployed API:
 
    ```
    VITE_API_URL=https://nephlux-pjdsc2026.onrender.com
    ```
 
-2. Install and start the web app:
+3. Install and start the web app:
 
    ```bash
    cd frontend
@@ -466,13 +473,13 @@ NEPHLUX-PJDSC2026/
    npm run dev
    ```
 
-3. Open http://localhost:5173 and sign in with one of the [demo accounts](#demo-accounts) below.
+4. Open http://localhost:5173 and sign in with one of the [demo accounts](#demo-accounts) below.
 
 The API runs on Render's free plan, which sleeps when idle. The first request after a quiet spell can take about a minute while it wakes up; after that it responds normally.
 
 ### Running everything locally
 
-You need Node.js 20+ and a PostgreSQL database.
+You need Git, Node.js 20+ and a PostgreSQL database. Clone the repository first, as in step 1 above.
 
 **API** (`backend/`). Create `backend/.env` with `DATABASE_URL`, `JWT_SECRET` and, for email notices, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_APP_PASSWORD` and `MAIL_TO`. Then:
 
