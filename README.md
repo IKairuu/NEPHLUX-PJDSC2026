@@ -313,7 +313,7 @@ NEPHLUX is a web app with a React front end and a NestJS API on PostgreSQL. Resi
 
 <br/>
 
-Nephra is a help chat on every screen. It picks one of **78 approved answers** about the app, YAKAP and kidney basics, with no language model and no storage. Danger signs get an emergency answer, and diagnosis or medicine questions are sent to the doctor.
+Nephra is a help chat on every screen. It picks one of **78 approved answers** about the app, YAKAP and kidney basics and stores nothing. When an AI model is set in the API's `.env`, the model may only reword the chosen approved answer, in English, Filipino or Bisaya; without one, Nephra shows the approved text as written. Questions are rate-limited per user. Danger signs get an emergency answer, and diagnosis or medicine questions are sent to the doctor.
 
 Its pass mark was written before the answer bank existed. On held-out questions:
 
@@ -330,7 +330,7 @@ With one "did you mean" tap, 48 of 62 (77%) reached the right answer. Nephra is 
 ## Privacy and Safety by Design
 
 - **The resident check stores nothing.** The server scores the answers and keeps no record or log of them. Answers reach a clinic only as the clinic code, and only if the resident shows it.
-- **Nephra stores nothing.** It picks from approved answers, with no language model.
+- **Nephra stores nothing.** It answers only from approved text. An optional AI model may reword that text but cannot add facts, calculate or diagnose, and the chat says when a question is sent to the AI service.
 - **Staff sign in.** Clinic and City Health Office screens need an approved staff account; records use initials only.
 - **Counts, not names, for the city**, with cells of 1 to 4 suppressed.
 - **The doctor decides every referral.** An override requires a written reason.
