@@ -12,8 +12,8 @@ export const ROLE_KEYS = ['resident', 'doctor', 'cho']
 export const ROLES = {
   resident: { name: 'Resident', icon: 'res', blurb: 'Two-minute awareness check. No account, nothing saved.' },
   // v7: a nurse or doctor enters the labs; only the doctor decides. `short` keeps role pickers and buttons readable.
-  doctor: { name: 'YAKAP Clinic (nurse or doctor)', short: 'YAKAP Clinic', icon: 'doc', blurb: 'A nurse or doctor enters the YAKAP labs; the doctor decides the referral; the clinic follows it up.', email: 'doctor@demo.nephlux', demoName: 'Dr. A. Reyes' },
-  cho: { name: 'City Health Office', short: 'CHO', icon: 'cho', blurb: 'Screening reach by barangay, test budget, outreach.', email: 'cho@demo.nephlux', demoName: 'CHO analyst' },
+  doctor: { name: 'YAKAP Clinic (nurse or doctor)', short: 'YAKAP Clinic', icon: 'doc', blurb: 'A nurse or doctor enters the YAKAP labs; the doctor decides the referral; the clinic follows it up.', email: 'clinic_test@gmail.com', demoName: 'Dr. A. Reyes' },
+  cho: { name: 'City Health Office', short: 'CHO', icon: 'cho', blurb: 'Screening reach by barangay, test budget, outreach.', email: 'cho_test@gmail.com', demoName: 'CHO analyst' },
 }
 
 // Shown on the sign-in screen for the seeded demo accounts. It only works when the backend was seeded
