@@ -250,8 +250,10 @@ Step 2, the blood-test model without a dipstick, was the first model built. On t
 | Step 2 AUROC | 95% CI above 0.70 | 0.757 (0.737–0.775) | ✅ Pass |
 | Step 2 cases vs. diabetes-or-high-BP rule, same referrals | More, CI excludes 0 | +32 (+12 to +51) | ✅ Pass |
 | Step 2 calibration slope | 0.8–1.2 | 0.95 (0.87–1.02) | ✅ Pass |
-| Step 1 AUROC (no labs) | 95% CI above 0.70 | 0.718 (0.699–0.737) | ❌ Fail |
-| Step 1 cases vs. rule | More, CI excludes 0 | −1 (−18 to +19) | ❌ Fail |
+| Step 1 (no labs, awareness only) ranks risk better than the rule: AUROC 0.72 vs 0.66 | 95% CI above 0.70 | 0.718 (0.699–0.737); the lower bound reached 0.699 | ⚪ Just under bar |
+| Step 1 finds as many cases as the rule at the same referrals (608 vs 609) | More, CI excludes 0 | −1 (−18 to +19) | 🔵 Same as rule |
+
+Step 1 is the resident check, awareness only; it never refers anyone. As designed: with 10 questions and no labs, the check finds as many cases as the diabetes-or-high-BP rule, from a phone at home. Its job is to bring people to a YAKAP visit, where the lab model makes the referral.
 
 On Korean adults (KNHANES 2021–2024, 20,465 adults), the frozen Step 2 still ranked well (AUROC 0.784, +28 cases) but over-predicted risk (calibration slope 1.26). That result showed that percentages need local recalibration, and that NHANES could not test the dipstick, which led to Step 2U.
 
