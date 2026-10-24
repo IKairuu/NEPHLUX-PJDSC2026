@@ -3,6 +3,7 @@ import { reasonText } from '../../common/risk/risk-engine';
 import {
   ClinicSector,
   Decision,
+  DipstickGrade,
   LabUnits,
   RiskLevel,
   Sex,
@@ -79,6 +80,10 @@ export class AssessmentResponseDto {
     hgbGDl: number;
     wbc: number;
     platelets: number;
+    dipProtein: DipstickGrade | null;
+    dipBlood: DipstickGrade | null;
+    dipGlucose: DipstickGrade | null;
+    urineSg: number | null;
   };
   risk: AssessmentRiskDto | null;
   warnings: string[];
@@ -104,9 +109,11 @@ export class AssessmentResponseDto {
         `eGFR ${Math.round(r.egfr)} is below 60. If it stays low for 3 months this alone meets the CKD threshold; manage per guideline whatever the score.`,
       );
     }
-    warnings.push(
-      'YAKAP urinalysis is not used by the model. A positive dipstick protein should raise concern whatever the score.',
-    );
+    if (!a.dipProtein) {
+      warnings.push(
+        'No urine dipstick result, so this uses Step 2 (blood tests only). Enter the YAKAP dipstick to use Step 2U, which found more cases on its test.',
+      );
+    }
     return {
       id: a.id,
       assessedOn: a.assessedOn,
@@ -140,6 +147,10 @@ export class AssessmentResponseDto {
         hgbGDl: a.hgbGDl,
         wbc: a.wbc,
         platelets: a.platelets,
+        dipProtein: a.dipProtein,
+        dipBlood: a.dipBlood,
+        dipGlucose: a.dipGlucose,
+        urineSg: a.urineSg,
       },
       risk: r
         ? {

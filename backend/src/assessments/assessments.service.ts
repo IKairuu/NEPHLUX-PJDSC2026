@@ -9,15 +9,27 @@ import {
 import { AuthUser } from '../auth/auth-user';
 import { BarangaysService } from '../barangays/barangays.service';
 import { decodeClinicCode } from '../common/clinic-code/clinic-code';
-import { ActiveModel, parseModelVersion } from '../common/risk/model-version';
 import {
+  ActiveModel,
+  ActiveStep2UModel,
+  STEP_LABS,
+  STEP_LABS_DIPSTICK,
+  parseModelVersion,
+  parseStep2UVersion,
+} from '../common/risk/model-version';
+import {
+  DipstickInput,
+  RiskScore,
   SI_TO_CONVENTIONAL,
   Step2Level,
   bmiFrom,
+  dipstickProteinPositive,
   egfr,
   reasons,
   scoreStep2,
+  scoreStep2U,
   step2Level,
+  step2uLevel,
 } from '../common/risk/risk-engine';
 import { Prisma, Suggestion } from '../generated/prisma/client';
 import {
@@ -28,7 +40,6 @@ import { AssessmentQueryDto } from './dto/assessment-query.dto';
 import { AssessmentSummaryDto } from './dto/assessment-response.dto';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 
-const STEP_LABS = 2;
 const REASON_COUNT = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -65,12 +76,38 @@ export class AssessmentsService {
     const patient = await this.resolvePatient(dto);
     const residentCode = this.checkResidentCode(dto);
     const labs = this.toConventional(dto);
-    const active = await this.loadActiveModel();
 
     const bmi = bmiFrom(dto.weightKg, dto.heightCm);
     const inputs = { ...dto, ...labs, bmi };
-    const score = scoreStep2(active.model, inputs);
-    const level = step2Level(score.probability, active.thresholds);
+    const dipstick: DipstickInput | null = dto.dipProtein
+      ? {
+          protein: dto.dipProtein,
+          blood: dto.dipBlood ?? null,
+          glucose: dto.dipGlucose ?? null,
+          specificGravity: dto.urineSg ?? null,
+        }
+      : null;
+
+    // With a dipstick protein result: Step 2U (KNHANES). Without one: Step 2 (NHANES).
+    let modelVersionId: string;
+    let score: RiskScore;
+    let level: Step2Level;
+    if (dipstick) {
+      const active = await this.loadStep2UModel();
+      modelVersionId = active.id;
+      score = scoreStep2U(active.model, inputs, dipstick);
+      level = step2uLevel(score.probability, active.thresholds);
+    } else {
+      const active = await this.loadActiveModel();
+      modelVersionId = active.id;
+      score = scoreStep2(active.model, inputs);
+      level = step2Level(score.probability, active.thresholds);
+    }
+    // Dipstick protein 1+ or more means refer whatever the score
+    const suggestion =
+      dipstick && dipstickProteinPositive(dipstick)
+        ? 'REFER'
+        : SUGGESTION_FOR[level];
 
     return this.repository.createWithRisk(
       {
@@ -94,14 +131,18 @@ export class AssessmentsService {
         ...labs,
         wbc: dto.wbc,
         platelets: dto.platelets,
+        dipProtein: dto.dipProtein ?? null,
+        dipBlood: dto.dipBlood ?? null,
+        dipGlucose: dto.dipGlucose ?? null,
+        urineSg: dto.urineSg ?? null,
       },
       patient,
       {
-        modelVersionId: active.id,
+        modelVersionId,
         probability: score.probability,
         riskLevel: level,
         egfr: egfr(labs.creatinineMgDl, dto.age, dto.female),
-        suggestion: SUGGESTION_FOR[level],
+        suggestion,
         reasons: reasons(score, REASON_COUNT).map((r, i) => ({
           rank: i + 1,
           featureKey: r.key,
@@ -238,6 +279,24 @@ export class AssessmentsService {
       );
     }
     const parsed = parseModelVersion(row);
+    if (!parsed) {
+      throw new InternalServerErrorException(
+        `Model version ${row.version} (step ${row.step}) is malformed`,
+      );
+    }
+    return parsed;
+  }
+
+  private async loadStep2UModel(): Promise<ActiveStep2UModel> {
+    const row = await this.repository.findActiveModelVersion(
+      STEP_LABS_DIPSTICK,
+    );
+    if (!row) {
+      throw new ServiceUnavailableException(
+        'No active Step 2U model. Run the database seed first.',
+      );
+    }
+    const parsed = parseStep2UVersion(row);
     if (!parsed) {
       throw new InternalServerErrorException(
         `Model version ${row.version} (step ${row.step}) is malformed`,

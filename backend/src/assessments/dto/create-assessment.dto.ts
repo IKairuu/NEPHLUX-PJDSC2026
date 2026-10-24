@@ -13,7 +13,9 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
-import { LabUnits } from '../../generated/prisma/client';
+import { DipstickGrade, LabUnits } from '../../generated/prisma/client';
+
+const GRADES = ['NEG', 'TRACE', 'ONE_PLUS', 'TWO_PLUS', 'THREE_PLUS'];
 
 // One YAKAP lab review. Lab values are in the units the doctor typed (labUnits);
 // the service converts them to conventional units before storing and scoring.
@@ -140,4 +142,25 @@ export class CreateAssessmentDto {
   @Min(5)
   @Max(2000)
   platelets: number;
+
+  // YAKAP urinalysis dipstick, when it is done. Protein is needed for Step 2U;
+  // blood, glucose and specific gravity are optional.
+  @IsOptional()
+  @IsIn(GRADES)
+  dipProtein?: DipstickGrade;
+
+  @IsOptional()
+  @IsIn(GRADES)
+  dipBlood?: DipstickGrade;
+
+  @IsOptional()
+  @IsIn(GRADES)
+  dipGlucose?: DipstickGrade;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1.0)
+  @Max(1.05)
+  urineSg?: number;
 }

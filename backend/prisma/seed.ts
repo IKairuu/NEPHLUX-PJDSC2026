@@ -1,6 +1,6 @@
-// Seeds reference data: the 80 Cagayan de Oro barangays, the 42 YAKAP clinics and
+// Seeds reference data: the 80 Cagayan de Oro barangays, the 42 YAKAP clinics,
 // risk model v1.0.0 (step 1 = resident questions, step 2 = YAKAP labs) with the step-2
-// test-budget curve, default settings, and, when
+// test-budget curve, the Step 2U model (step 3 = labs + dipstick, models/step2u_v1.json), default settings, and, when
 // SEED_DEMO_PASSWORD is set, demo staff accounts for the doctor, BHW and CHO screens.
 // Safe to run more than once: every row is upserted on its natural key.
 // Run with: npx prisma db seed
@@ -187,6 +187,46 @@ async function seedModel(): Promise<void> {
   );
 }
 
+interface Step2USeed {
+  version: string;
+  intercept: number;
+  coef: Record<string, number>;
+  mean: Record<string, number>;
+  thresholds: { refer: number };
+  test: { auroc: { auroc: number; ci: [number, number] } } & Prisma.InputJsonObject;
+}
+
+// Step 2U, read from the repository's models/ folder
+async function seedStep2UModel(): Promise<void> {
+  const m = JSON.parse(
+    readFileSync(
+      join(__dirname, '..', '..', 'models', 'step2u_v1.json'),
+      'utf8',
+    ),
+  ) as Step2USeed;
+  const step = 3;
+  const data = {
+    coefficients: { intercept: m.intercept, coef: m.coef },
+    means: m.mean,
+    thresholds: { step2u_refer: m.thresholds.refer },
+    testAuroc: m.test.auroc.auroc,
+    ciLow: m.test.auroc.ci[0],
+    ciHigh: m.test.auroc.ci[1],
+    evidence: m.test,
+    isActive: true,
+  };
+  await prisma.modelVersion.updateMany({
+    where: { step, NOT: { version: m.version } },
+    data: { isActive: false },
+  });
+  await prisma.modelVersion.upsert({
+    where: { version_step: { version: m.version, step } },
+    create: { version: m.version, step, ...data },
+    update: data,
+  });
+  console.log(`model_versions: ${m.version} (step 3, Step 2U)`);
+}
+
 // Defaults only: a value changed later through PATCH /settings is kept
 async function seedSettings(): Promise<void> {
   const defaults: Record<string, string> = {
@@ -258,6 +298,7 @@ async function main(): Promise<void> {
   const barangayIds = await seedBarangays();
   await seedClinics(barangayIds);
   await seedModel();
+  await seedStep2UModel();
   await seedSettings();
   await seedDemoStaff(barangayIds);
 }
