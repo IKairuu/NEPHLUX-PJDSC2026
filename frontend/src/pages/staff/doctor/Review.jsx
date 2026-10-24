@@ -124,7 +124,7 @@ function Decide({ a, dip, onDone, onSlip }) {
         {d.recheckDue && <p className="text-[13.5px] mt-2"><b>Recheck YAKAP labs by</b> {isoDate(d.recheckDue)}</p>}
         <p className="text-[13.5px] mt-2"><b>uACR result:</b> <UacrCell value={a.latestUacrMgG} /></p>
         <div className="flex gap-2 flex-wrap mt-3.5">
-          {d.decision !== 'NO_REFERRAL' && <button className="btn sm primary" onClick={() => onSlip(d.id)}><Icon name="print" />Referral slip</button>}
+          {d.decision === 'APPROVED' && <button className="btn sm primary" onClick={() => onSlip(d.id)}><Icon name="print" />Referral slip</button>}
           <Link className="btn sm" to="/doctor/queue">Back to the queue</Link>
         </div>
       </div>
@@ -138,7 +138,8 @@ function Decide({ a, dip, onDone, onSlip }) {
       const res = await api.referrals.create({ assessmentId: a.id, decision, ...(why && { overrideReason: why }) })
       notify(decision === 'NO_REFERRAL' ? 'Decision saved: no referral' : decision === 'OVERRIDDEN' ? 'Override saved' : 'Referral approved')
       onDone()
-      if (decision !== 'NO_REFERRAL') onSlip(res.id)
+      // only an approved referral has a slip; an override declines the referral
+      if (decision === 'APPROVED') onSlip(res.id)
     } catch (e) {
       setMsg(e.message)
     } finally {

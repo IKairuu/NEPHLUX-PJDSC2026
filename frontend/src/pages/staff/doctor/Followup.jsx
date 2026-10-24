@@ -24,9 +24,9 @@ function group(rows) {
   const G = {
     missed: rows.filter((r) => r.decision === 'APPROVED' && open(r) && daysSince(r.decidedAt) > MISSED_AFTER),
     pending: rows.filter((r) => r.decision === 'APPROVED' && open(r) && daysSince(r.decidedAt) <= MISSED_AFTER),
-    over: rows.filter((r) => r.decision === 'OVERRIDDEN' && open(r)),
+    over: rows.filter((r) => r.decision === 'OVERRIDDEN'),
     recheck: rows.filter((r) => r.decision === 'NO_REFERRAL' && r.recheckDue),
-    done: rows.filter((r) => !open(r)),
+    done: rows.filter((r) => r.decision === 'APPROVED' && !open(r)),
   }
   for (const k in G) G[k].sort((a, b) => new Date(a.decidedAt) - new Date(b.decidedAt))
   G.recheck.sort((a, b) => new Date(a.recheckDue) - new Date(b.recheckDue))
@@ -74,8 +74,8 @@ export default function Followup() {
                 <span className="days">{r.latestUacrMgG != null ? <UacrCell value={r.latestUacrMgG} /> : `${days} days`}</span>
                 <span className="act">
                   <Link className="btn sm" to={`/doctor/assessments/${r.assessmentId}`}>Open</Link>
-                  {r.decision !== 'NO_REFERRAL' && <button className="btn sm" onClick={() => setSlipId(r.id)}><Icon name="print" />Slip</button>}
-                  {r.decision !== 'NO_REFERRAL' && <RecordUacr assessmentId={r.assessmentId} repeat={r.latestUacrMgG != null} onDone={q.reload} />}
+                  {r.decision === 'APPROVED' && <button className="btn sm" onClick={() => setSlipId(r.id)}><Icon name="print" />Slip</button>}
+                  {r.decision === 'APPROVED' && <RecordUacr assessmentId={r.assessmentId} repeat={r.latestUacrMgG != null} onDone={q.reload} />}
                 </span>
               </div>
             )

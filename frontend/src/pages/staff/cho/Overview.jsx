@@ -37,7 +37,7 @@ function join(geo, stats) {
 
 // map colour. raw is null when the API withheld a rate (small counts); it colours as 0 and reads as "—"
 const METRICS = {
-  reach: { label: 'Screened per 1,000', raw: (b) => b.stats?.screenedPer1000 ?? null, f: (v) => (v < 0.01 ? '0.01' : v < 1 ? v.toFixed(2) : v.toFixed(1)) },
+  reach: { label: 'Screened per 1,000', raw: (b) => b.stats?.screenedPer1000 ?? null, f: per1k },
   done: { label: 'Referrals completed', raw: (b) => b.stats?.completedShare ?? null, f: (v) => pct(v) },
   pop: { label: 'Population 2020', raw: (b) => b.pop2020, f: (v) => Math.round(v).toLocaleString() },
 }
@@ -100,7 +100,7 @@ const FUNNEL_COLOUR = ['var(--ch2)', 'var(--high)', 'var(--plum)', 'var(--low)',
 
 function Body({ rows, ov }) {
   const [metric, setMetric] = useState('reach')
-  const [base, setBase] = useState('outline')
+  const [base, setBase] = useState('satellite')
   const [hl, setHl] = useState(null)
   const [showAll, setShowAll] = useState(false)
   const M = METRICS[metric], T = ov.totals

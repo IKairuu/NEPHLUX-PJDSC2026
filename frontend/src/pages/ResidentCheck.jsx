@@ -229,7 +229,7 @@ function Result({ a, res, lang, onClear, onBarangay }) {
   const rows = res.nearestClinics.map((c) => ({ id: c.yakapRef, name: c.shortName || c.name, public: c.sector === 'PUBLIC', brgy: c.barangayName, km: c.distanceKm }))
 
   const [mapOpen, setMapOpen] = useState(false)
-  const [base, setBase] = useState('outline')
+  const [base, setBase] = useState('satellite')
   const [focus, setFocus] = useState(null)
   const [scrollTick, setScrollTick] = useState(0)
   const mapBox = useRef(null)

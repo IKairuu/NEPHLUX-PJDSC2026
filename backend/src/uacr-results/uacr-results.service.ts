@@ -20,7 +20,7 @@ export class UacrResultsService {
     user: AuthUser,
   ): Promise<UacrResultWithRecorder> {
     const a = await this.loadInScope(dto.assessmentId, user);
-    if (!a.decision || a.decision.decision === 'NO_REFERRAL') {
+    if (a.decision?.decision !== 'APPROVED') {
       throw new BadRequestException(
         'There is no uACR referral for this assessment',
       );

@@ -8,7 +8,7 @@ export const ASSESSMENT_INCLUDE = {
   riskResult: {
     include: {
       reasons: { orderBy: { rank: 'asc' } },
-      modelVersion: { select: { version: true } },
+      modelVersion: { select: { version: true, step: true } },
     },
   },
   decision: true,

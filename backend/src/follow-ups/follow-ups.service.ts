@@ -106,6 +106,6 @@ function toRow(d: FollowUpDecision, now: number): FollowUpRowDto {
           suspectedAlbuminuria: u.valueMgG >= UACR_POSITIVE_MG_G,
         }
       : null,
-    canRecordUacr: !u && d.decision !== 'NO_REFERRAL',
+    canRecordUacr: !u && d.decision === 'APPROVED',
   };
 }

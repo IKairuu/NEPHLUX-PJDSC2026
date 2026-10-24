@@ -9,6 +9,7 @@ import { AssessmentsService } from '../assessments/assessments.service';
 import { AuthUser } from '../auth/auth-user';
 import { BarangaysService } from '../barangays/barangays.service';
 import { haversineKm } from '../common/geo/haversine';
+import { STEP_LABS_DIPSTICK } from '../common/risk/model-version';
 import { reasonText } from '../common/risk/risk-engine';
 import { Prisma } from '../generated/prisma/client';
 import { CreateReferralDto } from './dto/create-referral.dto';
@@ -111,9 +112,10 @@ export class ReferralsService {
 
   async slip(id: string, user: AuthUser): Promise<ReferralSlipDto> {
     const d = await this.findOne(id, user);
-    if (d.decision === 'NO_REFERRAL') {
+    // only an approved referral sends the patient for a uACR
+    if (d.decision !== 'APPROVED') {
       throw new BadRequestException(
-        'There is no slip for a no-referral decision',
+        'There is no slip unless the referral was approved',
       );
     }
     const a = d.assessment;
@@ -162,15 +164,19 @@ export class ReferralsService {
       },
       doctorName: d.decidedBy.fullName,
       disclaimer:
-        'Screening support from a model trained on U.S. NHANES data, not yet validated in Filipino patients; not a diagnosis. uACR is not part of the YAKAP benefit, so the patient may need to pay for it unless the City Health Office covers it.',
+        (r.modelVersion.step === STEP_LABS_DIPSTICK
+          ? 'Screening support from a model trained on Korean KNHANES data (labs and urine dipstick)'
+          : 'Screening support from a model trained on U.S. NHANES data') +
+        ', not yet validated in Filipino patients; not a diagnosis. uACR is not part of the YAKAP benefit, so the patient may need to pay for it unless the City Health Office covers it.',
     };
   }
 
   async markSlipPrinted(id: string, user: AuthUser): Promise<ReferralFull> {
     const d = await this.findOne(id, user);
-    if (d.decision === 'NO_REFERRAL') {
+    // only an approved referral sends the patient for a uACR
+    if (d.decision !== 'APPROVED') {
       throw new BadRequestException(
-        'There is no slip for a no-referral decision',
+        'There is no slip unless the referral was approved',
       );
     }
     return this.repository.markSlipPrinted(id, user.id);

@@ -48,7 +48,7 @@ export default function Decisions() {
                     <td className="text-[13px]">{r.decidedBy.fullName}</td>
                     <td className="mono"><UacrCell value={r.latestUacrMgG} /></td>
                     <td className="text-right">
-                      {r.decision !== 'NO_REFERRAL' && (
+                      {r.decision === 'APPROVED' && (
                         <button className="btn xs" onClick={() => setSlipId(r.id)}><Icon name="print" />{r.slipPrintedAt ? 'Reprint' : 'Slip'}</button>
                       )}
                     </td>

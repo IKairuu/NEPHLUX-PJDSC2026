@@ -67,7 +67,7 @@ export default function Queue() {
             <li>Print the uACR referral slip.</li>
           </ol>
           <div className="note warn mt-3.5 text-[13px]">
-            <Icon name="alert" /> YAKAP urinalysis is not used by the model (the U.S. data has no dipstick). A positive dipstick protein should raise concern whatever the score.
+            <Icon name="alert" /> With a YAKAP dipstick protein result, the score uses Step 2U (labs plus dipstick); without one, Step 2 (labs only). Dipstick protein 1+ or more means refer for uACR whatever the score.
           </div>
         </div>
       </div>

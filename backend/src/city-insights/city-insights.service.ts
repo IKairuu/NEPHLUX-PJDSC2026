@@ -261,8 +261,10 @@ function aggregate(barangays: BarangayForStats[], facts: AssessmentFact[]) {
     };
     add('screened');
     if (f.riskResult?.riskLevel === 'HIGH') add('high');
-    if (f.decision?.decision === 'APPROVED') add('referred');
-    const u = f.uacrResults[0];
+    const approved = f.decision?.decision === 'APPROVED';
+    if (approved) add('referred');
+    // a uACR counts only as the follow-up of an approved referral
+    const u = approved ? f.uacrResults[0] : undefined;
     if (u) add('done');
     if (u && u.valueMgG >= UACR_POSITIVE_MG_G) add('positive');
     if (f.residentCode) add('viaCode');
