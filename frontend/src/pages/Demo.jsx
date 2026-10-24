@@ -32,6 +32,12 @@ const DOCTOR = ROLES.doctor.demoName
 // Step 2U is not scored in the browser
 const STEP2U_P = 0.10, STEP2U_REFER = 0.025
 const LANGS = [['en', 'English'], ['ceb', 'Bisaya'], ['fil', 'Tagalog']]
+// what the resident takes to the YAKAP clinic, shown under the clinic code
+const BRING = {
+  en: 'Bring your PhilHealth ID (or PhilHealth number) and this code to the YAKAP clinic.',
+  ceb: 'Dad-a ang imong PhilHealth ID (o PhilHealth number) ug kini nga code sa YAKAP clinic.',
+  fil: 'Dalhin ang inyong PhilHealth ID (o PhilHealth number) at ang code na ito sa YAKAP clinic.',
+}
 // the API's English result text; the real check shows it as the server sends it, so RESULT has no English copy
 const EN = {
   headline: {
@@ -217,7 +223,7 @@ function STEPS(R, lang, onLang) {
       body: 'Diabetes, high blood pressure, smoking, weight and height, and his barangay. Each answer takes one tap. His answers are not stored anywhere.',
       view: <QuestionScreen i={QUESTIONS.length - 1} value="Bonbon" lang={lang} onLang={onLang} /> },
     { role: 'resident', screen: 'Your result', when: 'Day 0 · Resident',
-      body: '"Higher chance" is awareness, never a diagnosis. He gets a 9-character code that carries his answers. The code is the only thing he takes to the clinic, and only if he shows it.',
+      body: '"Higher chance" is awareness, never a diagnosis. He gets a 9-character code that carries his answers. He brings it to the YAKAP clinic together with his PhilHealth ID (or PhilHealth number), which YAKAP needs to register him.',
       view: <ResultScreen R={R} ring="code" lang={lang} onLang={onLang} /> },
     { role: 'resident', screen: 'Your result', when: 'Day 0 · Resident', block: 'start',
       body: 'The nearest clinics to Bonbon are listed, with the nearest public one marked. The YAKAP check-up is free at public YAKAP clinics; private ones may charge up to ₱900 a year.',
@@ -317,6 +323,7 @@ function ResultScreen({ R, ring, lang, onLang }) {
           <div className="eyebrow">{T('codeTitle')}</div>
           <div className="code">{R.code}</div>
           <p className="text-[13px]">{T('codeText')}</p>
+          <p className="text-[13px] mt-2"><Icon name="info" /> <b>{BRING[lang]}</b></p>
         </div>
         <p className="muted text-[12.5px] mt-3.5">{lang === 'en' ? EN.disclaimer : RESULT.disclaimer[lang]}</p>
         <div className="wiz-nav">

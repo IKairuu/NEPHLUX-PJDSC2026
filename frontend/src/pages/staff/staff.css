@@ -158,7 +158,6 @@
   .rf .f.grow { flex: 1 1 auto; }
   .rf .f b { font-weight: 700; white-space: nowrap; }
   .rf .ln { flex: 1 1 auto; min-width: 90px; border-bottom: 1px solid #000; padding: 0 4px 1px; min-height: 1.35em; font-size: 13.5px; }
-  .rf .ln i { color: #666; font-size: 11px; font-style: italic; margin-left: 6px; }
   .rf .sig { display: grid; gap: 4px; width: 340px; max-width: 100%; margin: 34px 0 8px; }
   .rf .sig .ln { min-height: 1.6em; text-align: center; }
   .rf .sig .prc { display: flex; gap: 6px; margin-top: 6px; }

@@ -13,11 +13,11 @@ const SEX = { MALE: 'M', FEMALE: 'F' }
 const longDate = (d) => new Date(d).toLocaleDateString('en-PH', { day: 'numeric', month: 'long', year: 'numeric' })
 
 // One "Label: ______" field. A value prints on the line; without one the line is left to fill in by hand.
-function F({ label, value, grow, hint }) {
+function F({ label, value, grow }) {
   return (
     <span className={grow ? 'f grow' : 'f'}>
       <b>{label}</b>
-      <span className="ln">{value}{hint && <i>{hint}</i>}</span>
+      <span className="ln">{value}</span>
     </span>
   )
 }
@@ -31,8 +31,8 @@ function Referring({ s }) {
     <section className="part">
       <h2>REFERRAL FORM</h2>
       <p className="sub">{s.clinic.name} · {s.clinic.sector === 'PUBLIC' ? 'public' : 'private'} YAKAP clinic · {s.city}</p>
-      <Row><F label="Date:" value={longDate(s.date)} /><F label="Receiving Hospital:" grow hint="laboratory or hospital doing the uACR" /></Row>
-      <Row><F label="Name of Patient:" value={p.initials} grow hint="write the full name by hand" /></Row>
+      <Row><F label="Date:" value={longDate(s.date)} /><F label="Receiving Hospital:" grow /></Row>
+      <Row><F label="Name of Patient:" value={p.initials} grow /></Row>
       <Row><F label="Age/ Sex:" value={`${p.age} / ${SEX[p.sex] || p.sex}`} /><F label="Barangay:" value={`${p.barangay}, ${s.city}`} grow /></Row>
       <Row><F label="Nationality:" /><F label="Resident code:" value={s.residentCode || 'none'} /></Row>
       <Row><F label="Vital Signs: PR:" /><F label="RR:" /><F label="Temp:" /></Row>
@@ -72,7 +72,7 @@ function Returning({ s }) {
       <Row><F label="Age/ Sex:" value={`${p.age} / ${SEX[p.sex] || p.sex}`} /><F label="Nationality:" /></Row>
       <Row><F label="Vital Signs: BP:" /><F label="PR:" /><F label="RR:" /><F label="Temp:" /></Row>
       <Row><F label="Pertinent History and Physical Exam:" grow /></Row>
-      <Row><F label="uACR result:" hint="mg/g" /><F label="Date tested:" /></Row>
+      <Row><F label="uACR result (mg/g):" /><F label="Date tested:" /></Row>
       <Row><F label="Impression and Diagnosis:" grow /></Row>
       <Row><F label="Medications/ Treatment:" grow /></Row>
       <div className="sig">
