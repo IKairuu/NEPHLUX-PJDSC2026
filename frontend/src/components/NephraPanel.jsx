@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import clsx from 'clsx'
 import Icon from './Icon'
 import NephraFace from './NephraFace'
+import { api } from '../lib/api'
 import { useUIStore } from '../store/useUIStore'
 
 const GREETING = "Hi, I'm Nephra. I can explain how NEPHLUX works, what YAKAP covers, what a uACR test is, and where to go next. I can't diagnose or read your own results."
 const DISCLAIMER = 'Help assistant · checked answers, not for diagnosis.'
 const SUGGESTIONS = ['What is NEPHLUX?', 'Where is the nearest YAKAP clinic?', 'What is my risk score?', 'My creatinine is 110. Is that bad?']
 
-// UI only: these mock replies have the shape of POST /nephra/chat (NephraChatResponseDto) so the panel can be
-// wired to the API by replacing reply() with api.nephra.chat({ message, role, screen, history }).
+// Replies come from POST /nephra/chat. When the API cannot be reached, these approved answers (same shape as
+// NephraChatResponseDto) keep the panel useful; anything else gets the did-you-mean fallback.
 const MOCK = {
   'what is nephlux?': { kind: 'answer', reply: 'NEPHLUX helps Cagayan de Oro decide who should get a urine albumin test first. It reads lab tests that YAKAP already pays for, so a doctor can decide.\n\nIt supports doctors. It does not give a diagnosis.', links: [{ label: 'How it works', path: '/#how' }] },
   'where is the nearest yakap clinic?': { kind: 'answer', reply: 'The resident check ends with a map of YAKAP clinics near your barangay, and shows which ones are free.', links: [{ label: 'Start the 2-minute check', path: '/resident/check' }] },
@@ -19,17 +20,41 @@ const MOCK = {
 }
 const FALLBACK = { kind: 'did_you_mean', reply: "I'm not sure I have a checked answer for that. Did you mean one of these?", links: [], suggestions: SUGGESTIONS.slice(0, 3) }
 
-function reply(message) {
-  return Promise.resolve({ suggestions: [], ...(MOCK[message.trim().toLowerCase()] || FALLBACK) })
+function offlineReply(message) {
+  return { suggestions: [], ...(MOCK[message.trim().toLowerCase()] || FALLBACK) }
 }
 
-const MOOD = { answer: 'explaining', emergency: 'concerned', see_doctor: 'concerned', no_calculation: 'explaining', did_you_mean: 'thinking', no_answer: 'thinking', off_topic: 'thinking' }
+// the backend's roles: staff by their session, residents on their own screens, everyone else a guest
+function roleOf(session, pathname) {
+  if (session?.role) return session.role
+  return pathname.startsWith('/resident') ? 'resident' : 'guest'
+}
+// "/doctor/queue" -> "doctor-queue", "/" -> "landing"
+const screenOf = (pathname) => (pathname.split('/').filter(Boolean).join('-') || 'landing').slice(0, 40)
+
+async function reply(message, ctx, log) {
+  // the turns before this message (not the greeting), trimmed to what the API accepts; it reads only the user's turns
+  const history = log.slice(1).slice(-6).map((m) => ({ who: m.who, text: m.text.slice(0, 500) }))
+  try {
+    return await api.nephra.chat({ message, role: ctx.role, screen: ctx.screen, history })
+  } catch (e) {
+    // 429: too many messages for now; say so instead of answering from the approved list
+    if (e.status === 429) return { kind: 'rate_limited', reply: e.message, links: [], suggestions: [] }
+    return offlineReply(message)
+  }
+}
+
+const MOOD = { answer: 'explaining', emergency: 'concerned', see_doctor: 'concerned', no_calculation: 'explaining', did_you_mean: 'thinking', no_answer: 'thinking', off_topic: 'thinking', rate_limited: 'thinking' }
 const SAFETY = { see_doctor: 'Please see a YAKAP doctor for this', emergency: 'Go to the nearest emergency room now' }
 
 export default function NephraPanel() {
   const open = useUIStore((s) => s.nephraOpen)
   const setOpen = useUIStore((s) => s.setNephraOpen)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const session = useUIStore((s) => s.session)
+  const role = roleOf(session, pathname)
+  const [info, setInfo] = useState({ suggestions: SUGGESTIONS, disclaimer: DISCLAIMER })
   const [log, setLog] = useState([{ who: 'nephra', text: GREETING, kind: 'answer' }])
   const [mood, setMood] = useState('happy')
   const [typing, setTyping] = useState(false)
@@ -37,6 +62,15 @@ export default function NephraPanel() {
   const bodyRef = useRef(null), inputRef = useRef(null)
 
   useEffect(() => { if (open) inputRef.current?.focus() }, [open])
+  // suggestion chips and the disclaimer for this role; the built-in ones stay if the API is down
+  useEffect(() => {
+    if (!open) return
+    let live = true
+    api.nephra.info(role).then((r) => {
+      if (live) setInfo({ suggestions: r.suggestions?.length ? r.suggestions : SUGGESTIONS, disclaimer: r.disclaimer || DISCLAIMER })
+    }, () => {})
+    return () => { live = false }
+  }, [open, role])
   useEffect(() => { if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight }, [log, typing, open])
   useEffect(() => {
     if (!open) return
@@ -58,13 +92,10 @@ export default function NephraPanel() {
     setLog((l) => [...l, { who: 'user', text: q }])
     setTyping(true)
     setMood('thinking')
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    const r = await reply(q)
-    setTimeout(() => {
-      setLog((l) => [...l, { who: 'nephra', text: r.reply, kind: r.kind, links: r.links, suggestions: r.suggestions }])
-      setMood(MOOD[r.kind] || 'happy')
-      setTyping(false)
-    }, reduce ? 0 : 450)
+    const r = await reply(q, { role, screen: screenOf(pathname) }, log)
+    setLog((l) => [...l, { who: 'nephra', text: r.reply, kind: r.kind, links: r.links, suggestions: r.suggestions }])
+    setMood(MOOD[r.kind] || 'happy')
+    setTyping(false)
   }
 
   function submit(e) {
@@ -87,7 +118,7 @@ export default function NephraPanel() {
     <div className="npanel" role="dialog" aria-modal="false" aria-labelledby="nTitle">
       <div className="nhead">
         <span className="nav-av" aria-hidden="true"><NephraFace emotion={mood} size={44} /></span>
-        <div><b id="nTitle">Nephra</b><small>{DISCLAIMER}</small></div>
+        <div><b id="nTitle">Nephra</b><small>{info.disclaimer}</small></div>
         <button type="button" className="icon-btn" aria-label="Close Nephra" onClick={close}><Icon name="x" className="" /></button>
       </div>
 
@@ -106,7 +137,7 @@ export default function NephraPanel() {
         ))}
         {typing
           ? <div className="ntype" role="status" aria-label="Nephra is typing"><i /><i /><i /></div>
-          : <div className="nsug">{SUGGESTIONS.map((s) => <button key={s} type="button" onClick={() => ask(s)}>{s}</button>)}</div>}
+          : <div className="nsug">{info.suggestions.map((s) => <button key={s} type="button" onClick={() => ask(s)}>{s}</button>)}</div>}
       </div>
 
       <form className="nform" onSubmit={submit}>

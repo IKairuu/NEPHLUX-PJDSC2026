@@ -85,6 +85,11 @@ export const api = {
     create: (body) => request('/uacr-results', { method: 'POST', body, auth: true }),
     list: (assessmentId) => request('/uacr-results', { query: { assessmentId }, auth: true }),
   },
+  // public, for residents and staff alike: Nephra stores nothing and never calculates
+  nephra: {
+    info: (role) => request('/nephra', { query: { role } }),
+    chat: (body) => request('/nephra/chat', { method: 'POST', body }),
+  },
   // CHO only: counts by barangay, small cells come back as "<5"
   cityInsights: {
     overview: ({ period, sector } = {}) => request('/city-insights/overview', { query: { period, sector }, auth: true }),
