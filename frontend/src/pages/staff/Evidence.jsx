@@ -1,5 +1,5 @@
 import { Chip, PassChip } from '../../components/Chip'
-import { EV, EXPECTED, RESIDENT_ROWS, STEP1_V2, STEP2U } from '../../data/evidence'
+import { EV, EXPECTED, RESIDENT_GROUP, RESIDENT_ROWS, STEP1_V2, STEP2U } from '../../data/evidence'
 import { f3, pct } from '../../lib/format'
 import { Head } from './ui'
 
@@ -102,8 +102,8 @@ export default function Evidence() {
           <div className="eyebrow">Pre-registered pass mark</div>
           <div className="pm-group">Clinic models (used for referrals)</div>
           {clinic.map(([t, ok]) => <div className="passrow" key={t}><span>{t}</span><PassChip pass={ok} /></div>)}
-          <div className="pm-group">Resident check (awareness only)</div>
-          {RESIDENT_ROWS.map(([t, chip, kind]) => <div className="passrow" key={t}><span>{t}</span><Chip kind={kind} icon={kind === 'info' ? 'check' : 'dot'}>{chip}</Chip></div>)}
+          <div className="pm-group">{RESIDENT_GROUP}</div>
+          {RESIDENT_ROWS.map(([t, chip, kind, , icon]) => <div className="passrow" key={t}><span>{t}</span><Chip kind={kind} icon={icon}>{chip}</Chip></div>)}
           <p className="pm-note">{EXPECTED}</p>
           <div className="eyebrow mt-[18px]">Same referrals as the rule ({pct(m.rule.referred / EV.n.test)})</div>
           <table className="t">

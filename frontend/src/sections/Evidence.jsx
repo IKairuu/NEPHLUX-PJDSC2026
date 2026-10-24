@@ -1,7 +1,7 @@
 import Icon from '../components/Icon'
 import SectionHead from '../components/SectionHead'
 import CountUp from '../components/CountUp'
-import { EV, EXPECTED, RESIDENT_ROWS, STEP2U as U } from '../data/evidence'
+import { EV, EXPECTED, RESIDENT_GROUP, RESIDENT_ROWS, STEP2U as U } from '../data/evidence'
 import { f3, pct } from '../lib/format'
 import { useGo } from '../hooks/useGo'
 
@@ -53,11 +53,11 @@ export default function Evidence() {
                 </li>
               ))}
             </ul>
-            <div className="pm-group">Resident check (awareness only)</div>
+            <div className="pm-group">{RESIDENT_GROUP}</div>
             <ul className="pm mt-1.5">
-              {RESIDENT_ROWS.map(([label, chip, kind]) => (
+              {RESIDENT_ROWS.map(([label, chip, kind, mark]) => (
                 <li key={label} className="aw">
-                  <span className="mk"><Icon name={kind === 'info' ? 'check' : 'dot'} className="" /></span>
+                  <span className="mk"><Icon name={mark} className="" /></span>
                   <span>{label}</span>
                   <span className={`chip ${kind}`}>{chip}</span>
                 </li>

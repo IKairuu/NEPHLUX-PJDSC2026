@@ -16,7 +16,7 @@ export function LevelChip({ level, text }) {
 }
 
 export function Chip({ kind, icon, children }) {
-  return <span className={`chip ${kind}`}><Icon name={icon} />{children}</span>
+  return <span className={`chip ${kind}`}>{icon && <Icon name={icon} />}{children}</span>
 }
 
 // a missed pre-registered criterion reads "Not met" in neutral grey: it is a reported result, not an error
