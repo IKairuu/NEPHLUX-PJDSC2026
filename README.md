@@ -17,7 +17,7 @@ PhilHealth's YAKAP primary care benefit already pays for HbA1c, creatinine, lipi
 [![License](https://img.shields.io/badge/License-All%20rights%20reserved-200122?style=flat-square)](LICENSE)
 [![Better Stack Badge](https://incidents.betterstack.com/status-badges/v1/monitor/31sdk.svg)](https://incidents.betterstack.com/?utm_source=status_badge)
 
-[Pitch deck (PDF)](docs/NEPHLUX_Pitch_Deck.pdf) · [Project paper (PDF)](docs/NEPHLUX_Paper.pdf) · [Run the app](#run-the-app)
+[Live demo](https://nephlux-pjdsc-2026.vercel.app) · [Pitch deck (PDF)](docs/NEPHLUX_Pitch_Deck.pdf) · [Project paper (PDF)](docs/NEPHLUX_Paper.pdf) · [Run the app](#run-the-app)
 
 <br/>
 
@@ -448,7 +448,9 @@ NEPHLUX-PJDSC2026/
 
 ### Quick start for judges
 
-The API (the web service in `backend/`) is already deployed on Render at **https://nephlux-pjdsc2026.onrender.com**, with its database seeded. You only need Node.js 20+ to run the web app against it:
+**Easiest: open the live demo at https://nephlux-pjdsc-2026.vercel.app** and sign in with one of the [demo accounts](#demo-accounts) below. Nothing to install.
+
+**Or run the web app on your own computer.** The API (the web service in `backend/`) is already deployed on Render at **https://nephlux-pjdsc2026.onrender.com**, with its database seeded. You only need Node.js 20+ to run the web app against it:
 
 1. In `frontend/`, rename `.env.example` to `.env` (or copy it). It already points the app at the deployed API:
 
