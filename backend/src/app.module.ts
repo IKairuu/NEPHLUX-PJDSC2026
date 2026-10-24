@@ -10,6 +10,7 @@ import { ClinicsModule } from './clinics/clinics.module';
 import { FollowUpsModule } from './follow-ups/follow-ups.module';
 import { MailModule } from './mail/mail.module';
 import { ModelVersionsModule } from './model-versions/model-versions.module';
+import { NephraModule } from './nephra/nephra.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ReferralsModule } from './referrals/referrals.module';
 import { ResidentCheckModule } from './resident-check/resident-check.module';
@@ -32,6 +33,7 @@ import { UacrResultsModule } from './uacr-results/uacr-results.module';
     CityInsightsModule,
     MailModule,
     AccessRequestsModule,
+    NephraModule,
   ],
   controllers: [AppController],
   providers: [AppService],
