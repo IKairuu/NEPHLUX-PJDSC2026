@@ -36,7 +36,7 @@ const SCENES = {
         <div><b>9.1</b><span>rule or dipstick first</span></div>
         <div><b>₱755</b><span>per case</span></div>
       </div>
-      <div className="muted text-xs">Korean KNHANES test set; uACR price assumed ₱600</div>
+      <div className="muted text-xs">Korean KNHANES test set; uACR ₱600 public or bulk (assumed); retail ₱1,500–3,500 gives ₱1,887–4,404 per case</div>
     </>
   ),
 }

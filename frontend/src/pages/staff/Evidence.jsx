@@ -46,7 +46,7 @@ function Step2UCard() {
             Referring the same {pct(t.comparator_share)} of {t.n.toLocaleString()} Korean test adults as "diabetes, high BP or dipstick protein 1+", Step 2U found {m.step2u.cases_found} of {t.cases} cases and the comparator {m.comparator.cases_found} (95% CI of the gain +{m.step2u.extra_ci[0]} to +{m.step2u.extra_ci[1]}). Sensitivity {pct(m.step2u.sensitivity, 1)} vs {pct(m.comparator.sensitivity, 1)}.
           </p>
           <p className="muted text-[13px] mt-2">
-            With only 50 uACR tests per 1,000 adults: {b.model.toFixed(1)} cases found vs {b.comparator.toFixed(1)}, about ₱{Math.round(b.cost_per_case_model).toLocaleString()} per case vs ₱{Math.round(b.cost_per_case_comparator).toLocaleString()} (uACR price assumed ₱600).
+            With only 50 uACR tests per 1,000 adults: {b.model.toFixed(1)} cases found vs {b.comparator.toFixed(1)}, about ₱{Math.round(b.cost_per_case_model).toLocaleString()} per case vs ₱{Math.round(b.cost_per_case_comparator).toLocaleString()} at ₱600 a test (public or bulk, assumed). At the published retail price (₱1,500–3,500): ₱1,887–4,404 vs ₱8,203–19,141 per case.
           </p>
         </div>
         <div>

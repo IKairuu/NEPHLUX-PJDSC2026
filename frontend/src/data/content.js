@@ -32,7 +32,7 @@ export const BENEFITS = [
 export const ACCESS = [
   ['Residents', 'Free to use', 'No account and no data kept. Works on a basic phone browser. The YAKAP check-up itself is free at public YAKAP clinics; private YAKAP clinics may charge up to ₱900 a year.'],
   ['YAKAP clinics', 'Part of the consult', 'Runs beside the YAKAP lab results the clinic already has, and the clinic follows up its own referrals. A real rollout needs clinic accounts and record keeping under the Data Privacy Act.'],
-  ['City Health Office', 'Budget for uACR', 'uACR is not in the YAKAP benefit. The city decides how many tests it can fund; the slider shows who to test first. Price assumed ₱600 (₱300–1,200).'],
+  ['City Health Office', 'Budget for uACR', 'uACR is not in the YAKAP benefit. The city decides how many tests it can fund; the slider shows who to test first. Price: ₱600 public or bulk (assumed, ₱300–1,200); retail ₱1,500–3,500 (Baclig, 2026).'],
 ]
 
 export const FAQ = [

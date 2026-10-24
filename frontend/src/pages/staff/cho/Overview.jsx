@@ -243,7 +243,7 @@ function Strategies() {
               </table>
             </div>
             <p className="muted text-[12.5px] mt-2.5">
-              *uACR price assumed at {peso(s.uacrPrice)}; it is not in the YAKAP benefit.
+              *uACR price: {peso(s.uacrPrice)} public or bulk (assumed, ₱300–1,200); retail ₱1,500–3,500 (Baclig, 2026, Inquirer). The test is not in the YAKAP benefit.
               {s.hemodialysisPerYear != null && ` One year of hemodialysis costs PhilHealth up to ${peso(s.hemodialysisPerYear)}.`} {s.note}
             </p>
           </>
@@ -309,7 +309,8 @@ function Budget() {
               <p className="mt-3 text-sm" aria-live="polite">
                 {o.testsPer1000 >= 1000 ? `Testing everyone finds all ${o.casesModel.toFixed(1)} cases per 1,000; ranking makes no difference at this budget.`
                   : <>Same {o.testsPer1000} tests: the model's ranking finds <b>{o.extraVsRule >= 0 ? '+' : ''}{o.extraVsRule.toFixed(1)}</b> more cases per 1,000 than testing people with diabetes or high blood pressure first.</>}
-                {' '}Test cost {peso(o.testCost)} per 1,000 adults (assumed {peso(d.uacrPrice)} each){o.costPerCaseModel != null ? `, ${peso(o.costPerCaseModel)} per case found by the model.` : '.'}
+                {' '}Test cost {peso(o.testCost)} per 1,000 adults (public or bulk, assumed {peso(d.uacrPrice)} each){o.costPerCaseModel != null ? `, ${peso(o.costPerCaseModel)} per case found by the model.` : '.'}
+                {d.uacrPrice > 0 && ` At the published retail price (₱1,500–3,500): ${peso(o.testCost * 1500 / d.uacrPrice)}–${peso(o.testCost * 3500 / d.uacrPrice)} per 1,000 adults${o.costPerCaseModel != null ? `, ${peso(o.costPerCaseModel * 1500 / d.uacrPrice)}–${peso(o.costPerCaseModel * 3500 / d.uacrPrice)} per case` : ''}.`}
               </p>
             </div>
             <div>

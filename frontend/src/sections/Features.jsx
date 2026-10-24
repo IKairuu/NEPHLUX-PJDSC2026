@@ -78,7 +78,7 @@ const FEATURES = [
           <div><b>9.1</b><span>rule or dipstick first</span></div>
           <div><b>₱755</b><span>per case vs ₱3,281</span></div>
         </div>
-        <div className="muted text-xs mt-2">50 uACR tests per 1,000 adults · Korean KNHANES test set · uACR ₱600 assumed</div>
+        <div className="muted text-xs mt-2">50 uACR tests per 1,000 adults · Korean KNHANES test set · uACR ₱600 public or bulk (assumed); retail ₱1,500–3,500 gives ₱1,887–4,404 per case</div>
       </div>
     ) },
 ]

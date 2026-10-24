@@ -35,7 +35,7 @@ export const EV = {
     { model: '+ lipid profile', auroc: 0.7502125802075297 },
     { model: '+ CBC (full step 2)', auroc: 0.7565961978450257 },
   ],
-  // per 1,000 adults screened; uACR price assumed ₱600 (₱300–1,200)
+  // per 1,000 adults screened; uACR ₱600 public or bulk (assumed, ₱300–1,200); retail ₱1,500–3,500 (Baclig, 2026) scales costs by 2.5–5.8
   cost_per_1000: {
     test_everyone_uacr: { uacr_tests: 1000, cases_found: 119.7595792637115, cases_missed: 0, cost_base: 600000, cost_per_case_base: 5010.037641154328 },
     rule_dm_or_htn: { uacr_tests: 489.8572501878287, cases_found: 91.51014274981218, cases_missed: 28.249436513899326, cost_base: 293914.3501126972, cost_per_case_base: 3211.822660098522 },
