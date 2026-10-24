@@ -1,5 +1,5 @@
 import { PassChip } from '../../components/Chip'
-import { EV, STEP1_V2 } from '../../data/evidence'
+import { EV, STEP1_V2, STEP2U } from '../../data/evidence'
 import { f3, pct } from '../../lib/format'
 import { Head } from './ui'
 
@@ -33,6 +33,41 @@ function CiPlot({ items }) {
   )
 }
 
+// Step 2U: labs + YAKAP urine dipstick, learned and tested on Korean KNHANES
+function Step2UCard() {
+  const t = STEP2U, m = t.matched, b = t.budget50
+  return (
+    <div className="card">
+      <div className="eyebrow">Step 2U · YAKAP labs + urine dipstick · learned on KNHANES 2021–2024, tested once on 2019–2020</div>
+      <div className="cols mt-2.5">
+        <div>
+          <div className="bigstat">+{m.step2u.extra}<small>cases</small></div>
+          <p className="muted mt-3 text-sm">
+            Referring the same {pct(t.comparator_share)} of {t.n.toLocaleString()} Korean test adults as "diabetes, high BP or dipstick protein 1+", Step 2U found {m.step2u.cases_found} of {t.cases} cases and the comparator {m.comparator.cases_found} (95% CI of the gain +{m.step2u.extra_ci[0]} to +{m.step2u.extra_ci[1]}). Sensitivity {pct(m.step2u.sensitivity, 1)} vs {pct(m.comparator.sensitivity, 1)}.
+          </p>
+          <p className="muted text-[13px] mt-2">
+            With only 50 uACR tests per 1,000 adults: {b.model.toFixed(1)} cases found vs {b.comparator.toFixed(1)}, about ₱{Math.round(b.cost_per_case_model).toLocaleString()} per case vs ₱{Math.round(b.cost_per_case_comparator).toLocaleString()} (uACR price assumed ₱600).
+          </p>
+        </div>
+        <div>
+          <table className="t">
+            <thead><tr><th>Korean test set</th><th className="num">AUROC (95% CI)</th></tr></thead>
+            <tbody>
+              <tr><td>Step 2U · labs + dipstick</td><td className="num">{ci(t.auroc)}</td></tr>
+              <tr><td>Rule OR dipstick 1+</td><td className="num">{ci(t.auroc_comparator)}</td></tr>
+              <tr><td>Rule · diabetes or high BP</td><td className="num">{ci(t.auroc_rule)}</td></tr>
+              <tr><td>Step 2 · labs only</td><td className="num">{ci(t.auroc_step2)}</td></tr>
+            </tbody>
+          </table>
+          <div className="passrow mt-2.5"><span>Pass mark C1–C3 (written before fitting)</span><PassChip pass={t.pass.c1_c3} /></div>
+          <div className="passrow"><span>Calibration slope {t.calibration.slope.toFixed(2)}, CITL {t.calibration.citl.toFixed(2)}</span><PassChip pass={t.pass.c4_calibration} /></div>
+          <p className="muted text-[12.5px] mt-2">Korean adults, not Filipinos; KNHANES reads the strip in a lab, YAKAP clinics may read it by eye. All clean KNHANES test years are now used, so the next test must be Filipino YAKAP records (about 2,800–4,400 adults). Without the dipstick, Step 2 on the same Korean set was not clearly better than the plain rule.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // The frozen model's test-set results. Static research numbers, the same for every clinic.
 export default function Evidence() {
   const a = EV.test_auroc, m = EV.matched, pm = EV.pass_mark
@@ -50,10 +85,11 @@ export default function Evidence() {
   return (
     <>
       <Head eyebrow="Evidence · model card" title={<>Does it <span className="serif">work</span>?</>}
-        text={`Trained on NHANES 2011–2016 (${EV.n.train.toLocaleString()} U.S. adults without known kidney disease), tested once on 2017–March 2020 (${EV.n.test.toLocaleString()} adults, ${EV.n.test_cases} with uACR ≥30 mg/g). Not yet validated in Filipino patients.`} />
-      <div className="cols">
+        text={`Two lab models. With the YAKAP dipstick: Step 2U, learned on Korean KNHANES 2021–2024 and tested once on 2019–2020. Without it: Step 2, trained on NHANES 2011–2016 (${EV.n.train.toLocaleString()} U.S. adults without known kidney disease), tested once on 2017–March 2020 (${EV.n.test.toLocaleString()} adults, ${EV.n.test_cases} with uACR ≥30 mg/g). Not yet validated in Filipino patients.`} />
+      <Step2UCard />
+      <div className="cols mt-3.5">
         <div className="card">
-          <div className="eyebrow">Discrimination · AUROC with 95% bootstrap CI</div>
+          <div className="eyebrow">Step 2 (labs only, U.S. NHANES) · AUROC with 95% bootstrap CI</div>
           <div className="max-sm:hidden mt-2"><CiPlot items={items} /></div>
           <table className="t mt-2 sm:hidden">
             <tbody>
@@ -104,8 +140,8 @@ export default function Evidence() {
         <div className="card">
           <div className="eyebrow">Limits</div>
           <ul className="mt-2 pl-[18px] list-disc muted text-[13.5px] grid gap-1">
-            <li>U.S. training data; no Filipino validation yet (KNHANES next).</li>
-            <li>No dipstick urinalysis in NHANES.</li>
+            <li>U.S. (Step 2) and Korean (Step 2U) data; no Filipino validation yet.</li>
+            <li>No dipstick in NHANES, so Step 2 cannot use it; Step 2U does.</li>
             <li>uACR measured once; guidelines confirm over 3 months.</li>
             <li>BP device changed between training and test cycles.</li>
             <li>uACR price is assumed; dialysis avoided not measured.</li>

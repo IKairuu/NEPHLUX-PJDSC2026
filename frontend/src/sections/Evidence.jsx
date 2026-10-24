@@ -1,42 +1,44 @@
 import Icon from '../components/Icon'
 import SectionHead from '../components/SectionHead'
-import { EV } from '../data/evidence'
+import { EV, STEP2U as U } from '../data/evidence'
 import { f3, pct } from '../lib/format'
 import { useGo } from '../hooks/useGo'
 
 export default function Evidence() {
   const navigate = useGo()
-  const a = EV.test_auroc, m = EV.matched, P = EV.prevalence, pm = EV.pass_mark, gain = EV.extra_cases_step2
+  const pm = EV.pass_mark, m = U.matched
   const rows = [
-    ['Step 2 AUROC lower bound above 0.70', pm['c1_auroc_ci_lower_gt_0.70']],
-    ['Step 2 finds more cases than "diabetes or high BP" at equal referrals', pm.c2_more_cases_than_rule_at_same_referrals],
-    [`Step 2 calibration slope 0.8–1.2 (${EV.calibration_slope_step2.toFixed(2)})`, pm['c3_calibration_slope_0.8_1.2']],
+    ['Step 2U (Korean test) passes C1–C3: AUROC, more cases than rule-or-dipstick, beats labs-only', U.pass.c1_c3],
+    [`Step 2U calibration slope 0.8–1.2 (${U.calibration.slope.toFixed(2)})`, U.pass.c4_calibration],
+    ['Step 2 (U.S. test) AUROC lower bound above 0.70', pm['c1_auroc_ci_lower_gt_0.70']],
+    ['Step 2 (U.S. test) finds more cases than "diabetes or high BP"', pm.c2_more_cases_than_rule_at_same_referrals],
     ['Step 1 (no labs) AUROC lower bound above 0.70', pm['step1_auroc_ci_lower_gt_0.70']],
     ['Step 1 finds more cases than the rule', pm.step1_more_cases_than_rule],
   ]
   const trio = [
-    ['Step 2 AUROC', f3(a.step2_lr.auroc)],
-    ['Rule AUROC', f3(a.rule_dm_or_htn.auroc)],
-    ['Calibration', EV.calibration_slope_step2.toFixed(2)],
+    ['Step 2U AUROC', f3(U.auroc.auroc)],
+    ['Rule or dipstick', f3(U.auroc_comparator.auroc)],
+    ['Calibration', U.calibration.slope.toFixed(2)],
   ]
+  const s2k = U.step2_vs_plain_rule
   return (
     <section className="sec" id="evidence" aria-labelledby="eT">
       <div className="wrap">
         <SectionHead eyebrow="Evidence" id="eT"
           title={<>A pass mark written <span className="serif">before training.</span></>}
-          text="Trained on NHANES 2011–2016, tested once on 2017–March 2020. Where it failed, it says so." />
+          text="Step 2U learned on Korean KNHANES 2021–2024 and was tested once on 2019–2020; Step 2 on U.S. NHANES. Where a model failed, it says so." />
         <div className="evi reveal">
           <div>
-            <div className="eyebrow">Same number of tests, more cases</div>
-            <div className="bigstat mt-[18px]">+{gain[0]}<small>cases</small></div>
+            <div className="eyebrow">Step 2U · same number of tests, more cases</div>
+            <div className="bigstat mt-[18px]">+{m.step2u.extra}<small>cases</small></div>
             <p className="muted mt-[18px] max-w-[560px]">
-              Referring the same {pct(m.rule.referred / EV.n.test)} of {EV.n.test.toLocaleString('en-US')} test adults as "everyone with diabetes or high blood pressure", the lab model found {m.step2_lr.cases_found} of {EV.n.test_cases} cases and the rule found {m.rule.cases_found} (95% CI of the gain +{Math.round(gain[1])} to +{Math.round(gain[2])}). A real but modest gain.
+              Referring the same {pct(U.comparator_share)} of {U.n.toLocaleString('en-US')} Korean test adults (KNHANES 2019–2020) as "diabetes, high BP or dipstick protein 1+", Step 2U (labs + dipstick) found {m.step2u.cases_found} of {U.cases} cases and the comparator {m.comparator.cases_found} (95% CI of the gain +{m.step2u.extra_ci[0]} to +{m.step2u.extra_ci[1]}).
             </p>
             <div className="trio">
               {trio.map(([label, v]) => <div key={label}><div className="eyebrow">{label}</div><span className="mono">{v}</span></div>)}
             </div>
             <p className="muted text-[13px] mt-4">
-              {pct(P.test_cases_with_egfr_ge60_share)} of cases had a normal-looking creatinine, and {pct(P.test_cases_without_dm_or_htn_share)} had neither diabetes nor high blood pressure.
+              Among adults with neither diabetes nor high BP, Step 2U caught {pct(U.no_dm_no_htn.step2u_sensitivity)} of cases vs {pct(U.no_dm_no_htn.comparator_sensitivity)} for the comparator. Without the dipstick, the U.S. labs-only Step 2 found +{s2k.extra} vs the plain rule on the same Korean adults (95% CI {s2k.extra_ci[0]} to +{s2k.extra_ci[1]}): not clearly better. That is why the dipstick matters.
             </p>
           </div>
           <div>

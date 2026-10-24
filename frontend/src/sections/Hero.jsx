@@ -68,7 +68,7 @@ export default function Hero() {
             <button className="btn primary" onClick={() => navigate('resident')}><Icon name="arrow" />Start the 2-minute check</button>
             <button className="btn glass-l" onClick={() => navigate('demo')}><Icon name="play" />Watch the guided demo</button>
           </div>
-          <p className="hnote">Screening support, not a diagnosis. Trained on U.S. NHANES data; not yet validated in Filipino patients.</p>
+          <p className="hnote">Screening support, not a diagnosis. Tested on U.S. (NHANES) and Korean (KNHANES) adults; not yet validated in Filipino patients.</p>
         </div>
         <div className="stage" aria-hidden="true">
           <Kidney />

@@ -59,13 +59,35 @@ export const EV = {
   },
 }
 
+// Step 2U: the Step 2 labs plus the YAKAP urine dipstick (protein, blood, glucose, specific gravity).
+// Learned on Korean KNHANES 2021–2024, frozen, scored once on KNHANES 2019–2020. Copied from BAGO_STEP2U.test (prototype v7).
+// The comparator is "diabetes, high BP or dipstick protein 1+", which refers the same share of adults.
+export const STEP2U = {
+  n: 11047, cases: 912,
+  refer_at: 0.02548847146444033, // "refer" cut, fixed on the learning years only
+  auroc: { auroc: 0.9173551787708047, ci: [0.9085198097672762, 0.9262496494540894] },
+  auroc_comparator: { auroc: 0.7345796657405725, ci: [0.721437518800494, 0.7482264265034898] },
+  auroc_rule: { auroc: 0.6921284155133764, ci: [0.6762469278507534, 0.7076945054263598] },
+  auroc_step2: { auroc: 0.7794123629250729, ci: [0.7634800404265877, 0.7946961007132614] }, // labs-only model on the same Korean adults
+  comparator_share: 0.394134154068978,
+  matched: {
+    comparator: { cases_found: 752, sensitivity: 0.8245614035087719 },
+    step2u: { cases_found: 846, sensitivity: 0.9276315789473685, extra: 94, extra_ci: [72, 118] },
+  },
+  calibration: { slope: 1.018906327282837, citl: -0.0528979939022203 },
+  pass: { c1_c3: true, c4_calibration: true },
+  no_dm_no_htn: { step2u_sensitivity: 0.8032786885245902, comparator_sensitivity: 0.3442622950819672 },
+  step2_vs_plain_rule: { extra: 21, extra_ci: [-1, 41] }, // without the dipstick: not clearly better
+  budget50: { model: 39.73929573639902, comparator: 9.142753688784286, cost_per_case_model: 754.9202733485193, cost_per_case_comparator: 3281.2871287128714 },
+}
+
 // Resident check version 2: a second look at an already-used test set, with its pass mark written first (23 Oct 2026)
 export const STEP1_V2 = {
   rule_cases_found: 609,
   rows: [
     { name: 'v1 · 10 questions', auroc: 0.7179328379339902, ci: [0.6985790806588822, 0.7365605748450225], found: 608, gain: -1, pass: false },
     { name: 'v2 · + 5 more questions', auroc: 0.7182472638731878, ci: [0.6995974748129966, 0.7366851805430034], found: 611, gain: 2, pass: false },
-    { name: 'v2 · + health worker BP', auroc: 0.7280594736235618, ci: [0.7090016865533743, 0.7478802855701597], found: 616, gain: 7, pass: false },
+    { name: 'v2 · + clinic BP and waist', auroc: 0.7280594736235618, ci: [0.7090016865533743, 0.7478802855701597], found: 616, gain: 7, pass: false },
   ],
 }
 

@@ -31,14 +31,14 @@ const FEATURES = [
     ) },
   { role: 'doctor', n: '02', title: 'The model suggests. The doctor decides.', cta: 'Open as a doctor', target: 'login:doctor',
     text: 'At the YAKAP clinic, the doctor enters the labs YAKAP already covers. NEPHLUX estimates the chance of albuminuria and shows why.',
-    ticks: ['Missing labs stop the estimate; never treated as normal', 'A positive urine dipstick means refer anyway', 'Approve, override with a reason, or decline'],
+    ticks: ['Missing labs stop the estimate; never treated as normal', 'Adds the YAKAP urine dipstick when it is done', 'Dipstick protein 1+ still means refer anyway', 'Approve, override with a reason, or decline'],
     pic: (
       <div className="fpic glass" aria-hidden="true">
         <div className="lab">Chance of uACR ≥30 mg/g · SAMPLE</div>
-        <div className="gauge2 mt-3"><span className="big">42%</span><span className="bar"><i style={{ left: '88%' }} /></span></div>
+        <div className="gauge2 mt-3"><span className="big">10%</span><span className="bar"><i style={{ left: '88%' }} /></span></div>
         <div className="mt-2.5"><LevelChip level="high" /></div>
         <div className="rlines">
-          {[['Systolic blood pressure ▲', 80], ['HbA1c 7.4% ▲', 66], ['Diabetes diagnosis ▲', 48]].map(([t, w]) => (
+          {[['Systolic blood pressure ▲', 80], ['Diabetes diagnosis ▲', 79], ['Dipstick protein negative ▼', 62]].map(([t, w]) => (
             <div className="rline" key={t}><span>{t}</span><span className="t2"><i style={{ width: `${w}%` }} /></span></div>
           ))}
         </div>
@@ -74,11 +74,11 @@ const FEATURES = [
         <div className="lab">Screened per 1,000 residents · SAMPLE · not prevalence</div>
         <div className="minimap">{MINIMAP.map((c, i) => <i key={i} className={c || undefined} />)}</div>
         <div className="big3 mt-[18px]">
-          <div><b>96.3</b><span>cases per 1,000, model order</span></div>
-          <div><b>91.5</b><span>diabetes or BP first</span></div>
-          <div><b>58.7</b><span>no order</span></div>
+          <div><b>39.7</b><span>cases per 1,000, Step 2U order</span></div>
+          <div><b>9.1</b><span>rule or dipstick first</span></div>
+          <div><b>₱755</b><span>per case vs ₱3,281</span></div>
         </div>
-        <div className="muted text-xs mt-2">490 uACR tests per 1,000 adults · NHANES test set</div>
+        <div className="muted text-xs mt-2">50 uACR tests per 1,000 adults · Korean KNHANES test set · uACR ₱600 assumed</div>
       </div>
     ) },
 ]

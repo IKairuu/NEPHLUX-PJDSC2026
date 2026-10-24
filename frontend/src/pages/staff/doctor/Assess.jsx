@@ -181,7 +181,7 @@ export default function Assess() {
               </select>
             </div>
           </div>
-          <p className="muted text-xs mt-1.5">The model does not use urinalysis (the U.S. training data has no dipstick). A dipstick protein of 1+ or more means refer for uACR whatever the score.</p>
+          <p className="muted text-xs mt-1.5">The server scores with Step 2 (labs only, U.S. NHANES). Step 2U, which adds the full dipstick and did much better on Korean adults, is not on the server yet. A dipstick protein of 1+ or more still means refer for uACR whatever the score.</p>
 
           <div className="flex gap-2.5 mt-[18px] flex-wrap items-center">
             <button className="btn primary" type="submit" disabled={busy}><Icon name="flask" />{busy ? 'Estimating…' : 'Estimate risk'}</button>

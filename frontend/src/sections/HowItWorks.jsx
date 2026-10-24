@@ -19,7 +19,7 @@ const STEPS = [
       <>
         <div className="lab">YAKAP labs used by the model</div>
         <div className="flex gap-1.5 flex-wrap">{['HbA1c', 'Creatinine', 'Lipids', 'Blood count', 'Measured BP'].map((x) => <span key={x} className="chip info">{x}</span>)}</div>
-        <div className="muted text-[12.5px]">Urinalysis is on the YAKAP list too. The model cannot use it (the U.S. data has no dipstick), so a positive dipstick means refer anyway.</div>
+        <div className="muted text-[12.5px]">With the YAKAP urine dipstick, NEPHLUX uses Step 2U, learned from Korean KNHANES data that has both the dipstick and uACR. Without a dipstick it falls back to the U.S.-trained Step 2.</div>
       </>
     ) },
   { title: 'Risk estimate', who: 'Doctor', icon: 'flask', where: 'In the YAKAP consult · under a minute',
@@ -28,9 +28,9 @@ const STEPS = [
     never: 'Guesses a missing lab or treats it as normal.',
     preview: (
       <>
-        <div className="gauge2"><span className="big text-[44px]">42%</span><span className="bar"><i style={{ left: '88%' }} /></span></div>
+        <div className="gauge2"><span className="big text-[44px]">10%</span><span className="bar"><i style={{ left: '88%' }} /></span></div>
         <LevelChip level="high" />
-        <div className="muted text-[12.5px]">High is 7.6% or more · moderate 4.5–7.6% · low under 4.5%</div>
+        <div className="muted text-[12.5px]">With the dipstick (Step 2U): refer at 2.5% or more. Labs only (Step 2): High is 7.6% or more · moderate 4.5–7.6% · low under 4.5%</div>
       </>
     ) },
   { title: 'Doctor decides', who: 'Doctor', icon: 'check', where: 'Same visit',

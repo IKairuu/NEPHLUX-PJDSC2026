@@ -93,7 +93,7 @@ function RiskCard({ a, dip }) {
       {a.warnings.map((w) => <div key={w} className="note warn mt-2.5 text-[13px]"><Icon name="alert" /> {w}</div>)}
       <h3 className="mt-[18px] mb-1 text-[15px]">Top reasons</h3>
       <Reasons reasons={r.reasons} />
-      <p className="muted text-xs mt-2.5">Model {r.modelVersion}: logistic regression trained on U.S. NHANES 2011–2016; not yet validated in Filipino patients. Screening support, not a diagnosis.</p>
+      <p className="muted text-xs mt-2.5">Model {r.modelVersion}: Step 2, logistic regression on YAKAP labs, trained on U.S. NHANES 2011–2016 (no dipstick). Not yet validated in Filipino patients. Screening support, not a diagnosis.</p>
     </div>
   )
 }

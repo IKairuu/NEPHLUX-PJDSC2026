@@ -18,7 +18,7 @@ const SCENES = {
   doc: (
     <>
       <div className="eyebrow">Chance of albuminuria · SAMPLE</div>
-      <div className="mono text-[40px]">42%</div>
+      <div className="mono text-[40px]">10%</div>
       <LevelChip level="high" />
       {[['HbA1c', 40], ['Systolic BP', 28]].map(([name, w]) => (
         <div className="reason" key={name}>
@@ -30,13 +30,13 @@ const SCENES = {
   ),
   cho: (
     <>
-      <div className="eyebrow">With 490 uACR tests per 1,000 adults</div>
+      <div className="eyebrow">With 50 uACR tests per 1,000 adults</div>
       <div className="big3">
-        <div><b>96.3</b><span>cases, model ranking</span></div>
-        <div><b>91.5</b><span>diabetes / BP first</span></div>
-        <div><b>58.7</b><span>no ranking</span></div>
+        <div><b>39.7</b><span>cases, Step 2U ranking</span></div>
+        <div><b>9.1</b><span>rule or dipstick first</span></div>
+        <div><b>₱755</b><span>per case</span></div>
       </div>
-      <div className="muted text-xs">NHANES test set; uACR price assumed ₱600</div>
+      <div className="muted text-xs">Korean KNHANES test set; uACR price assumed ₱600</div>
     </>
   ),
 }
