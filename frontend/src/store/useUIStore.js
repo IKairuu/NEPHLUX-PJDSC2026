@@ -18,7 +18,6 @@ const PENDING = {
   resident: 'The resident check is not ported to React yet.',
   app: 'The staff screens are not ported to React yet.',
   demo: 'The guided demo is not ported to React yet.',
-  nephra: 'The Nephra chat panel is not ported to React yet.',
   evidence: 'The full evidence screen is not ported to React yet.',
 }
 
@@ -48,6 +47,10 @@ export const useUIStore = create((set, get) => ({
     set({ session })
   },
 
+  // the Nephra chat panel; its messages live in the panel and are never saved
+  nephraOpen: false,
+  setNephraOpen: (nephraOpen) => set({ nephraOpen }),
+
   benefitTab: 0,
   setBenefitTab: (benefitTab) => set({ benefitTab }),
 
@@ -65,6 +68,7 @@ export const useUIStore = create((set, get) => ({
     const [screen] = target.split(':')
     if (screen === 'register' && get().routeTo) return get().routeTo(target)
     set({ portalOpen: false, mobileNavOpen: false })
+    if (screen === 'nephra') return set({ nephraOpen: true })
     get().notify(PENDING[target.split(':')[0]] || 'This screen is not ported to React yet.')
   },
 }))

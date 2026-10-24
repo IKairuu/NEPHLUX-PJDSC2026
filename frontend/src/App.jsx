@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router'
 import Sprite from './components/Sprite'
 import NephraFab from './components/NephraFab'
+import NephraPanel from './components/NephraPanel'
 import Toast from './components/Toast'
 import Landing from './pages/Landing'
 import SignIn from './pages/SignIn'
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <NephraFab />
+      <NephraPanel />
       <Toast />
     </>
   )
