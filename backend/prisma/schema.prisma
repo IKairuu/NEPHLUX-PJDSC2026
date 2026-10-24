@@ -76,6 +76,15 @@ enum Decision {
   NO_REFERRAL
 }
 
+// YAKAP urine dipstick reading
+enum DipstickGrade {
+  NEG
+  TRACE
+  ONE_PLUS
+  TWO_PLUS
+  THREE_PLUS
+}
+
 // ---------------------------------------------------------------- REFERENCE DATA
 
 model Barangay {
@@ -223,6 +232,12 @@ model Assessment {
   wbc            Float // x10^9/L
   platelets      Float // x10^9/L
 
+  // YAKAP urinalysis dipstick; with a protein result the API scores Step 2U, without one Step 2
+  dipProtein DipstickGrade? @map("dip_protein")
+  dipBlood   DipstickGrade? @map("dip_blood")
+  dipGlucose DipstickGrade? @map("dip_glucose")
+  urineSg    Float?         @map("urine_sg") // specific gravity, e.g. 1.015
+
   createdAt DateTime @default(now()) @map("created_at")
 
   patient     Patient           @relation(fields: [patientId], references: [id])
@@ -306,7 +321,7 @@ model UacrResult {
 model ModelVersion {
   id           String   @id @default(uuid()) @db.Uuid
   version      String // e.g. 1.0.0
-  step         Int      @db.SmallInt // 1 = questionnaire, 2 = labs
+  step         Int      @db.SmallInt // 1 = questionnaire, 2 = labs, 3 = labs + dipstick (Step 2U)
   coefficients Json
   means        Json
   thresholds   Json
