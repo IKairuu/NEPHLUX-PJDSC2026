@@ -59,6 +59,7 @@ export default function NephraPanel() {
   const [mood, setMood] = useState('happy')
   const [typing, setTyping] = useState(false)
   const [text, setText] = useState('')
+  const [menuOpen, setMenuOpen] = useState(false)
   const bodyRef = useRef(null), inputRef = useRef(null)
 
   useEffect(() => { if (open) inputRef.current?.focus() }, [open])
@@ -80,6 +81,10 @@ export default function NephraPanel() {
   })
 
   if (!open) return null
+
+  // the latest reply's suggestions when it gave some, else the role's starters from GET /nephra
+  const latest = [...log].reverse().find((m) => m.who === 'nephra' && m.kind !== 'did_you_mean' && m.suggestions?.length)
+  const suggestions = latest ? latest.suggestions : info.suggestions
 
   function close() {
     setOpen(false)
@@ -130,15 +135,21 @@ export default function NephraPanel() {
               <div className="nlinks">{m.links.map((l) => <button key={l.label} type="button" className="btn xs" onClick={() => follow(l.path)}>{l.label}<Icon name="arrow" /></button>)}</div>
             )}
             {SAFETY[m.kind] && <div className="nlinks"><span className={clsx('chip', m.kind === 'emergency' ? 'high' : 'follow')}><Icon name="alert" />{SAFETY[m.kind]}</span></div>}
-            {!!m.suggestions?.length && (
+            {m.kind === 'did_you_mean' && !!m.suggestions?.length && (
               <div className="nsug">{m.suggestions.map((s) => <button key={s} type="button" onClick={() => ask(s)}>{s}</button>)}</div>
             )}
           </div>
         ))}
-        {typing
-          ? <div className="ntype" role="status" aria-label="Nephra is typing"><i /><i /><i /></div>
-          : <div className="nsug">{info.suggestions.map((s) => <button key={s} type="button" onClick={() => ask(s)}>{s}</button>)}</div>}
+        {typing && <div className="ntype" role="status" aria-label="Nephra is typing"><i /><i /><i /></div>}
       </div>
+
+      {/* one dropdown of suggested questions instead of a chip row after every reply; it follows Nephra's latest suggestions */}
+      <details className="nmenu" open={menuOpen} onToggle={(e) => setMenuOpen(e.currentTarget.open)}>
+        <summary>Suggested questions <Icon name="chev" className="" /></summary>
+        <div className="nmenu-list">
+          {suggestions.map((s) => <button key={s} type="button" disabled={typing} onClick={() => { setMenuOpen(false); ask(s) }}>{s}</button>)}
+        </div>
+      </details>
 
       <form className="nform" onSubmit={submit}>
         <label className="sr-only" htmlFor="nq">Ask a question about NEPHLUX</label>

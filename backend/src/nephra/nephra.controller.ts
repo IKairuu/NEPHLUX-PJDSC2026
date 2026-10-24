@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Ip,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { Public } from '../auth/decorators/public.decorator';
 import { CreateNephraChatDto } from './dto/create-nephra-chat.dto';
 import { NephraQueryDto } from './dto/nephra-query.dto';
@@ -23,7 +31,11 @@ export class NephraController {
   @Public()
   @Post('chat')
   @HttpCode(200)
-  chat(@Body() dto: CreateNephraChatDto): Promise<NephraChatResponseDto> {
-    return this.nephraService.chat(dto);
+  // over the limit: 429 with { message, retryAfterSeconds }
+  chat(
+    @Body() dto: CreateNephraChatDto,
+    @Ip() ip: string,
+  ): Promise<NephraChatResponseDto> {
+    return this.nephraService.chat(dto, ip);
   }
 }

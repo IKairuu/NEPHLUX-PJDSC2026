@@ -22,6 +22,8 @@ export class NephraChatResponseDto {
   answerId: string;
   // "approved" = bank text as written; "model" = reworded by the language model
   source: 'approved' | 'model';
+  // the AI model that wrote the reply, when source is "model"
+  model?: string;
   links: NephraLinkDto[];
   suggestions: string[];
   disclaimer: string;
