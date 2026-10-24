@@ -410,12 +410,12 @@ flowchart LR
 
 | Layer | Technology |
 |---|---|
-| Modelling | Python, scikit-learn (L2 logistic regression), shap for checking SHAP values |
+| Modelling | Python: scikit-learn (L2 logistic regression; boosted trees as a comparison), LightGBM (Step 1 v3 trees), pandas, NumPy, SciPy, statsmodels, matplotlib, shap for checking SHAP values, pyreadstat (KNHANES SAS files), shapely (barangay map data) |
 | Data | NHANES 2011–2020 (CDC), KNHANES 2019–2024 (KDCA), PSA 2020 census, PSGC 2023 boundaries (faeldon, 2024), PhilHealth YAKAP accredited list |
-| Front end (`frontend/`) | React, React Router, Zustand, Tailwind CSS, Vite, Leaflet |
-| API (`backend/`) | NestJS, Prisma, PostgreSQL, JWT sign-in (Passport, bcrypt), email notices (Nodemailer) |
+| Front end (`frontend/`) | React, React Router, Zustand, Tailwind CSS, Vite, Leaflet, clsx |
+| API (`backend/`) | NestJS, Prisma, PostgreSQL, JWT sign-in (Passport, bcrypt), email notices (Nodemailer), Mastra for Nephra's optional AI wording, Zod |
 | Monitoring | Better Stack uptime monitor for the deployed API (status badge at the top) |
-| Tests | Jest for the API; Node test scripts for the risk engine; axe-core accessibility scan |
+| Tests | Jest for the API, including Step 2U against the Python model on 300 test patients; an axe-core accessibility scan was run on the early prototype |
 
 ---
 

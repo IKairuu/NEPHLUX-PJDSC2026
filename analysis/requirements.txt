@@ -29,3 +29,8 @@ tqdm==4.70.1
 typing_extensions==4.16.0
 tzdata==2026.5
 wrapt==2.5.1
+# Used by step1_v3.py (LightGBM trees, reading KNHANES SAS files) and make_cdo_geo.py (map shapes);
+# not pinned because those runs were made outside this environment.
+lightgbm
+pyreadstat
+shapely
