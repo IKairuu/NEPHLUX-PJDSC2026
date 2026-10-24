@@ -11,7 +11,7 @@ const FLAGS = [['dmHx', 'Diabetes'], ['htnHx', 'Hypertension'], ['bpMed', 'BP me
 const EMPTY = {
   initials: '', barangayId: '', age: '', female: '0', weightKg: '', heightCm: '',
   dmHx: false, htnHx: false, bpMed: false, cvdHx: false, smoker: false, famDm: false,
-  sbp: '', dbp: '', hba1c: '', creat: '', tchol: '', hdl: '', hgb: '', wbc: '', plt: '', dip: '',
+  sbp: '', dbp: '', hba1c: '', creat: '', tchol: '', hdl: '', hgb: '', wbc: '', plt: '', dip: '', dipBld: '', dipGlu: '', usg: '',
 }
 // [field, label, min, max]; ranges are the API's, so the doctor hears about a slip before the server refuses it
 const NUMERIC = [
@@ -24,6 +24,9 @@ const INITIALS = /^[A-Za-z]\.?(\s?[A-Za-z]\.?){0,3}$/
 const UNITS = { SI: { cr: 'µmol/L', ch: 'mmol/L', hb: 'g/L' }, CONVENTIONAL: { cr: 'mg/dL', ch: 'mg/dL', hb: 'g/dL' } }
 
 const filled = (v) => v !== '' && Number.isFinite(+v)
+// strip reading -> API dipstick grade
+const GRADE = { neg: 'NEG', trace: 'TRACE', 1: 'ONE_PLUS', 2: 'TWO_PLUS', 3: 'THREE_PLUS' }
+const STRIP = [['', 'Not done'], ['neg', 'Negative'], ['trace', 'Trace'], ['1', '1+'], ['2', '2+'], ['3', '3+ or more']]
 
 export default function Assess() {
   const navigate = useNavigate()
@@ -75,6 +78,7 @@ export default function Assess() {
     if (miss.length) return setMsg('Missing: ' + miss.map(label).join(', ') + '. NEPHLUX never treats a missing value as normal.')
     if (out.length) return setMsg('Out of range: ' + out.map(label).join(', ') + '.')
     if (code.loaded && !code.confirmed) return setMsg("Confirm the resident's answers with the patient first (tick the box under the code).")
+    if (filled(f.usg) && (+f.usg < 1 || +f.usg > 1.05)) return setMsg('Specific gravity should be between 1.000 and 1.050.')
     setMsg('')
     setBusy(true)
     try {
@@ -87,9 +91,15 @@ export default function Assess() {
         bpMed: f.bpMed, cvdHx: f.cvdHx, smoker: f.smoker, famDm: f.famDm,
         sbp: +f.sbp, dbp: +f.dbp, labUnits: units, hba1cPct: +f.hba1c, creatinine: +f.creat,
         totalCholesterol: +f.tchol, hdl: +f.hdl, hemoglobin: +f.hgb, wbc: +f.wbc, platelets: +f.plt,
+        // with a dipstick protein result the API scores Step 2U; without one, Step 2
+        ...(f.dip && {
+          dipProtein: GRADE[f.dip],
+          ...(f.dipBld && { dipBlood: GRADE[f.dipBld] }),
+          ...(f.dipGlu && { dipGlucose: GRADE[f.dipGlu] }),
+          ...(filled(f.usg) && { urineSg: +f.usg }),
+        }),
       })
-      // the dipstick is not part of the API's record; carry it to the review screen for the referral rule
-      navigate(`/doctor/assessments/${a.id}`, { state: { dip: f.dip } })
+      navigate(`/doctor/assessments/${a.id}`)
     } catch (err) {
       setMsg(err.message)
       setBusy(false)
@@ -101,7 +111,7 @@ export default function Assess() {
 
   return (
     <>
-      <Head eyebrow="Assessment · step 2 · YAKAP labs" title={<>Who needs the <span className="serif">urine</span> test?</>}
+      <Head eyebrow="Assessment · YAKAP labs + dipstick" title={<>Who needs the <span className="serif">urine</span> test?</>}
         text="The server estimates the chance of albuminuria (uACR ≥30 mg/g) from the tests YAKAP already covers. You decide.">
         <Live>Scored by the API</Live>
       </Head>
@@ -173,15 +183,21 @@ export default function Assess() {
             <Num k="hgb" label={<>Hemoglobin <span className="mono">{u.hb}</span></>} ph={units === 'SI' ? '128' : '12.8'} field={field} />
             <Num k="wbc" label="WBC (×10⁹/L)" ph="8.1" field={field} />
             <Num k="plt" label="Platelets (×10⁹/L)" ph="240" field={field} />
-            <div>
-              <label className="f" htmlFor="as-dip">Urinalysis protein <span className="muted">(optional)</span></label>
-              <select {...field('dip')}>
-                <option value="">Not done</option><option value="neg">Negative</option><option value="trace">Trace</option>
-                <option value="1">1+</option><option value="2">2+</option><option value="3">3+ or more</option>
-              </select>
-            </div>
           </div>
-          <p className="muted text-xs mt-1.5">The model does not use urinalysis (the U.S. training data has no dipstick). A dipstick protein of 1+ or more means refer for uACR whatever the score.</p>
+
+          <div className="eyebrow mt-[18px]">YAKAP urinalysis · dipstick</div>
+          <div className="fg">
+            {[['dip', 'Protein'], ['dipBld', 'Blood'], ['dipGlu', 'Glucose']].map(([k, label]) => (
+              <div key={k}>
+                <label className="f" htmlFor={'as-' + k}>{label}</label>
+                <select {...field(k)} disabled={k !== 'dip' && !f.dip}>
+                  {STRIP.map(([v, t]) => <option key={v} value={v}>{t}</option>)}
+                </select>
+              </div>
+            ))}
+            <Num k="usg" label="Specific gravity" ph="1.015" field={field} />
+          </div>
+          <p className="muted text-xs mt-1.5">With a protein result, NEPHLUX uses Step 2U (labs plus dipstick), which found 94 more cases than the usual rule on its test. Without one it uses Step 2 (labs only). Blood, glucose and specific gravity are optional. A dipstick protein of 1+ or more means refer for uACR whatever the score.</p>
 
           <div className="flex gap-2.5 mt-[18px] flex-wrap items-center">
             <button className="btn primary" type="submit" disabled={busy}><Icon name="flask" />{busy ? 'Estimating…' : 'Estimate risk'}</button>
