@@ -541,12 +541,17 @@ One script (`analysis/run_all.py`) reads the 60 NHANES XPT files in `data/raw/` 
 
 The pitch deck uses free photos under the [Unsplash License](https://unsplash.com/license). The people shown are not patients and are not connected to this project.
 
+<details>
+<summary><b>Show all 4 photo credits</b></summary>
+
 | Slide | Photographer | Place |
 |---|---|---|
 | 02 | [Bas Peperzak](https://unsplash.com/photos/an-old-woman-wearing-a-straw-hat-and-smiling-_Qi5XLmQ754) | Cebu City |
 | 13 | [Rainier Ridao](https://unsplash.com/photos/woman-carrying-her-baby-while-leaning-against-the-brown-wooden-post-707nOyHzXR8) | Cagayan de Oro City |
 | 16 | [JC Gellidon](https://unsplash.com/photos/gray-scale-photo-of-three-nurses-and-doctor-about-to-perform-surgery-Ks5m44_nmVs) | Manila |
 | 17 | [Jeremy Brady](https://unsplash.com/photos/elderly-woman-with-white-hair-in-blue-patterned-shirt-A7STtLEFyQ8) | Philippines |
+
+</details>
 
 ---
 
