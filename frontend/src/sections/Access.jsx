@@ -6,7 +6,7 @@ export default function Access() {
     <section className="sec" id="access" aria-labelledby="aT">
       <div className="wrap">
         <SectionHead eyebrow="Access & sustainability" id="aT"
-          title={<>No fees. <span className="serif">A research prototype.</span></>}
+          title={<>No fees. <span className="serif">Built beside YAKAP.</span></>}
           text="NEPHLUX is not a PhilHealth service and is not endorsed by PhilHealth. It is designed to sit beside the YAKAP package the city already runs." />
         <div className="acc reveal">
           {ACCESS.map(([who, title, text]) => (

@@ -52,7 +52,7 @@ function Register({ role }) {
             <span className="mini"><NephraFace emotion="explaining" size={54} /></span>
             <span>Doctors are checked against their PRC licence and YAKAP clinic. CHO staff are confirmed by their unit head.</span>
           </div>
-          <p className="fine">Prototype sign-in for demonstration only. It is not secure and is not connected to PhilHealth or to real patient records.</p>
+          <p className="fine">Staff accounts are issued by the City Health Office. NEPHLUX is not connected to PhilHealth systems.</p>
         </aside>
         <div className="auth-form">
           {sent ? <Sent role={role} /> : <RequestForm role={role} />}

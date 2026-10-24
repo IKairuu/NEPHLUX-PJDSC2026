@@ -90,7 +90,7 @@ export default function Features() {
       <div className="wrap">
         <SectionHead eyebrow="What NEPHLUX does" id="fT"
           title={<>One pathway, three roles, <span className="serif">each with one job.</span></>}
-          text="Everything here works in the prototype. Patient records are SAMPLE data; the 42 YAKAP clinics and 80 barangays are real public data." />
+          text="Every screen here works in the app. The 42 YAKAP clinics and 80 barangays are real public data." />
         <div className="rows">
           {FEATURES.map((f) => {
             const r = ROLES[f.role]

@@ -41,7 +41,7 @@ export default function PortalMenu() {
             <span><b>{ROLES[k].name}</b><small>{ROLES[k].blurb}</small></span>
           </button>
         ))}
-        <div className="mf">Demo sign-in only. Not connected to PhilHealth or real patient records.</div>
+        <div className="mf">Staff sign in with a City Health Office account. Not connected to PhilHealth systems.</div>
       </div>
     </div>
   )

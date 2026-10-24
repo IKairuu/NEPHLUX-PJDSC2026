@@ -61,7 +61,7 @@ export default function Hero() {
       <Aurora />
       <div className="wrap">
         <div>
-          <span className="kick glass-l"><b>RESEARCH PROTOTYPE</b>Cagayan de Oro City · PhilHealth YAKAP labs</span>
+          <span className="kick glass-l"><b>SCREENING SUPPORT</b>Cagayan de Oro City · PhilHealth YAKAP labs</span>
           <h1 id="heroTitle">Smarter screening for <span className="serif">early</span> kidney damage.</h1>
           <p className="lede">YAKAP already covers HbA1c, creatinine, lipids, a blood count and a urinalysis. It does not cover the urine albumin test (uACR) that shows kidney damage early. NEPHLUX uses the labs YAKAP already pays for to help the doctor decide who should get that test first.</p>
           <div className="ctas">

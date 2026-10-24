@@ -11,7 +11,7 @@ const QUESTIONS = [
   { q: 'What is NEPHLUX?', id: 'what_is_nephlux', scope: 'in',
     a: 'NEPHLUX helps Cagayan de Oro decide who should get a urine albumin test first. It reads lab tests that YAKAP already pays for and ranks who most needs that urine test, so a doctor can decide.\n\nIt supports doctors. It does not give a diagnosis.' },
   { q: 'How do I use this app?', id: 'how_to_use', scope: 'in',
-    a: 'Pick your role from the Access Portal. Residents can start the 2-minute check right away with no account; YAKAP doctors and the CHO use a demo sign-in.' },
+    a: 'Pick your role from the Access Portal. Residents can start the 2-minute check right away with no account; YAKAP clinics and the CHO sign in with their staff accounts.' },
   { q: 'Is this a diagnosis?', id: 'is_it_diagnosis', scope: 'in',
     a: 'No. NEPHLUX is not a diagnosis: it only helps decide who should see a doctor and who should get a urine albumin test first. Only that urine test, ordered and read by a doctor, can show kidney damage.' },
   { q: 'Is YAKAP free?', id: 'yakap_cost', scope: 'in',
