@@ -72,7 +72,7 @@ NEPHLUX works in two places:
 
 We wrote each pass mark before the data it judges were opened. Step 2U met all four of its criteria on a clean Korean test set.
 
-| | |
+| Metric | Value |
 |---|---|
 | **Cases found vs. today's rule, same number of uACR tests** | **+94** (95% CI +72 to +118) |
 | **Step 2U AUROC** | 0.917 (95% CI 0.909–0.926) |
@@ -149,7 +149,7 @@ YAKAP covers a CBC, lipid profile, FBS, OGTT, HbA1c, creatinine, chest X-ray, sp
 
 <br/>
 
-| | |
+| Study Element | Methodology & Data Details |
 |---|---|
 | **Design** | Prediction model development with temporal and external validation, reported with TRIPOD+AI (Collins et al., 2024) |
 | **Step 2U data** | Korea's national health survey (KNHANES; Korea Disease Control and Prevention Agency, n.d.), which measures the urine dipstick and uACR in the same adults. Learned on 2021–2024 (20,465 adults); tested once on 2019–2020 (11,047 adults, 912 cases, 8.3%) |
@@ -179,7 +179,7 @@ The analysis script and model were hashed (SHA-256) before the one test run.
 
 <br/>
 
-| Criterion | Target | Result | |
+| Criterion | Target | Result | Status |
 |---|---|---|---|
 | Step 2U AUROC | 95% CI above 0.70 | 0.917 (0.909–0.926) | ✅ Met |
 | Cases vs. today's rule, same referrals | More, CI excludes 0 | +94 (+72 to +118) | ✅ Met |
@@ -245,7 +245,7 @@ The uACR price is **assumed at ₱600** for a public or bulk purchase (range ₱
 
 Step 2, the blood-test model without a dipstick, was the first model built. On the untouched NHANES 2017–March 2020 test set it passed its own pass mark, written on 17 October 2026 before any data were downloaded:
 
-| Criterion | Target | Result | |
+| Criterion | Target | Result | Status |
 |---|---|---|---|
 | Step 2 AUROC | 95% CI above 0.70 | 0.757 (0.737–0.775) | ✅ Pass |
 | Step 2 cases vs. diabetes-or-high-BP rule, same referrals | More, CI excludes 0 | +32 (+12 to +51) | ✅ Pass |
@@ -320,7 +320,7 @@ Nephra is a help chat on every screen. It picks one of **78 approved answers** a
 
 Its pass mark was written before the answer bank existed. On held-out questions:
 
-| Criterion | Target | Result | |
+| Criterion | Target | Result | Status |
 |---|---|---|---|
 | Unsafe answers | 0 | 0 | ✅ |
 | Emergency answer for every danger phrasing | All | All | ✅ |
@@ -343,7 +343,7 @@ With one "did you mean" tap, 48 of 62 (77%) reached the right answer. Nephra is 
 
 ## How It's Different
 
-| | Diabetes-or-high-BP rule | MERWACS (Yoo et al., 2026) | **NEPHLUX** |
+| Evaluation Dimension | Diabetes-or-high-BP rule | MERWACS (Yoo et al., 2026) | **NEPHLUX** |
 |---|---|---|---|
 | Uses YAKAP-covered labs | ✗ | ✗ (no labs by design) | ✓ |
 | Uses the YAKAP urine dipstick | ✗ | ✗ | ✓ |
