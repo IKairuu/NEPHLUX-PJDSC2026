@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { NephraIntent, NephraLink } from './nephra-bank';
 import {
   answer,
@@ -8,6 +8,7 @@ import {
   suggestions,
 } from './nephra-engine';
 import { NephraAgent } from './nephra.agent';
+import { NephraRateLimiter } from './nephra-rate-limiter';
 import { NephraRepository } from './nephra.repository';
 import { CreateNephraChatDto } from './dto/create-nephra-chat.dto';
 import {
@@ -42,6 +43,7 @@ export class NephraService {
   constructor(
     private readonly nephraRepository: NephraRepository,
     private readonly nephraAgent: NephraAgent,
+    private readonly rateLimiter: NephraRateLimiter,
   ) {}
 
   info(role: NephraRole = 'guest'): NephraInfoResponseDto {
@@ -53,28 +55,57 @@ export class NephraService {
     };
   }
 
-  async chat(dto: CreateNephraChatDto): Promise<NephraChatResponseDto> {
+  // userKey identifies the sender for the rate limit (the client IP address)
+  async chat(
+    dto: CreateNephraChatDto,
+    userKey: string,
+  ): Promise<NephraChatResponseDto> {
     const role = dto.role ?? 'guest';
     // 1. deterministic rules first: danger signs, diagnosis, medicine, math
     const rules = answer(dto.message, role);
     const kind = KIND[rules.id] ?? 'answer';
+    // an emergency answer is never rate limited
+    if (kind === 'emergency') return this.fromRules(rules, kind, role);
+
+    const limit = this.rateLimiter.hit(userKey);
+    if (!limit.allowed)
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          error: 'Too Many Requests',
+          message:
+            "You've sent a lot of questions. Please wait a moment and try again. If you feel very unwell, go to the nearest emergency room or call 911.",
+          retryAfterSeconds: limit.retryAfterSeconds,
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+
     if (!MODEL_KINDS.includes(kind) || !this.nephraAgent.enabled)
       return this.fromRules(rules, kind, role);
 
     // 2. the approved answers the model may use
+    // the previous real question ("speak in Bisaya" only sets the language)
     const previous = [...(dto.history ?? [])]
       .reverse()
-      .find((t) => t.who === 'user')?.text;
-    const candidates = this.nephraRepository.findCandidates(
-      dto.message,
-      role,
-      previous,
-    );
-    if (!candidates.length) return this.fromRules(rules, kind, role);
+      .find((t) => t.who === 'user' && !isLanguageOnly(t.text))?.text;
+    const candidates = this.nephraRepository
+      .findCandidates(dto.message, role, previous)
+      .map(forModel);
+
+    // past the server's daily AI budget, answer from the bank only
+    if (!candidates.length || !this.rateLimiter.takeModelCall())
+      return this.fromRules(rules, kind, role);
 
     // 3. the model rewords one of them; anything off-script falls back
     const res = await this.nephraAgent.reply(
-      buildPrompt(dto.message, role, dto.screen, previous, candidates),
+      buildPrompt(
+        dto.message,
+        role,
+        dto.screen,
+        previous,
+        replyLanguage(dto),
+        candidates,
+      ),
     );
     const checked = res && checkReply(res.text, candidates);
     if (!checked) return this.fromRules(rules, kind, role);
@@ -84,6 +115,7 @@ export class NephraService {
       kind: 'answer',
       answerId: checked.intent.id,
       source: 'model',
+      model: res.model,
       links: this.links(checked.intent.links ?? [], role),
       suggestions: suggestions(role),
       disclaimer: this.disclaimer(),
@@ -122,6 +154,7 @@ function buildPrompt(
   role: NephraRole,
   screen: string | undefined,
   previous: string | undefined,
+  language: string | undefined,
   candidates: NephraIntent[],
 ): string {
   const bank = candidates
@@ -130,11 +163,49 @@ function buildPrompt(
   return [
     `USER ROLE: ${role}${screen ? `, on screen "${screen}"` : ''}`,
     previous ? `EARLIER QUESTION: """${previous}"""` : '',
+    language ? `REPLY LANGUAGE: ${language}` : '',
     `QUESTION: """${question}"""`,
     `APPROVED ANSWERS:\n${bank}`,
   ]
     .filter(Boolean)
     .join('\n\n');
+}
+
+// With a model the bank's "English only" line is no longer true.
+const MODEL_TEXT: Record<string, string> = {
+  language:
+    'Yes. You can ask in English, Tagalog or Bisaya, and I will answer in the same language. Just tell me which one you prefer.',
+};
+
+function forModel(it: NephraIntent): NephraIntent {
+  return MODEL_TEXT[it.id] ? { ...it, a: MODEL_TEXT[it.id] } : it;
+}
+
+// The language the user last asked for, in this message or an earlier one.
+const LANGUAGES: [RegExp, string][] = [
+  [/\b(bisaya|binisaya|cebuano|sinugbuanon)\b/i, 'Bisaya (Cebuano)'],
+  [/\b(tagalog|in filipino|filipino please)\b/i, 'Filipino (Tagalog)'],
+  [/\b(in english|english please|speak english)\b/i, 'English'],
+];
+
+function isLanguageOnly(text: string): boolean {
+  return (
+    LANGUAGES.some(([rx]) => rx.test(text)) &&
+    text.trim().split(/\s+/).length <= 6
+  );
+}
+
+function replyLanguage(dto: CreateNephraChatDto): string | undefined {
+  const turns = [
+    dto.message,
+    ...[...(dto.history ?? [])]
+      .reverse()
+      .filter((t) => t.who === 'user')
+      .map((t) => t.text),
+  ];
+  for (const t of turns)
+    for (const [rx, lang] of LANGUAGES) if (rx.test(t)) return lang;
+  return undefined;
 }
 
 // Accepts the model's reply only if it names one of the given answers and
