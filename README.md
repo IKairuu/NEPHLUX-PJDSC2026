@@ -443,6 +443,30 @@ NEPHLUX-PJDSC2026/
 
 ## Run the App
 
+### Quick start for judges
+
+The API (the web service in `backend/`) is already deployed on Render at **https://nephlux-pjdsc2026.onrender.com**, with its database seeded. You only need Node.js 20+ to run the web app against it:
+
+1. In `frontend/`, rename `.env.example` to `.env` (or copy it). It already points the app at the deployed API:
+
+   ```
+   VITE_API_URL=https://nephlux-pjdsc2026.onrender.com
+   ```
+
+2. Install and start the web app:
+
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. Open http://localhost:5173 and sign in with one of the [demo accounts](#demo-accounts) below.
+
+The API runs on Render's free plan, which sleeps when idle. The first request after a quiet spell can take about a minute while it wakes up; after that it responds normally.
+
+### Running everything locally
+
 You need Node.js 20+ and a PostgreSQL database.
 
 **API** (`backend/`). Create `backend/.env` with `DATABASE_URL`, `JWT_SECRET` and, for email notices, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_APP_PASSWORD` and `MAIL_TO`. Then:
@@ -455,7 +479,7 @@ npm run prisma:seed
 npm run start:dev
 ```
 
-**Web app** (`frontend/`). It talks to the API at `http://localhost:3000` by default (see `frontend/.env.example`).
+**Web app** (`frontend/`). Without a `.env` it talks to the API at `http://localhost:3000`. If you created `frontend/.env` for the quick start, change `VITE_API_URL` to `http://localhost:3000` or delete the file.
 
 ```bash
 cd frontend
