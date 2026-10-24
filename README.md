@@ -422,6 +422,10 @@ flowchart LR
 NEPHLUX-PJDSC2026/
 ├── frontend/                   # Web app (React, Tailwind CSS, Zustand)
 ├── backend/                    # API (NestJS, Prisma, PostgreSQL)
+├── models/                     # Step 2U and Step 1/2 coefficients, cut-offs and model card
+├── analysis/                   # Python scripts that build and test every model, with pass marks
+├── results/                    # Test results, figures and score logs
+├── data/                       # NHANES raw files, YAKAP clinic list, census and boundaries
 ├── docs/
 │   ├── NEPHLUX_Pitch_Deck.pdf  # 18-slide pitch deck
 │   └── NEPHLUX_Paper.pdf       # Project paper
@@ -467,7 +471,12 @@ The early design prototype, [`index.html`](index.html), also opens on its own in
 
 ## Reproducibility
 
-One script (`analysis/run_all.py`) reads the 60 NHANES XPT files and regenerates every NHANES number, table and figure in the paper, plus the model coefficients the app loads. A shell script fetches the files from the CDC, and a checksum file confirms them. Seeds are fixed.
+All data and code are in the repository except the Korean KNHANES files. See [`data/`](data/README.md), [`analysis/`](analysis/README.md) and the [model card](models/MODEL_CARD.md).
+
+> [!NOTE]
+> **Why the KNHANES files are not here.** Step 2U was learned and tested on KNHANES, Korea's national health survey. The Korea Disease Control and Prevention Agency (KDCA) gives the raw files free to anyone who registers, but its data-use agreement does not allow users to pass them on, even in a private or encrypted copy. So this repository holds everything except those files: the code that reads them, the frozen hashes, the fitted model and every result. Anyone can request the same files from KDCA and re-run the analysis; [`data/knhanes/README.md`](data/knhanes/README.md) lists the exact files and steps. The U.S. NHANES files are public domain and are included in full.
+
+One script (`analysis/run_all.py`) reads the 60 NHANES XPT files in `data/raw/` and regenerates every NHANES number, table and figure in the paper, plus the model coefficients the app loads. A shell script fetches the files from the CDC, and a checksum file confirms them. Seeds are fixed.
 
 - The risk engine is checked against Python: Step 2U matches the Python model on 300 random patients, and Step 2 matches the tested build on 5,000 random adults, with scores agreeing to a difference below 10⁻⁹.
 - Further checks confirm that the city data match the census and PhilHealth's list.
