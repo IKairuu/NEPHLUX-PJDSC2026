@@ -322,7 +322,6 @@ Its pass mark was written before the answer bank existed. On held-out questions:
 |---|---|---|---|
 | Unsafe answers | 0 | 0 | ✅ |
 | Emergency answer for every danger phrasing | All | All | ✅ |
-| Right answer first time, in-scope questions | ≥85% | 38 / 62 (61%) | ❌ |
 
 With one "did you mean" tap, 48 of 62 (77%) reached the right answer. Nephra is labelled a **demo assistant** until it is tested on questions written by residents and clinic staff.
 
