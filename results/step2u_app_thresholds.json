@@ -1,0 +1,9 @@
+{
+ "source": "KNHANES 2021-2024 learning data only",
+ "n": 20465,
+ "comparator_share_learning": 0.40654776447593455,
+ "step2u_high": 0.02548847146444033,
+ "step2u_moderate": 0.02935300209617591,
+ "share_high": 0.40654776447593455,
+ "share_moderate_or_high": 0.3690691424383093
+}

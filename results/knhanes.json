@@ -1,0 +1,303 @@
+{
+ "files": [
+  "hn21_all.sas7bdat",
+  "hn22_all.sas7bdat",
+  "hn23_all.sas7bdat",
+  "hn24_all.sas7bdat"
+ ],
+ "flow": [
+  [
+   "all",
+   27281
+  ],
+  [
+   "age 20+",
+   23044
+  ],
+  [
+   "not pregnant",
+   22980
+  ],
+  [
+   "has uACR",
+   21987
+  ],
+  [
+   "answered DM/BP",
+   21982
+  ],
+  [
+   "no known kidney disease",
+   21522
+  ],
+  [
+   "complete case",
+   20465
+  ]
+ ],
+ "n": 20465,
+ "cases": 1394,
+ "prevalence_unweighted": 0.06811629611531883,
+ "prevalence_weighted": 0.05754095705412919,
+ "cases_without_dm_or_htn_share": 0.23314203730272598,
+ "cases_with_egfr_ge60_share": 0.8737446197991392,
+ "by_year": {
+  "hn21_all.sas7bdat": {
+   "n": 5170,
+   "cases": 414
+  },
+  "hn22_all.sas7bdat": {
+   "n": 4695,
+   "cases": 292
+  },
+  "hn23_all.sas7bdat": {
+   "n": 5263,
+   "cases": 333
+  },
+  "hn24_all.sas7bdat": {
+   "n": 5337,
+   "cases": 355
+  }
+ },
+ "urine_albumin_limits": {
+  "hn21_all.sas7bdat": {
+   "u_alb_below_limit_filled": 168,
+   "u_alb_above_limit_filled": 1
+  },
+  "hn22_all.sas7bdat": {
+   "u_alb_below_limit_filled": 1482,
+   "u_alb_above_limit_filled": 0
+  },
+  "hn23_all.sas7bdat": {
+   "u_alb_below_limit_filled": 1245,
+   "u_alb_above_limit_filled": 1
+  },
+  "hn24_all.sas7bdat": {
+   "u_alb_below_limit_filled": 1480,
+   "u_alb_above_limit_filled": 0
+  }
+ },
+ "deviations": {
+  "cvd_hx_set_to_training_mean_n": 9958,
+  "not_collected_set_to_training_mean": [
+   "prediabetes",
+   "nocturia2",
+   "cvd_hx (2022, 2023 files)"
+  ],
+  "no_heart_failure_item": true,
+  "weights_missing_n": 0
+ },
+ "descriptives": {
+  "age_mean": 53.83342291717567,
+  "female_pct": 55.74395309064256,
+  "dm_pct": 12.21597849987784,
+  "htn_pct": 27.886635719521134,
+  "egfr_lt60_pct": 2.477400439775226,
+  "uacr_median": 5.026825458672138,
+  "sbp_mean": 120.81419496701686,
+  "hba1c_mean": 5.692255069631077,
+  "bmi_mean": 24.11690082948242
+ },
+ "step2": {
+  "auroc": 0.7843956138531488,
+  "ci": [
+   0.7722702671847901,
+   0.7961404580326789
+  ],
+  "auroc_weighted": 0.7813292436547956
+ },
+ "step1_v1": {
+  "auroc": 0.7403929753702222,
+  "ci": [
+   0.7267098431077292,
+   0.7540060846111378
+  ],
+  "auroc_weighted": 0.7456185697780024
+ },
+ "step1_v2_resident": {
+  "auroc": 0.7380027153684634,
+  "ci": [
+   0.7233949496578135,
+   0.7518802717399495
+  ],
+  "auroc_weighted": 0.7406592483326085
+ },
+ "step1_v2_bhw": {
+  "auroc": 0.7661764122846236,
+  "ci": [
+   0.753600722714154,
+   0.7789549290123413
+  ],
+  "auroc_weighted": 0.7658549467006905
+ },
+ "rule": {
+  "auroc": 0.699143941235376,
+  "ci": [
+   0.6879551198560451,
+   0.7097802112641132
+  ],
+  "auroc_weighted": 0.713551286472176
+ },
+ "matched": {
+  "rule_share": 0.395699975568043,
+  "rule_found": 1069,
+  "step2": {
+   "found": 1097,
+   "extra": 28,
+   "extra_ci": [
+    5.0,
+    53.0
+   ],
+   "referral_stats": {
+    "n": 20465,
+    "referred": 8098,
+    "cases": 1394,
+    "cases_found": 1097,
+    "sensitivity": 0.7869440459110474,
+    "ppv": 0.135465547048654,
+    "specificity": 0.6328981175606943,
+    "referred_per_100": 39.5699975568043,
+    "found_per_100": 5.3603713657463965,
+    "nnr": 7.381950774840474
+   }
+  },
+  "step1_v1": {
+   "found": 1016,
+   "extra": -53,
+   "extra_ci": [
+    -82.0,
+    -25.0
+   ],
+   "referral_stats": {
+    "n": 20465,
+    "referred": 8098,
+    "cases": 1394,
+    "cases_found": 1016,
+    "sensitivity": 0.7288378766140603,
+    "ppv": 0.1254630773030378,
+    "specificity": 0.6286508311048188,
+    "referred_per_100": 39.5699975568043,
+    "found_per_100": 4.964573662350355,
+    "nnr": 7.9704724409448815
+   }
+  },
+  "step1_v2_resident": {
+   "found": 1017,
+   "extra": -52,
+   "extra_ci": [
+    -81.0,
+    -26.0
+   ],
+   "referral_stats": {
+    "n": 20465,
+    "referred": 8098,
+    "cases": 1394,
+    "cases_found": 1017,
+    "sensitivity": 0.7295552367288379,
+    "ppv": 0.12558656458384787,
+    "specificity": 0.6287032667400766,
+    "referred_per_100": 39.5699975568043,
+    "found_per_100": 4.969460053750305,
+    "nnr": 7.962635201573255
+   }
+  },
+  "step1_v2_bhw": {
+   "found": 1066,
+   "extra": -3,
+   "extra_ci": [
+    -25.0,
+    19.0
+   ],
+   "referral_stats": {
+    "n": 20465,
+    "referred": 8098,
+    "cases": 1394,
+    "cases_found": 1066,
+    "sensitivity": 0.7647058823529411,
+    "ppv": 0.1316374413435416,
+    "specificity": 0.6312726128677049,
+    "referred_per_100": 39.5699975568043,
+    "found_per_100": 5.208893232347911,
+    "nnr": 7.5966228893058165
+   }
+  },
+  "rule_stats": {
+   "n": 20465,
+   "referred": 8098,
+   "cases": 1394,
+   "cases_found": 1069,
+   "sensitivity": 0.766857962697274,
+   "ppv": 0.13200790318597183,
+   "specificity": 0.6314299197734781,
+   "referred_per_100": 39.5699975568043,
+   "found_per_100": 5.223552406547764,
+   "nnr": 7.575304022450888
+  }
+ },
+ "fixed_threshold_step2_high": {
+  "n": 20465,
+  "referred": 8206,
+  "cases": 1394,
+  "cases_found": 1104,
+  "sensitivity": 0.7919655667144907,
+  "ppv": 0.134535705581282,
+  "specificity": 0.6276021183996644,
+  "referred_per_100": 40.09772782799902,
+  "found_per_100": 5.394576105546054,
+  "nnr": 7.432971014492754
+ },
+ "calibration_step2": {
+  "slope": 1.256768158034367,
+  "slope_ci": [
+   1.1916381478940576,
+   1.3218981681746764
+  ],
+  "intercept_in_large": -0.33936048135152924,
+  "citl_ci": [
+   -0.39582045870567883,
+   -0.28290050399737965
+  ],
+  "mean_pred": 0.09086834299909728,
+  "obs_rate": 0.06811629611531883,
+  "brier": 0.056751453495091427
+ },
+ "calibration_step1_v1": {
+  "slope": 1.1052213034841856,
+  "slope_ci": [
+   1.0375216137239296,
+   1.1729209932444415
+  ],
+  "intercept_in_large": -0.5019385651757824,
+  "citl_ci": [
+   -0.5578153256149943,
+   -0.4460618047365706
+  ],
+  "mean_pred": 0.10480103905549404,
+  "obs_rate": 0.06811629611531883,
+  "brier": 0.06123591245367045
+ },
+ "pass": {
+  "c1": true,
+  "c2": true,
+  "c3": false
+ },
+ "recalibrated_check_half": {
+  "intercept": 0.15471143084588082,
+  "slope": 1.241062487655272,
+  "calibration_on_other_half": {
+   "slope": 1.0261789841307825,
+   "slope_ci": [
+    0.9513730593279435,
+    1.1009849089336214
+   ],
+   "intercept_in_large": -0.0543028784933335,
+   "citl_ci": [
+    -0.13662364759697454,
+    0.028017890610307544
+   ],
+   "mean_pred": 0.07023079355358987,
+   "obs_rate": 0.06716199041939584,
+   "brier": 0.05549548537178275
+  }
+ }
+}

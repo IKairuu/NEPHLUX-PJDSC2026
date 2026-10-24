@@ -1,0 +1,97 @@
+{
+ "files": [
+  "hn21_all.sas7bdat",
+  "hn22_all.sas7bdat",
+  "hn23_all.sas7bdat",
+  "hn24_all.sas7bdat"
+ ],
+ "flow": [
+  [
+   "all",
+   27281
+  ],
+  [
+   "age 20+",
+   23044
+  ],
+  [
+   "not pregnant",
+   22980
+  ],
+  [
+   "has uACR",
+   21987
+  ],
+  [
+   "answered DM/BP",
+   21982
+  ],
+  [
+   "no known kidney disease",
+   21522
+  ],
+  [
+   "has dipstick protein",
+   21522
+  ],
+  [
+   "complete case",
+   20465
+  ]
+ ],
+ "n": 20465,
+ "cases": 1394,
+ "cvd_hx_fill": {
+  "cvd_hx": 0.04815837061006948
+ },
+ "dev_loyo": {
+  "K2": {
+   "by_held_out_year": {
+    "hn21_all.sas7bdat": 0.7944117372208204,
+    "hn22_all.sas7bdat": 0.7914264558100175,
+    "hn23_all.sas7bdat": 0.789738013875945,
+    "hn24_all.sas7bdat": 0.7824574100564851
+   },
+   "mean": 0.789508404240817
+  },
+  "step2u": {
+   "by_held_out_year": {
+    "hn21_all.sas7bdat": 0.8975090706679181,
+    "hn22_all.sas7bdat": 0.904712384768791,
+    "hn23_all.sas7bdat": 0.8999597975257205,
+    "hn24_all.sas7bdat": 0.8955156874607743
+   },
+   "mean": 0.8994242351058009
+  }
+ },
+ "learning_curve": {
+  "K2": {
+   "1": {
+    "mean_auroc": 0.785190255236102,
+    "n_fits": 12
+   },
+   "2": {
+    "mean_auroc": 0.7885387197145728,
+    "n_fits": 12
+   },
+   "3": {
+    "mean_auroc": 0.789508404240817,
+    "n_fits": 4
+   }
+  },
+  "step2u": {
+   "1": {
+    "mean_auroc": 0.8951968323872993,
+    "n_fits": 12
+   },
+   "2": {
+    "mean_auroc": 0.898449322539349,
+    "n_fits": 12
+   },
+   "3": {
+    "mean_auroc": 0.8994242351058009,
+    "n_fits": 4
+   }
+  }
+ }
+}

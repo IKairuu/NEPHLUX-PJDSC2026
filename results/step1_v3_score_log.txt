@@ -1,0 +1,159 @@
+{
+ "model_sha256": "84a4721dda1253aef37439c3b96b335c7e90b3812a3b5ee69c4082c3c3c96ae5",
+ "script_sha256": "24f77529ae108afdc055ee428593cc8def3244fc31c3f582650964ff5eb3eb7d",
+ "flow": [
+  [
+   "all",
+   15469
+  ],
+  [
+   "age 20+",
+   12614
+  ],
+  [
+   "not pregnant",
+   12575
+  ],
+  [
+   "has uACR",
+   11544
+  ],
+  [
+   "answered DM/BP",
+   11542
+  ],
+  [
+   "no known kidney disease",
+   11427
+  ],
+  [
+   "complete case",
+   11047
+  ]
+ ],
+ "n": 11047,
+ "cases": 912,
+ "prevalence": 0.08255635014030958,
+ "rule": {
+  "share": 0.3799221508101747,
+  "found": 668,
+  "auroc": [
+   0.6921284155133764,
+   0.6762469278507534,
+   0.7076945054263598
+  ]
+ },
+ "rule_questions_only": {
+  "share": 0.29673214447361274,
+  "found": 582
+ },
+ "v3_resident": {
+  "auroc": 0.7536827391616684,
+  "ci": [
+   0.7352730578577175,
+   0.7692443681824521
+  ],
+  "auroc_weighted": 0.7540575700005416,
+  "found_at_rule_share": 660,
+  "diff_vs_rule": -8,
+  "diff_ci": [
+   -29.0,
+   15.024999999999977
+  ],
+  "calibration_slope": 1.0480707908856564,
+  "calibration_slope_ci": [
+   0.9739753237799549,
+   1.1245706422247406
+  ],
+  "citl": 0.04328237624554826,
+  "mean_predicted": 0.07958892331738851,
+  "at_threshold": {
+   "share_referred": 0.705349868742645,
+   "sensitivity": 0.9078947368421053,
+   "ppv": 0.10626283367556469
+  },
+  "diff_vs_questions_only_rule": 7,
+  "subgroups": {
+   "female": {
+    "n": 6030,
+    "cases": 491,
+    "auroc": 0.7329203143493883
+   },
+   "male": {
+    "n": 5017,
+    "cases": 421,
+    "auroc": 0.7766724757043717
+   },
+   "age<50": {
+    "n": 4781,
+    "cases": 194,
+    "auroc": 0.6890422057855122
+   },
+   "age50+": {
+    "n": 6266,
+    "cases": 718,
+    "auroc": 0.7252452890248287
+   }
+  },
+  "pass": {
+   "1_auroc_lb_gt_0.70": true,
+   "2_more_cases_ci_excl_0": false,
+   "3_calibration": true,
+   "overall": false
+  }
+ },
+ "v3_bhw": {
+  "auroc": 0.778141688088005,
+  "ci": [
+   0.7620146437594992,
+   0.7938661675608315
+  ],
+  "auroc_weighted": 0.7821952398263625,
+  "found_at_rule_share": 685,
+  "diff_vs_rule": 17,
+  "diff_ci": [
+   1.0,
+   35.0
+  ],
+  "calibration_slope": 1.036602434895192,
+  "calibration_slope_ci": [
+   0.9751409706261506,
+   1.1007418157198774
+  ],
+  "citl": 0.04157766365120107,
+  "mean_predicted": 0.07977406530891724,
+  "at_threshold": {
+   "share_referred": 0.6460577532361728,
+   "sensitivity": 0.9155701754385965,
+   "ppv": 0.11699593666806782
+  },
+  "subgroups": {
+   "female": {
+    "n": 6030,
+    "cases": 491,
+    "auroc": 0.75192276650406
+   },
+   "male": {
+    "n": 5017,
+    "cases": 421,
+    "auroc": 0.806975599974366
+   },
+   "age<50": {
+    "n": 4781,
+    "cases": 194,
+    "auroc": 0.7285538017570948
+   },
+   "age50+": {
+    "n": 6266,
+    "cases": 718,
+    "auroc": 0.7503579798888605
+   }
+  },
+  "pass": {
+   "1_auroc_lb_gt_0.70": true,
+   "2_more_cases_ci_excl_0": true,
+   "3_calibration": true,
+   "overall": true
+  }
+ }
+}

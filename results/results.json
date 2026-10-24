@@ -1,0 +1,775 @@
+{
+ "seed": 20261017,
+ "n_boot": 1000,
+ "flow": [
+  {
+   "step": "All NHANES participants in DEMO",
+   "train": 29902,
+   "test": 15560
+  },
+  {
+   "step": "Age 20+",
+   "train": 17048,
+   "test": 9232,
+   "removed_train": 12854,
+   "removed_test": 6328
+  },
+  {
+   "step": "Not pregnant",
+   "train": 16856,
+   "test": 9145,
+   "removed_train": 192,
+   "removed_test": 87
+  },
+  {
+   "step": "Has urine albumin-creatinine ratio",
+   "train": 15827,
+   "test": 8234,
+   "removed_train": 1029,
+   "removed_test": 911
+  },
+  {
+   "step": "Answered diabetes and BP questions",
+   "train": 15827,
+   "test": 8234,
+   "removed_train": 0,
+   "removed_test": 0
+  },
+  {
+   "step": "No known kidney disease or dialysis (hidden-damage target)",
+   "train": 15274,
+   "test": 7912,
+   "removed_train": 553,
+   "removed_test": 322
+  },
+  {
+   "step": "Complete BMI, BP and YAKAP labs (complete-case)",
+   "train": 13840,
+   "test": 6655,
+   "removed_train": 1434,
+   "removed_test": 1257
+  }
+ ],
+ "missing_before_complete_case": {
+  "bmi": 239,
+  "sbp": 1268,
+  "dbp": 1301,
+  "hba1c": 944,
+  "egfr": 1354,
+  "tchol": 1272,
+  "hdl": 1272,
+  "hgb": 902,
+  "wbc": 902,
+  "plt": 903
+ },
+ "prevalence": {
+  "train_unweighted": 0.11163294797687862,
+  "train_weighted": 0.0898321976423557,
+  "test_unweighted": 0.1197595792637115,
+  "test_weighted": 0.09239559893917103,
+  "test_asian_unweighted": 0.11153358681875793,
+  "test_asian_weighted": 0.10201835013914451,
+  "test_dm_or_htn_unweighted": 0.18680981595092025,
+  "test_neither_unweighted": 0.055375552282768775,
+  "test_neither_weighted": 0.046907240872966834,
+  "test_cases_without_dm_or_htn_share": 0.23588456712672523,
+  "test_cases_with_egfr_ge60_share": 0.848180677540778,
+  "test_cases_with_egfr_ge60_share_weighted": 0.8922781849801604
+ },
+ "n": {
+  "train": 13840,
+  "test": 6655,
+  "train_cases": 1545,
+  "test_cases": 797,
+  "test_asian": 789,
+  "test_asian_cases": 88
+ },
+ "descriptives": {
+  "train": {
+   "age_mean": 48.7260838150289,
+   "female_pct": 50.606936416184965,
+   "asian_pct": 12.355491329479769,
+   "dm_pct": 12.247109826589595,
+   "htn_pct": 35.115606936416185,
+   "egfr_lt60_pct": 6.098265895953757,
+   "uacr_median": 7.115,
+   "albuminuria_pct": 11.163294797687861,
+   "sbp_mean": 123.76592003853564,
+   "hba1c_mean": 5.775065028901734
+  },
+  "test": {
+   "age_mean": 50.52637114951165,
+   "female_pct": 50.338091660405716,
+   "asian_pct": 11.855747558226897,
+   "dm_pct": 14.395191585274231,
+   "htn_pct": 37.265214124718256,
+   "egfr_lt60_pct": 5.875281743050338,
+   "uacr_median": 7.34,
+   "albuminuria_pct": 11.97595792637115,
+   "sbp_mean": 124.3741046831956,
+   "hba1c_mean": 5.85182569496619
+  }
+ },
+ "dev_cv_auroc": {
+  "step1_lr": 0.7152356510855703,
+  "step2_lr": 0.7566824201697482,
+  "step2_gbt": 0.7604651560675993
+ },
+ "model_choice": "logistic regression (GBT gain < 0.01 in CV)",
+ "test_auroc": {
+  "step1_lr": {
+   "auroc": 0.7179328379339902,
+   "ci": [
+    0.6985790806588822,
+    0.7365605748450225
+   ]
+  },
+  "step2_lr": {
+   "auroc": 0.7565961978450257,
+   "ci": [
+    0.7371748387399245,
+    0.7747959287257039
+   ]
+  },
+  "step2_gbt": {
+   "auroc": 0.7658331023687753,
+   "ci": [
+    0.7475968982387885,
+    0.7837944765974854
+   ]
+  },
+  "rule_dm_or_htn": {
+   "auroc": 0.6557859513290922,
+   "ci": [
+    0.6389653042347285,
+    0.6705554873054225
+   ]
+  },
+  "egfr_lt60_only": {
+   "auroc": 0.5528642532405362,
+   "ci": [
+    0.5403634691550944,
+    0.5650392554227678
+   ]
+  },
+  "age_only": {
+   "auroc": 0.64393136518688,
+   "ci": [
+    0.6230480353114097,
+    0.6629123198783895
+   ]
+  },
+  "step2_minus_step1": {
+   "diff": 0.03866335991103553,
+   "ci": [
+    0.025521185456560794,
+    0.051626706528092564
+   ]
+  }
+ },
+ "matched": {
+  "rule_share_referred": 0.4898572501878287,
+  "rule": {
+   "n": 6655,
+   "referred": 3260,
+   "cases": 797,
+   "cases_found": 609,
+   "sensitivity": 0.7641154328732748,
+   "ppv": 0.18680981595092025,
+   "specificity": 0.5474564697849095,
+   "referred_per_100": 48.98572501878287,
+   "found_per_100": 9.151014274981216,
+   "nnr": 5.35303776683087
+  },
+  "step1_lr": {
+   "n": 6655,
+   "referred": 3260,
+   "cases": 797,
+   "cases_found": 608,
+   "sensitivity": 0.7628607277289837,
+   "ppv": 0.18650306748466258,
+   "specificity": 0.5472857630590645,
+   "referred_per_100": 48.98572501878287,
+   "found_per_100": 9.135987978963186,
+   "nnr": 5.3618421052631575,
+   "extra_cases_vs_rule": -1,
+   "extra_cases_ci": [
+    -18.0,
+    19.024999999999977
+   ]
+  },
+  "step2_lr": {
+   "n": 6655,
+   "referred": 3260,
+   "cases": 797,
+   "cases_found": 641,
+   "sensitivity": 0.8042659974905897,
+   "ppv": 0.19662576687116565,
+   "specificity": 0.5529190850119494,
+   "referred_per_100": 48.98572501878287,
+   "found_per_100": 9.631855747558227,
+   "nnr": 5.085803432137285,
+   "extra_cases_vs_rule": 32,
+   "extra_cases_ci": [
+    12.0,
+    51.02499999999998
+   ]
+  },
+  "step2_gbt": {
+   "n": 6655,
+   "referred": 3260,
+   "cases": 797,
+   "cases_found": 644,
+   "sensitivity": 0.8080301129234629,
+   "ppv": 0.19754601226993865,
+   "specificity": 0.5534312051894845,
+   "referred_per_100": 48.98572501878287,
+   "found_per_100": 9.676934635612321,
+   "nnr": 5.062111801242236,
+   "extra_cases_vs_rule": 35,
+   "extra_cases_ci": [
+    13.0,
+    57.0
+   ]
+  }
+ },
+ "calibration": {
+  "step1_lr": {
+   "slope": 0.9468614230711186,
+   "slope_ci": [
+    0.8568158424674251,
+    1.036907003674812
+   ],
+   "intercept_in_large": 0.0027999161401975406,
+   "citl_ci": [
+    -0.07468814386419143,
+    0.08028797614458652
+   ],
+   "mean_pred": 0.11949065630894162,
+   "obs_rate": 0.1197595792637115,
+   "brier": 0.09782410810511581
+  },
+  "step2_lr": {
+   "slope": 0.9454104714042191,
+   "slope_ci": [
+    0.8699619103090768,
+    1.0208590324993614
+   ],
+   "intercept_in_large": -0.008153946889801159,
+   "citl_ci": [
+    -0.08814598029744511,
+    0.07183808651784279
+   ],
+   "mean_pred": 0.12049696760268766,
+   "obs_rate": 0.1197595792637115,
+   "brier": 0.09175447060942594
+  },
+  "step2_gbt": {
+   "slope": 0.971298878247887,
+   "slope_ci": [
+    0.8960507715882615,
+    1.0465469849075124
+   ],
+   "intercept_in_large": 0.0006981479516034172,
+   "citl_ci": [
+    -0.07931629055334631,
+    0.08071258645655315
+   ],
+   "mean_pred": 0.11969664786856389,
+   "obs_rate": 0.1197595792637115,
+   "brier": 0.09150166207335925
+  }
+ },
+ "pass_mark": {
+  "c1_auroc_ci_lower_gt_0.70": true,
+  "c2_more_cases_than_rule_at_same_referrals": true,
+  "c3_calibration_slope_0.8_1.2": true,
+  "step1_auroc_ci_lower_gt_0.70": false,
+  "step1_more_cases_than_rule": false,
+  "step2_overall_pass": true
+ },
+ "thresholds": {
+  "step2_high": 0.07615138191352633,
+  "step2_moderate": 0.04483603093241831,
+  "step1_go_to_yakap": 0.051578488602901235
+ },
+ "pathway": {
+  "residents": 6655,
+  "cases": 797,
+  "step1_sent_to_yakap": 5306,
+  "step1_cases_among_sent": 743,
+  "step2_referred_uacr": 3115,
+  "step2_cases_found": 629,
+  "per100": {
+   "cases": 11.97595792637115,
+   "step1_sent_to_yakap": 79.72952667167543,
+   "step1_cases_among_sent": 11.164537941397446,
+   "step2_referred_uacr": 46.8069120961683,
+   "step2_cases_found": 9.451540195341849
+  },
+  "step2_ppv": 0.20192616372391653,
+  "overall_sensitivity": 0.7892095357590966,
+  "step1_sensitivity": 0.9322459222082811,
+  "clinic_only_fixed_threshold": {
+   "n": 6655,
+   "referred": 3219,
+   "cases": 797,
+   "cases_found": 638,
+   "sensitivity": 0.8005018820577164,
+   "ppv": 0.1981981981981982,
+   "specificity": 0.5594059405940595,
+   "referred_per_100": 48.369646882043575,
+   "found_per_100": 9.586776859504132,
+   "nnr": 5.045454545454546
+  },
+  "rule_per100": {
+   "n": 6655,
+   "referred": 3260,
+   "cases": 797,
+   "cases_found": 609,
+   "sensitivity": 0.7641154328732748,
+   "ppv": 0.18680981595092025,
+   "specificity": 0.5474564697849095,
+   "referred_per_100": 48.98572501878287,
+   "found_per_100": 9.151014274981216,
+   "nnr": 5.35303776683087
+  }
+ },
+ "asian": {
+  "n": 789,
+  "cases": 88,
+  "step1_lr": {
+   "auroc": 0.7188270003890544,
+   "ci": [
+    0.664392941628933,
+    0.7738757328609803
+   ]
+  },
+  "step2_lr": {
+   "auroc": 0.7411976397354428,
+   "ci": [
+    0.6890134817553272,
+    0.7920729950586719
+   ]
+  },
+  "rule_dm_or_htn": {
+   "auroc": 0.6632570354039684,
+   "ci": [
+    0.6138183033194735,
+    0.712414259046695
+   ]
+  },
+  "matched_rule": {
+   "n": 789,
+   "referred": 327,
+   "cases": 88,
+   "cases_found": 62,
+   "sensitivity": 0.7045454545454546,
+   "ppv": 0.18960244648318042,
+   "specificity": 0.6219686162624821,
+   "referred_per_100": 41.444866920152094,
+   "found_per_100": 7.858048162230672,
+   "nnr": 5.274193548387097
+  },
+  "matched_step2": {
+   "n": 789,
+   "referred": 327,
+   "cases": 88,
+   "cases_found": 64,
+   "sensitivity": 0.7272727272727273,
+   "ppv": 0.19571865443425077,
+   "specificity": 0.6248216833095578,
+   "referred_per_100": 41.444866920152094,
+   "found_per_100": 8.111533586818759,
+   "nnr": 5.109375
+  },
+  "calibration_step2": {
+   "slope": 0.9824099626484389,
+   "slope_ci": [
+    0.7290194862250889,
+    1.235800439071789
+   ],
+   "intercept_in_large": 0.17666941231607897,
+   "citl_ci": [
+    -0.05722658803698724,
+    0.41056541266914515
+   ],
+   "mean_pred": 0.09669880694281079,
+   "obs_rate": 0.11153358681875793,
+   "brier": 0.09007388642233358
+  },
+  "fixed_threshold_step2": {
+   "n": 789,
+   "referred": 319,
+   "cases": 88,
+   "cases_found": 63,
+   "sensitivity": 0.7159090909090909,
+   "ppv": 0.1974921630094044,
+   "specificity": 0.6348074179743224,
+   "referred_per_100": 40.43092522179975,
+   "found_per_100": 7.984790874524715,
+   "nnr": 5.063492063492063
+  }
+ },
+ "by_group": {
+  "Mexican American": {
+   "n": 784,
+   "cases": 101,
+   "auroc_step2": 0.7332386240088138,
+   "auroc_step1": 0.6974616934607077
+  },
+  "Other Hispanic": {
+   "n": 688,
+   "cases": 73,
+   "auroc_step2": 0.783806659984408,
+   "auroc_step1": 0.7226862679585699
+  },
+  "Non-Hispanic White": {
+   "n": 2395,
+   "cases": 268,
+   "auroc_step2": 0.757955637889537,
+   "auroc_step1": 0.7177739651530781
+  },
+  "Non-Hispanic Black": {
+   "n": 1678,
+   "cases": 218,
+   "auroc_step2": 0.7578861379917055,
+   "auroc_step1": 0.7260321100917431
+  },
+  "Non-Hispanic Asian": {
+   "n": 789,
+   "cases": 88,
+   "auroc_step2": 0.7411976397354428,
+   "auroc_step1": 0.7188270003890544
+  },
+  "Other/multiracial": {
+   "n": 321,
+   "cases": 49,
+   "auroc_step2": 0.7902911164465786,
+   "auroc_step1": 0.7638055222088835
+  },
+  "female": {
+   "n": 3350,
+   "cases": 399,
+   "auroc_step2": 0.7132071113058824,
+   "auroc_step1": 0.6629582257915204
+  },
+  "male": {
+   "n": 3305,
+   "cases": 398,
+   "auroc_step2": 0.8015835973814723,
+   "auroc_step1": 0.767771606570866
+  },
+  "age_20_44": {
+   "n": 2562,
+   "cases": 174,
+   "auroc_step2": 0.6763607308573519,
+   "auroc_step1": 0.644400161728181
+  },
+  "age_45_64": {
+   "n": 2516,
+   "cases": 309,
+   "auroc_step2": 0.742509490984115,
+   "auroc_step1": 0.7017308856932121
+  },
+  "age_65plus": {
+   "n": 1577,
+   "cases": 314,
+   "auroc_step2": 0.7305878733780151,
+   "auroc_step1": 0.6650553983791498
+  },
+  "no_dm_no_htn": {
+   "n": 3395,
+   "cases": 188,
+   "auroc_step2": 0.6381618666613591,
+   "auroc_step1": 0.5799837788348625
+  }
+ },
+ "test_auroc_weighted": {
+  "step1_lr": 0.7107616029638564,
+  "step2_lr": 0.7351293577679707
+ },
+ "ablation": [
+  {
+   "model": "questionnaire only",
+   "auroc": 0.7179328379339902,
+   "ci": [
+    0.6977520490613008,
+    0.7349120328758144
+   ],
+   "cases_found_at_rule_share": 608
+  },
+  {
+   "model": "+ measured BP",
+   "auroc": 0.7265862981400463,
+   "ci": [
+    0.7066342484602608,
+    0.7458646182515853
+   ],
+   "cases_found_at_rule_share": 613
+  },
+  {
+   "model": "+ HbA1c",
+   "auroc": 0.7415954246313742,
+   "ci": [
+    0.7195151955458371,
+    0.7617711639282331
+   ],
+   "cases_found_at_rule_share": 625
+  },
+  {
+   "model": "+ creatinine (eGFR)",
+   "auroc": 0.7504406889440729,
+   "ci": [
+    0.729437454970865,
+    0.769904353572636
+   ],
+   "cases_found_at_rule_share": 634
+  },
+  {
+   "model": "+ lipid profile",
+   "auroc": 0.7502125802075297,
+   "ci": [
+    0.7293134590825999,
+    0.7695302193296429
+   ],
+   "cases_found_at_rule_share": 635
+  },
+  {
+   "model": "+ CBC (full step 2)",
+   "auroc": 0.7565961978450257,
+   "ci": [
+    0.7362352686742415,
+    0.7746192882926516
+   ],
+   "cases_found_at_rule_share": 641
+  }
+ ],
+ "composite_outcome_step1": {
+  "auroc": 0.7624076797314367,
+  "ci": [
+   0.7459707789777571,
+   0.7774439786041164
+  ],
+  "prevalence_test": 0.16033057851239668,
+  "merwacs_reported_internal": [
+   0.68,
+   0.7
+  ],
+  "merwacs_reported_external_knhanes": [
+   0.71,
+   0.73
+  ]
+ },
+ "cost": {
+  "hd_per_session": 6350,
+  "hd_sessions_per_year": 156,
+  "uacr_test_price_assumed": 600,
+  "uacr_price_range_assumed": [
+   300,
+   1200
+  ],
+  "hd_per_year": 990600,
+  "per_1000_adults": {
+   "test_everyone_uacr": {
+    "uacr_tests": 1000.0,
+    "cases_found": 119.7595792637115,
+    "cases_missed": 0.0,
+    "cost_base": 600000.0,
+    "cost_per_case_base": 5010.037641154328,
+    "cost_low": 300000.0,
+    "cost_per_case_low": 2505.018820577164,
+    "cost_high": 1200000.0,
+    "cost_per_case_high": 10020.075282308657,
+    "breakeven_dialysis_years_base": 0.6056935190793459
+   },
+   "rule_dm_or_htn": {
+    "uacr_tests": 489.8572501878287,
+    "cases_found": 91.51014274981218,
+    "cases_missed": 28.249436513899326,
+    "cost_base": 293914.3501126972,
+    "cost_per_case_base": 3211.822660098522,
+    "cost_low": 146957.1750563486,
+    "cost_per_case_low": 1605.911330049261,
+    "cost_high": 587828.7002253945,
+    "cost_per_case_high": 6423.645320197044,
+    "breakeven_dialysis_years_base": 0.29670336171279754
+   },
+   "step2_model_same_referrals": {
+    "uacr_tests": 489.8572501878287,
+    "cases_found": 96.31855747558227,
+    "cases_missed": 23.441021788129234,
+    "cost_base": 293914.3501126972,
+    "cost_per_case_base": 3051.482059282371,
+    "cost_low": 146957.1750563486,
+    "cost_per_case_low": 1525.7410296411856,
+    "cost_high": 587828.7002253945,
+    "cost_per_case_high": 6102.964118564742,
+    "breakeven_dialysis_years_base": 0.29670336171279754
+   },
+   "two_step_pathway_fixed_thresholds": {
+    "uacr_tests": 468.069120961683,
+    "cases_found": 94.51540195341848,
+    "cases_missed": 25.244177310293026,
+    "cost_base": 280841.4725770098,
+    "cost_per_case_base": 2971.383147853737,
+    "cost_low": 140420.7362885049,
+    "cost_per_case_low": 1485.6915739268684,
+    "cost_high": 561682.9451540196,
+    "cost_per_case_high": 5942.766295707474,
+    "breakeven_dialysis_years_base": 0.2835064330476578
+   }
+  }
+ },
+ "dca_selected": [
+  {
+   "threshold": 0.05,
+   "treat_all": 0.0734,
+   "step1_lr": 0.0752,
+   "step2_lr": 0.0765,
+   "rule_dm_or_htn": 0.0705,
+   "treat_none": 0.0
+  },
+  {
+   "threshold": 0.1,
+   "treat_all": 0.022,
+   "step1_lr": 0.0505,
+   "step2_lr": 0.0535,
+   "rule_dm_or_htn": 0.0472,
+   "treat_none": 0.0
+  },
+  {
+   "threshold": 0.15,
+   "treat_all": -0.0356,
+   "step1_lr": 0.029,
+   "step2_lr": 0.0369,
+   "rule_dm_or_htn": 0.0212,
+   "treat_none": 0.0
+  },
+  {
+   "threshold": 0.2,
+   "treat_all": -0.1003,
+   "step1_lr": 0.0147,
+   "step2_lr": 0.0292,
+   "rule_dm_or_htn": -0.0081,
+   "treat_none": 0.0
+  },
+  {
+   "threshold": 0.3,
+   "treat_all": -0.2575,
+   "step1_lr": 0.0028,
+   "step2_lr": 0.0165,
+   "rule_dm_or_htn": -0.0792,
+   "treat_none": 0.0
+  }
+ ],
+ "shap_mean_abs_step2": {
+  "egfr": 0.35359359715302835,
+  "sbp": 0.33410148019481445,
+  "egfr_low": 0.32786974684160536,
+  "hba1c": 0.18227113500106246,
+  "age": 0.165260769752587,
+  "hgb": 0.14667267223281813,
+  "htn_hx": 0.1447777282539895,
+  "age_sq": 0.11665477501898962,
+  "dm_hx": 0.10157318514530948,
+  "dbp": 0.09880659497635248,
+  "cvd_hx": 0.09732508363614897,
+  "smoker": 0.09598632587198347,
+  "wbc": 0.08613010934975908,
+  "tchol": 0.04509775116902624,
+  "bp_med": 0.021513272321951906,
+  "female": 0.014245152524307329,
+  "hdl": 0.004008696533269047,
+  "bmi": 0.002909900307686939,
+  "plt": 0.002328384450374475,
+  "fam_dm": 0.0022498114475590966
+ },
+ "shap_mean_abs_step1": {
+  "htn_hx": 0.30851492893761556,
+  "age": 0.2519284152587881,
+  "dm_hx": 0.2308503392109311,
+  "age_sq": 0.13974638511794987,
+  "smoker": 0.10947714511904919,
+  "cvd_hx": 0.09168449804761658,
+  "bp_med": 0.0801652827716332,
+  "bmi": 0.06032983278999111,
+  "female": 0.05708844459677458,
+  "fam_dm": 0.031702952304046676
+ },
+ "shap_package_check_max_abs_diff": 0.0,
+ "coef_step1": {
+  "intercept": -4.12701181442615,
+  "coef": {
+   "age": 0.017011185076042008,
+   "age_sq": 0.058269647320651055,
+   "female": 0.11418626160832876,
+   "dm_hx": 0.9986469448515136,
+   "htn_hx": 0.6676510419841889,
+   "bp_med": -0.2017493540436854,
+   "smoker": 0.3543113611673084,
+   "fam_dm": 0.06393934803156888,
+   "cvd_hx": 0.538145124091243,
+   "bmi": 0.010970566132735376
+  },
+  "mean": {
+   "age": 48.7260838150289,
+   "age_sq": 3.0268793352601158,
+   "female": 0.5060693641618497,
+   "dm_hx": 0.12247109826589596,
+   "htn_hx": 0.3511560693641618,
+   "bp_med": 0.25852601156069366,
+   "smoker": 0.19841040462427745,
+   "fam_dm": 0.40715317919075145,
+   "cvd_hx": 0.08648843930635838,
+   "bmi": 29.115317919075146
+  }
+ },
+ "coef_step2": {
+  "intercept": -9.806199487565053,
+  "coef": {
+   "age": 0.011159049038523874,
+   "age_sq": 0.048641205229667986,
+   "female": -0.028492643726415384,
+   "dm_hx": 0.4394004850541598,
+   "htn_hx": 0.3133106117675931,
+   "bp_med": -0.0541417511952633,
+   "smoker": 0.31064973183369626,
+   "fam_dm": 0.00453747890011263,
+   "cvd_hx": 0.5712527234796541,
+   "bmi": 0.0005291454043353944,
+   "sbp": 0.0230178210336882,
+   "dbp": 0.010596570075195644,
+   "hba1c": 0.2865751874034832,
+   "egfr": 0.021486804136659557,
+   "egfr_low": 0.3885952358079925,
+   "tchol": 0.0013896484172051845,
+   "hdl": -0.00033761655818342434,
+   "hgb": -0.12377357865028998,
+   "wbc": 0.051610154537852726,
+   "plt": -4.7400789130391004e-05
+  },
+  "mean": {
+   "age": 48.7260838150289,
+   "age_sq": 3.0268793352601158,
+   "female": 0.5060693641618497,
+   "dm_hx": 0.12247109826589596,
+   "htn_hx": 0.3511560693641618,
+   "bp_med": 0.25852601156069366,
+   "smoker": 0.19841040462427745,
+   "fam_dm": 0.40715317919075145,
+   "cvd_hx": 0.08648843930635838,
+   "bmi": 29.115317919075146,
+   "sbp": 123.76775048169556,
+   "dbp": 70.6596098265896,
+   "hba1c": 5.773475433526012,
+   "egfr": 95.75482528443736,
+   "egfr_low": 0.6200374904084771,
+   "tchol": 191.0373554913295,
+   "hdl": 53.07247109826589,
+   "hgb": 13.995462427745666,
+   "wbc": 7.169465317919075,
+   "plt": 236.9567196531792
+  }
+ }
+}
