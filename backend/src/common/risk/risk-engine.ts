@@ -1,6 +1,6 @@
 // Risk engine for the two-step pathway. Pure functions, no storage, no network.
-// Mirrors the prototype engine (logistic regression trained on NHANES), so the
-// API and the frontend give the same numbers for the same answers.
+// Step 1 and Step 2: logistic regression trained on NHANES. Step 2U: Step 2 plus the
+// YAKAP urine dipstick, learned on KNHANES 2021-2024 (models/step2u_v1.json).
 
 export interface RiskModel {
   intercept: number;
@@ -38,6 +38,20 @@ export interface Step2Input extends Step1Input {
   platelets: number;
 }
 
+// YAKAP urine dipstick readings
+export type DipstickGrade = 'NEG' | 'TRACE' | 'ONE_PLUS' | 'TWO_PLUS' | 'THREE_PLUS';
+
+export interface DipstickInput {
+  protein: DipstickGrade;
+  blood?: DipstickGrade | null;
+  glucose?: DipstickGrade | null;
+  specificGravity?: number | null;
+}
+
+export interface Step2UThresholds {
+  step2u_refer: number;
+}
+
 export interface RiskScore {
   probability: number;
   features: Record<string, number>;
@@ -71,6 +85,10 @@ const REASON_TEXT: Record<string, string> = {
   hgb: 'Hemoglobin',
   wbc: 'White cell count',
   plt: 'Platelets',
+  protein: 'Urine dipstick protein',
+  bld_pos: 'Urine dipstick blood',
+  glu_pos: 'Urine dipstick glucose',
+  usg: 'Urine specific gravity',
 };
 
 // A "no" answer can still raise the estimate; say it as "No ..." so nobody reads it as a yes
@@ -142,6 +160,37 @@ function step2Features(x: Step2Input): Record<string, number> {
   };
 }
 
+// Strip reading -> KNHANES code (0 negative, 1 trace, 2 = 1+, 3 = 2+, 4 = 3+ or more)
+const DIP_CODE: Record<DipstickGrade, number> = {
+  NEG: 0,
+  TRACE: 1,
+  ONE_PLUS: 2,
+  TWO_PLUS: 3,
+  THREE_PLUS: 4,
+};
+
+// Dipstick terms of Step 2U. A missing blood, glucose or specific gravity result is
+// left out here and set to the learning-data mean in scoreStep2U.
+export function dipstickFeatures(u: DipstickInput): Record<string, number> {
+  const p = DIP_CODE[u.protein];
+  const f: Record<string, number> = {
+    pro_trace: p === 1 ? 1 : 0,
+    pro_1: p === 2 ? 1 : 0,
+    pro_2plus: p >= 3 ? 1 : 0,
+  };
+  if (u.blood) f.bld_pos = DIP_CODE[u.blood] >= 2 ? 1 : 0;
+  if (u.glucose) f.glu_pos = DIP_CODE[u.glucose] >= 2 ? 1 : 0;
+  if (u.specificGravity != null && Number.isFinite(u.specificGravity)) {
+    f.usg = clip(u.specificGravity, 1.0, 1.04);
+  }
+  return f;
+}
+
+// Dipstick protein 1+ or more means refer for uACR whatever the score
+export function dipstickProteinPositive(u: DipstickInput): boolean {
+  return DIP_CODE[u.protein] >= 2;
+}
+
 function score(model: RiskModel, f: Record<string, number>): RiskScore {
   let lp = model.intercept;
   const merged: Record<string, number> = {};
@@ -151,8 +200,15 @@ function score(model: RiskModel, f: Record<string, number>): RiskScore {
       throw new Error(`Model term "${k}" has no matching feature`);
     }
     lp += model.coef[k] * value;
-    // exact SHAP for a linear-logit model; age_sq and egfr_low fold into one reason each
-    const key = k === 'age_sq' ? 'age' : k === 'egfr_low' ? 'egfr' : k;
+    // exact SHAP for a linear-logit model; age_sq, egfr_low and the protein grades fold into one reason each
+    const key =
+      k === 'age_sq'
+        ? 'age'
+        : k === 'egfr_low'
+          ? 'egfr'
+          : k.startsWith('pro_')
+            ? 'protein'
+            : k;
     merged[key] = (merged[key] ?? 0) + model.coef[k] * (value - model.mean[k]);
   }
   return {
@@ -168,6 +224,38 @@ export function scoreStep1(model: RiskModel, x: Step1Input): RiskScore {
 
 export function scoreStep2(model: RiskModel, x: Step2Input): RiskScore {
   return score(model, step2Features(x));
+}
+
+// Scores already-built Step 2 features plus the dipstick. Exported for the test that
+// compares the engine with the Python model.
+export function scoreStep2UFeatures(
+  model: RiskModel,
+  base: Record<string, number>,
+  u: DipstickInput,
+): RiskScore & { filled: string[] } {
+  const f = { ...base, ...dipstickFeatures(u) };
+  const filled: string[] = [];
+  for (const k of ['bld_pos', 'glu_pos', 'usg']) {
+    if (f[k] === undefined) {
+      f[k] = model.mean[k];
+      filled.push(k);
+    }
+  }
+  return { ...score(model, f), filled };
+}
+
+export function scoreStep2U(
+  model: RiskModel,
+  x: Step2Input,
+  u: DipstickInput,
+): RiskScore & { filled: string[] } {
+  return scoreStep2UFeatures(model, step2Features(x), u);
+}
+
+// Two bands: the refer cut refers the same share of the KNHANES learning data as
+// "diabetes, high BP or dipstick protein 1+", so there is no separate moderate band.
+export function step2uLevel(p: number, t: Step2UThresholds): Step2Level {
+  return p >= t.step2u_refer ? 'HIGH' : 'LOW';
 }
 
 export function step1Level(p: number, t: RiskThresholds): Step1Level {
