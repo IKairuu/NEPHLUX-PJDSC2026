@@ -15,6 +15,7 @@ PhilHealth's YAKAP primary care benefit already pays for HbA1c, creatinine, lipi
 [![Stack](https://img.shields.io/badge/Web%20app-React%20%C2%B7%20NestJS%20%C2%B7%20PostgreSQL-C9A2FF?style=flat-square)](#architecture)
 [![Step 2U](https://img.shields.io/badge/Step%202U%20pass%20mark-4%2F4%20met-6CCB94?style=flat-square)](#results-against-the-pass-mark)
 [![License](https://img.shields.io/badge/License-All%20rights%20reserved-200122?style=flat-square)](LICENSE)
+[![Better Stack Badge](https://incidents.betterstack.com/status-badges/v1/monitor/31sdk.svg)](https://incidents.betterstack.com/?utm_source=status_badge)
 
 [Pitch deck (PDF)](docs/NEPHLUX_Pitch_Deck.pdf) · [Project paper (PDF)](docs/NEPHLUX_Paper.pdf) · [Run the app](#run-the-app)
 
