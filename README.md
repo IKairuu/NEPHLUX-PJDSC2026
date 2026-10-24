@@ -91,7 +91,7 @@ NEPHLUX supports the doctor's decision and does not diagnose. Step 2U was learne
 
 <br/>
 
-Hemodialysis was PhilHealth's top-paid medical procedure in fiscal year 2024 (PhilHealth, 2025). Since October 2024, PhilHealth pays ₱6,350 a session for up to 156 sessions a year, or **₱990,600 per patient per year** (PhilHealth, 2024b). Fewer than 10% of Filipino adults with CKD have been diagnosed (Orejas, 2024).
+Hemodialysis was PhilHealth's top-paid medical procedure in fiscal year 2024 (Philippine Health Insurance Corporation [PhilHealth], 2025). Since October 2024, PhilHealth pays ₱6,350 a session for up to 156 sessions a year, or **₱990,600 per patient per year** (PhilHealth, 2024b). Fewer than 10% of Filipino adults had been diagnosed with CKD in 2021, the Philippine Society of Nephrology said (Orejas, 2024).
 
 <img src="assets/pitch-deck/03.png" alt="In Cagayan de Oro, kidney disease arrives at stage 5." width="900" />
 
@@ -116,7 +116,7 @@ No published source gives CKD burden by Philippine city or barangay. The nearest
 
 <br/>
 
-YAKAP covers a CBC, lipid profile, FBS, OGTT, HbA1c, creatinine, chest X-ray, sputum microscopy, ECG, mammogram, ultrasound, urinalysis, Pap smear, fecalysis and FOBT (PhilHealth, 2024a). **uACR is not on the list.**
+YAKAP covers a CBC, lipid profile, FBS, OGTT, HbA1c, creatinine, chest X-ray, sputum microscopy, ECG, mammogram, ultrasound, urinalysis, Pap smear, fecalysis and FOBT, as listed in the benefit table of Konsulta, YAKAP's former name (PhilHealth, 2024a). **uACR is not on the list.**
 
 - **85%** of U.S. survey adults with uACR ≥30 mg/g had a normal-looking creatinine (eGFR ≥60).
 - **24%** had neither diabetes nor high blood pressure, so the usual "refer everyone with diabetes or high BP" rule never sends them.
@@ -152,15 +152,15 @@ YAKAP covers a CBC, lipid profile, FBS, OGTT, HbA1c, creatinine, chest X-ray, sp
 | | |
 |---|---|
 | **Design** | Prediction model development with temporal and external validation, reported with TRIPOD+AI (Collins et al., 2024) |
-| **Step 2U data** | Korea's national health survey (KNHANES), which measures the urine dipstick and uACR in the same adults. Learned on 2021–2024 (20,465 adults); tested once on 2019–2020 (11,047 adults, 912 cases, 8.3%) |
-| **Step 2 data** | U.S. NHANES, which has no dipstick. Trained on 2011–2016 (13,840 adults); tested once on 2017–March 2020 (6,655 adults, 797 cases) |
+| **Step 2U data** | Korea's national health survey (KNHANES; Korea Disease Control and Prevention Agency, n.d.), which measures the urine dipstick and uACR in the same adults. Learned on 2021–2024 (20,465 adults); tested once on 2019–2020 (11,047 adults, 912 cases, 8.3%) |
+| **Step 2 data** | U.S. NHANES (Centers for Disease Control and Prevention, National Center for Health Statistics, n.d.), which has no dipstick. Trained on 2011–2016 (13,840 adults); tested once on 2017–March 2020 (6,655 adults, 797 cases) |
 | **Population** | Adults 20+, not pregnant, no known kidney disease or dialysis; complete-case analysis |
 | **Outcome** | A single spot uACR ≥30 mg/g |
 | **Step 1 inputs** | Age, sex, told has diabetes, told has high BP, BP medicine, BMI, smoking, family history of diabetes, past heart attack, stroke or heart failure |
-| **Step 2 adds** | Measured systolic and diastolic BP, HbA1c, eGFR (race-free CKD-EPI 2021), total and HDL cholesterol, hemoglobin, white cell count, platelets |
+| **Step 2 adds** | Measured systolic and diastolic BP, HbA1c, eGFR (race-free CKD-EPI 2021; Inker et al., 2021), total and HDL cholesterol, hemoglobin, white cell count, platelets |
 | **Step 2U adds** | Urine dipstick protein (trace, 1+, 2+ or more), blood, glucose and specific gravity |
-| **Model** | L2-penalised logistic regression, simple on purpose so every reason can be shown to the doctor. Race was not used. |
-| **Evaluation** | 1,000 bootstrap resamples; calibration slope and calibration-in-the-large; decision-curve net benefit; exact SHAP reasons for each prediction |
+| **Model** | L2-penalised logistic regression (scikit-learn; Pedregosa et al., 2011), simple on purpose so every reason can be shown to the doctor. Race was not used. |
+| **Evaluation** | 1,000 bootstrap resamples; calibration slope and calibration-in-the-large (Van Calster et al., 2019); decision-curve net benefit (Vickers & Elkin, 2006); exact SHAP reasons for each prediction (Lundberg & Lee, 2017) |
 
 **Step 2U pass mark (written before the 2019–2020 test years were opened):**
 
@@ -235,9 +235,9 @@ More than 1 in 4 cases in the test set had neither diabetes nor high blood press
 
 <br/>
 
-With only **50 uACR tests per 1,000 adults**, the NEPHLUX order found **39.7 cases** against **9.1** for today's rule (+30.6; 95% CI +28.6 to +33.0). That is about **₱755 per case found** against ₱3,281. This is the budget view the City Health Office screen shows.
+With only **50 uACR tests per 1,000 adults**, the NEPHLUX order found **39.7 cases** against **9.1** for today's rule (+30.6; 95% CI +28.6 to +33.0). That is about **₱755 per case found** against ₱3,281 at ₱600 a test. This is the budget view the City Health Office screen shows.
 
-The uACR price is **assumed at ₱600** (range ₱300–1,200); we found no PhilHealth rate for it. One dialysis-year is ₱990,600. These are cases found, not dialysis avoided, which depends on follow-up treatment and was not measured.
+The uACR price is **assumed at ₱600** for a public or bulk purchase (range ₱300–1,200); we found no PhilHealth rate for it. Hospitals and diagnostic centers have been reported to charge **₱1,500–3,500** (Baclig, 2026); at that retail price the cost is ₱1,887–4,404 per case found against ₱8,203–19,141 for today's rule. The test is not in the YAKAP benefit. One dialysis-year is ₱990,600. These are cases found, not dialysis avoided, which depends on follow-up treatment and was not measured.
 
 ---
 
@@ -284,7 +284,7 @@ NEPHLUX is a web app with a React front end and a NestJS API on PostgreSQL. Resi
 </tr>
 </table>
 
-*Screens show light and dark mode side by side. All patient records are SAMPLE data. The 42 YAKAP clinics come from PhilHealth's accredited list as of 30 September 2026, and map pins are approximate.*
+*Screens show light and dark mode side by side. All patient records are SAMPLE data. The 42 YAKAP clinics come from PhilHealth's accredited list as of 30 September 2026 (PhilHealth, 2026b), and map pins are approximate.*
 
 <img src="assets/pitch-deck/13.png" alt="From a phone at home to a referral slip." width="900" />
 
@@ -298,11 +298,11 @@ NEPHLUX is a web app with a React front end and a NestJS API on PostgreSQL. Resi
 
 | User | Input | Output |
 |---|---|---|
-| **Resident** | 10 questions, no labs | Awareness result, clinic code, nearest of 42 YAKAP clinics (YAKAP is free at public clinics, with a co-payment of up to ₱900 a year at private ones) |
+| **Resident** | 10 questions, no labs | Awareness result, clinic code, nearest of 42 YAKAP clinics (YAKAP is free at public clinics, with a co-payment of up to ₱900 a year at private ones; PhilHealth, 2026a) |
 | **YAKAP clinic (nurse or doctor)** | Labs YAKAP covers, BP, dipstick, history | Risk, reasons, referral slip, follow-up list. The nurse or doctor enters the data; the doctor decides. |
 | **City Health Office** | Counts only | Barangay map, referral funnel, test budget slider, outreach priorities |
 
-**From referrals to barangay screening counts.** Each clinic keeps its own records and sends the City Health Office only counts by barangay: screened, higher risk, referred, uACR done and uACR raised. Cells of 1 to 4 are hidden. Rates use the 2020 census for all 80 barangays (728,402 residents). The map shows where screening reaches, not how common CKD is.
+**From referrals to barangay screening counts.** Each clinic keeps its own records and sends the City Health Office only counts by barangay: screened, higher risk, referred, uACR done and uACR raised. Cells of 1 to 4 are hidden. Rates use the 2020 census for all 80 barangays (728,402 residents; Philippine Statistics Authority, 2021; Abdulsamad, 2026). The map shows where screening reaches, not how common CKD is.
 
 **Next, with consent.** Each returned uACR is a Filipino record with labs, dipstick and uACR together: the data needed to test NEPHLUX on Filipinos, and a start toward a Philippine kidney dataset held by the city. Research extracts would need ethics approval, with the City Health Office as data controller under the Data Privacy Act of 2012.
 
@@ -342,14 +342,14 @@ With one "did you mean" tap, 48 of 62 (77%) reached the right answer. Nephra is 
 
 ## How It's Different
 
-| | Diabetes-or-high-BP rule | MERWACS (Yoo et al., 2026) | DiaSight | **NEPHLUX** |
-|---|---|---|---|---|
-| Uses YAKAP-covered labs | ✗ | ✗ (no labs by design) | ✓ (retinopathy) | ✓ |
-| Uses the YAKAP urine dipstick | ✗ | ✗ | ✗ | ✓ |
-| Predicts albuminuria for a uACR referral | Indirectly | Composite outcome | ✗ | ✓ |
-| Pass mark written before testing | — | ✗ | ✗ | ✓ |
-| Tested against the simple rule at equal referrals | — | ✗ | ✗ | ✓ (+94 cases) |
-| Barangay-level screening counts for the city | ✗ | ✗ | ✗ | ✓ |
+| | Diabetes-or-high-BP rule | MERWACS (Yoo et al., 2026) | **NEPHLUX** |
+|---|---|---|---|
+| Uses YAKAP-covered labs | ✗ | ✗ (no labs by design) | ✓ |
+| Uses the YAKAP urine dipstick | ✗ | ✗ | ✓ |
+| Predicts albuminuria for a uACR referral | Indirectly | Composite outcome | ✓ |
+| Pass mark written before testing | — | ✗ | ✓ |
+| Tested against the simple rule at equal referrals | — | ✗ | ✓ (+94 cases) |
+| Barangay-level screening counts for the city | ✗ | ✗ | ✓ |
 
 ---
 
@@ -364,8 +364,8 @@ With one "did you mean" tap, 48 of 62 (77%) reached the right answer. Nephra is 
 - **Not tested on Filipinos.** Step 2U was learned and tested on Korean adults, and Step 2 on U.S. adults. Percentages need local recalibration.
 - **Dipsticks read by a laboratory.** In KNHANES the strips were read by the survey's laboratory; a YAKAP strip read by eye may do worse.
 - **Local burden not measured.** The case for Cagayan de Oro rests on admissions at one hospital.
-- **One uACR measurement per person.** KDIGO confirms albuminuria with repeat testing.
-- **Complete-case analysis, an assumed uACR price and no outcome follow-up.**
+- **One uACR measurement per person.** KDIGO confirms albuminuria with repeat testing (Kidney Disease: Improving Global Outcomes [KDIGO] CKD Work Group, 2024).
+- **Complete-case analysis, an assumed uACR price and no outcome follow-up.** Costs per case rise in proportion at the published retail price (₱1,500–3,500); which strategy finds more cases per test does not change.
 - **Not yet used in a clinic:** clinic map pins are approximate, the Bisaya and Tagalog text awaits review by native speakers, and no clinic staff have tested the app yet.
 
 **Next steps**
@@ -410,9 +410,10 @@ flowchart LR
 | Layer | Technology |
 |---|---|
 | Modelling | Python, scikit-learn (L2 logistic regression), shap for checking SHAP values |
-| Data | NHANES 2011–2020 (CDC), KNHANES 2019–2024 (KDCA), PSA 2020 census, PSGC 2023 boundaries, PhilHealth YAKAP accredited list |
+| Data | NHANES 2011–2020 (CDC), KNHANES 2019–2024 (KDCA), PSA 2020 census, PSGC 2023 boundaries (faeldon, 2024), PhilHealth YAKAP accredited list |
 | Front end (`frontend/`) | React, React Router, Zustand, Tailwind CSS, Vite, Leaflet |
 | API (`backend/`) | NestJS, Prisma, PostgreSQL, JWT sign-in (Passport, bcrypt), email notices (Nodemailer) |
+| Monitoring | Better Stack uptime monitor for the deployed API (status badge at the top) |
 | Tests | Jest for the API; Node test scripts for the risk engine; axe-core accessibility scan |
 
 ---
@@ -432,7 +433,7 @@ NEPHLUX-PJDSC2026/
 │   └── NEPHLUX_Paper.pdf       # Project paper
 ├── assets/
 │   ├── logo/                   # App icon and wordmark
-│   ├── pitch-deck/             # Slides 01–18 as PNG (1600×900)
+│   ├── pitch-deck/             # Slides 01–18 as PNG (1920×1080)
 │   └── screens/                # App screenshots, light and dark mode
 ├── index.html                  # Early single-file design prototype
 ├── README.md
@@ -543,7 +544,6 @@ The pitch deck uses free photos under the [Unsplash License](https://unsplash.co
 
 | Slide | Photographer | Place |
 |---|---|---|
-| 01 | [Josephus Bajo](https://unsplash.com/photos/a-man-in-a-boat-FaGMALBgMpU) | Malabuyoc, Cebu |
 | 02 | [Bas Peperzak](https://unsplash.com/photos/an-old-woman-wearing-a-straw-hat-and-smiling-_Qi5XLmQ754) | Cebu City |
 | 13 | [Rainier Ridao](https://unsplash.com/photos/woman-carrying-her-baby-while-leaning-against-the-brown-wooden-post-707nOyHzXR8) | Cagayan de Oro City |
 | 16 | [JC Gellidon](https://unsplash.com/photos/gray-scale-photo-of-three-nurses-and-doctor-about-to-perform-surgery-Ks5m44_nmVs) | Manila |
@@ -553,15 +553,15 @@ The pitch deck uses free photos under the [Unsplash License](https://unsplash.co
 
 ## References
 
-Abdulsamad, B. (2026). *psgc: Philippine Standard Geographic Code* (Version 0.1.2) [R package]. GitHub. https://github.com/yng-me/psgc
+Abdulsamad, B. (2026). *psgc: Philippine Standard Geographic Code* (Version 0.1.2) [R package]. Comprehensive R Archive Network. https://cran.r-project.org/web/packages/psgc/index.html
+
+Baclig, C. E. (2026, January 27). This one-minute test could save your kidneys. *INQUIRER.net*. https://newsinfo.inquirer.net/2173691/this-one-minute-test-could-save-your-kidneys
 
 Centers for Disease Control and Prevention, National Center for Health Statistics. (n.d.). *National Health and Nutrition Examination Survey data, 2011–2012 to 2017–March 2020 pre-pandemic* [Data sets]. Retrieved October 17, 2026, from https://wwwn.cdc.gov/nchs/nhanes/
 
 Collins, G. S., Moons, K. G. M., Dhiman, P., Riley, R. D., Beam, A. L., Van Calster, B., Ghassemi, M., Liu, X., Reitsma, J. B., van Smeden, M., Boulesteix, A.-L., Camaradou, J. C., Celi, L. A., Denaxas, S., Denniston, A. K., Glocker, B., Golub, R. M., Harvey, H., Heinze, G., … Logullo, P. (2024). TRIPOD+AI statement: Updated guidance for reporting clinical prediction models that use regression or machine learning methods. *BMJ, 385*, e078378. https://doi.org/10.1136/bmj-2023-078378
 
 Data Privacy Act of 2012, Republic Act No. 10173 (2012). https://lawphil.net/statutes/repacts/ra2012/ra_10173_2012.html
-
-DiaSight. (n.d.). *DiaSight: AI-powered risk stratification for diabetic retinopathy*. Retrieved October 17, 2026, from https://diasight.ph
 
 faeldon. (2024). *Philippines administrative boundaries JSON maps* [Data set]. GitHub. https://github.com/faeldon/philippines-json-maps
 
@@ -573,11 +573,11 @@ Korea Disease Control and Prevention Agency. (n.d.). *Korea National Health and 
 
 Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems, 30*, 4765–4774.
 
-Mambering, N., & Espiga-Comonsad, R. G. (2026). WCN26-4150 Geographic distribution and hospital-based incidence and prevalence of chronic kidney disease in patients admitted at a tertiary government hospital [Abstract]. *Kidney International Reports, 11*, 59–62, Article 104771. https://doi.org/10.1016/j.ekir.2026.104771
+Mambering, N., & Espiga-Comonsad, R. G. (2026). WCN26-4150 Geographic distribution and hospital-based incidence and prevalence of chronic kidney disease in patients admitted at a tertiary government hospital [Abstract]. *Kidney International Reports, 11*, Article 104771. https://doi.org/10.1016/j.ekir.2026.104771
 
 Orejas, T. T. (2024, February 8). PhilHealth, LGUs urged to cover tests for kidney disease. *Inquirer.net*. https://newsinfo.inquirer.net/1901365/philhealth-lgus-urged-to-cover-tests-for-kidney-disease
 
-Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830. https://jmlr.org/papers/v12/pedregosa11a.html
 
 Philippine Health Insurance Corporation. (2024a). *Annex B: PhilHealth Konsulta benefit table* (PhilHealth Circular No. 2024-0013). https://www.philhealth.gov.ph/circulars/2024/0013/Annex_B_Konsulta_Benefit_Table.pdf
 
@@ -585,7 +585,7 @@ Philippine Health Insurance Corporation. (2024b). *Institutionalization of 156 h
 
 Philippine Health Insurance Corporation. (2025, May 28). *PhilHealth speeds up payments, releases over P592M to NKTI in less than 5 months* [News release]. https://www.philhealth.gov.ph/news/up/article/2025/news_686f52507b28b.php
 
-Philippine Health Insurance Corporation. (2026a). *PhilHealth member advisory: Know your rights under the YAKAP primary care benefit* (PhilHealth Advisory No. 2026-0003). https://www.philhealth.gov.ph/advisories/2026/PA2026-0003.pdf
+Philippine Health Insurance Corporation. (2026a). *Know your rights under the YAKAP primary care benefit* (PhilHealth Advisory No. 2026-0003). https://www.philhealth.gov.ph/advisories/2026/PA2026-0003.pdf
 
 Philippine Health Insurance Corporation. (2026b). *List of PhilHealth YAKAP accredited providers as of September 30, 2026* [Data set].
 
