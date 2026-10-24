@@ -36,7 +36,7 @@ export const ACCESS = [
 ]
 
 export const FAQ = [
-  ['What is NEPHLUX?', 'A research prototype that helps decide who should get a urine albumin-creatinine ratio (uACR) test first, using the labs PhilHealth YAKAP already covers. It is set in Cagayan de Oro City.'],
+  ['What is NEPHLUX?', 'A screening tool that helps decide who should get a urine albumin-creatinine ratio (uACR) test first, using the labs PhilHealth YAKAP already covers. It is set in Cagayan de Oro City.'],
   ['What does NEPHLUX actually do?', 'It runs a logistic regression model on age, history, blood pressure, HbA1c, creatinine, lipids and blood count, and estimates the chance of albuminuria (uACR ≥30 mg/g). The doctor sees that estimate, its top reasons and any missing data, and decides.'],
   ['Is NEPHLUX a diagnostic tool?', 'No. It is screening support. Only a doctor can diagnose kidney disease, usually with two raised uACR results over 3 months.'],
   ['Does it use the YAKAP urinalysis?', 'Yes, when it is done. The U.S. NHANES data has no dipstick, so NEPHLUX added Step 2U: the same labs plus the urine dipstick (protein, blood, glucose, specific gravity), learned from Korean KNHANES 2021–2024, which has both the dipstick and uACR. Tested once on Korean adults (KNHANES 2019–2020), it found more cases than referring everyone with diabetes, high BP or dipstick protein 1+. Without a dipstick result the app uses Step 2. A dipstick protein of 1+ or more still means refer whatever the score.'],
@@ -44,10 +44,10 @@ export const FAQ = [
   ['What is the difference between the resident check and the clinic assessment?', 'The resident check uses 10 questions and no labs; it is awareness only and in testing did no better than asking about diabetes and high blood pressure. The clinic assessment adds YAKAP labs and measured blood pressure; that step passed its pre-registered pass mark.'],
   ['What is a uACR test?', 'A urine test that measures albumin, a protein that leaks into urine when the kidney filters are damaged. It shows damage earlier than creatinine. It is not part of the YAKAP benefit.'],
   ['Does NEPHLUX replace a doctor?', 'No. The doctor approves, overrides (with a written reason) or declines every suggested referral and is responsible for it.'],
-  ['Does the system use real Philippine patient data?', 'No. Step 2 was trained and tested on U.S. NHANES survey data, and Step 2U on Korean KNHANES survey data. All patient records in this prototype are SAMPLE data. The 42 YAKAP clinics and the 80 barangay populations are real public data; clinic pins are approximate.'],
+  ['Does the system use real Philippine patient data?', 'No. Step 2 was trained and tested on U.S. NHANES survey data, and Step 2U on Korean KNHANES survey data. The 42 YAKAP clinics and the 80 barangay populations are real public data; clinic pins are approximate.'],
   ['Is the model validated in the Philippines?', 'Not yet. The models have not been validated in Filipino patients. They were tested on U.S. (NHANES) and Korean (KNHANES) adults; the next test needs Filipino YAKAP records.'],
   ['How does the City Health Office dashboard work?', 'It counts screenings, referrals and completed tests by barangay, per 1,000 residents (2020 census). This shows screening reach, not how common kidney disease is. Cells of 1 to 4 show as "<5".'],
-  ['Is the prototype connected to PhilHealth?', "No. It has no connection to PhilHealth systems and is not endorsed by PhilHealth. The clinic list comes from PhilHealth's public YAKAP list of 30 Sep 2026."],
+  ['Is NEPHLUX connected to PhilHealth?', "No. It has no connection to PhilHealth systems and is not endorsed by PhilHealth. The clinic list comes from PhilHealth's public YAKAP list of 30 Sep 2026."],
   ['Can residents use NEPHLUX without laboratory results?', 'Yes. The resident check needs no labs and no account. It gives a clinic code to show at a YAKAP clinic, where the labs are done.'],
 ]
 

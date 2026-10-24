@@ -50,7 +50,7 @@ function SignIn({ role }) {
             <span className="mini"><NephraFace emotion="happy" size={54} /></span>
             <span>New here? Watch the guided demo from the home page.</span>
           </div>
-          <p className="fine">Prototype sign-in for demonstration only. It is not secure and is not connected to PhilHealth or to real patient records.</p>
+          <p className="fine">Staff accounts are issued by the City Health Office. NEPHLUX is not connected to PhilHealth systems.</p>
         </aside>
         <div className="auth-form">
           <div className="eyebrow">Sign in</div>
